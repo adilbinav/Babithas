@@ -38,7 +38,7 @@ const products = [
   }
 ];
 
-const WHATSAPP_NUMBER = "916238599582"; // From logo: 623 85 99 582, country code +91
+const WHATSAPP_NUMBER = "+91 623 85 99 582";
 
 // Initialize elements
 document.addEventListener("DOMContentLoaded", () => {
@@ -47,13 +47,14 @@ document.addEventListener("DOMContentLoaded", () => {
   setupMobileMenu();
   setupQuickViewModal();
   setupScrollEffects();
+  setupDemoModalClose();
 });
 
 // Mobile Navbar Toggle
 function setupMobileMenu() {
   const mobileMenuBtn = document.getElementById("mobile-menu-btn");
   const mobileMenu = document.getElementById("mobile-menu");
-  const mobileMenuLinks = mobileMenu.querySelectorAll("a");
+  const mobileMenuLinks = mobileMenu.querySelectorAll("a, button");
 
   if (!mobileMenuBtn || !mobileMenu) return;
 
@@ -92,9 +93,9 @@ function renderProducts(productList) {
   grid.innerHTML = "";
 
   productList.forEach(prod => {
-    // Generate WhatsApp click link
-    const waText = encodeURIComponent(`Hi BaBitha's, I am interested in inquiring about the "${prod.name}" (${prod.fabric}) saree that I saw on your website catalog. Can you please share more details and availability?`);
-    const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${waText}`;
+    // Generate WhatsApp text for demo modal
+    const rawText = `Hi BaBitha's, I am interested in inquiring about the "${prod.name}" (${prod.fabric}) saree that I saw on your website catalog. Can you please share more details and availability?`;
+    const escapedText = rawText.replace(/'/g, "\\'");
 
     const card = document.createElement("div");
     card.className = "product-card group bg-white border border-stone-100 rounded-lg overflow-hidden luxury-shadow-sm hover:luxury-shadow transition-all duration-300 flex flex-col";
@@ -111,9 +112,9 @@ function renderProducts(productList) {
             <button onclick="openQuickView(${prod.id})" class="w-full bg-white text-stone-900 text-xs font-semibold py-2 px-4 rounded shadow hover:bg-stone-50 transition-colors uppercase tracking-wider">
               Quick View
             </button>
-            <a href="${waLink}" target="_blank" rel="noopener" class="w-full flex items-center justify-center gap-2 bg-[#D4AF37] hover:bg-[#AA771C] text-white text-xs font-semibold py-2 px-4 rounded shadow transition-colors uppercase tracking-wider">
+            <button onclick="showWhatsAppDemo('${escapedText}')" class="w-full flex items-center justify-center gap-2 bg-[#D4AF37] hover:bg-[#AA771C] text-white text-xs font-semibold py-2 px-4 rounded shadow transition-colors uppercase tracking-wider">
               <i class="fa-brands fa-whatsapp"></i> Inquire Now
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -126,9 +127,9 @@ function renderProducts(productList) {
           <button onclick="openQuickView(${prod.id})" class="w-full text-center border border-stone-200 text-stone-800 text-xs font-semibold py-2 px-3 rounded hover:bg-stone-50 transition-colors uppercase tracking-wider">
             Quick Details
           </button>
-          <a href="${waLink}" target="_blank" rel="noopener" class="w-full flex items-center justify-center gap-2 bg-[#D4AF37] text-white text-xs font-semibold py-2 px-3 rounded shadow transition-colors uppercase tracking-wider">
+          <button onclick="showWhatsAppDemo('${escapedText}')" class="w-full flex items-center justify-center gap-2 bg-[#D4AF37] text-white text-xs font-semibold py-2 px-3 rounded shadow transition-colors uppercase tracking-wider">
             <i class="fa-brands fa-whatsapp"></i> Inquire WhatsApp
-          </a>
+          </button>
         </div>
       </div>
     `;
@@ -203,10 +204,12 @@ window.openQuickView = function(productId) {
   document.getElementById("modal-craft").innerText = product.craft;
   document.getElementById("modal-desc").innerText = product.desc;
 
-  const waText = encodeURIComponent(`Hi BaBitha's, I am interested in inquiring about the "${product.name}" (${product.fabric}) saree that I saw on your website catalog. Can you please share more details and availability?`);
-  const modalWaLink = document.getElementById("modal-wa-link");
-  if (modalWaLink) {
-    modalWaLink.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${waText}`;
+  const rawText = `Hi BaBitha's, I am interested in inquiring about the "${product.name}" (${product.fabric}) saree that I saw on your website catalog. Can you please share more details and availability?`;
+  const escapedText = rawText.replace(/'/g, "\\'");
+
+  const modalWaBtn = document.getElementById("modal-wa-btn");
+  if (modalWaBtn) {
+    modalWaBtn.setAttribute("onclick", `showWhatsAppDemo('${escapedText}')`);
   }
 
   modal.classList.remove("hidden");
@@ -223,6 +226,44 @@ window.closeQuickView = function() {
   document.body.classList.remove("overflow-hidden");
   currentOpenProductId = null;
 };
+
+// WhatsApp Demo Modal Helper Functions
+window.showWhatsAppDemo = function(message) {
+  const modal = document.getElementById("whatsapp-demo-modal");
+  const msgEl = document.getElementById("whatsapp-demo-message");
+  if (!modal || !msgEl) return;
+  
+  msgEl.innerText = message;
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+  document.body.classList.add("overflow-hidden");
+};
+
+window.closeWhatsAppDemo = function() {
+  const modal = document.getElementById("whatsapp-demo-modal");
+  if (!modal) return;
+  
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+  document.body.classList.remove("overflow-hidden");
+};
+
+function setupDemoModalClose() {
+  const modal = document.getElementById("whatsapp-demo-modal");
+  if (!modal) return;
+  
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      closeWhatsAppDemo();
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !modal.classList.contains("hidden")) {
+      closeWhatsAppDemo();
+    }
+  });
+}
 
 // Handle simple scroll-based styling for sticky nav
 function setupScrollEffects() {
