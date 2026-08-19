@@ -60,61 +60,83 @@
   </div>
 
   <!-- Main Navigation Header -->
-  <header id="main-header" class="sticky top-0 z-40 w-full transition-all duration-300 bg-cream-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-      
-      <!-- Brand Logo Container -->
-      <a href="#" class="flex items-center">
-        <img src="assets/logo.jpg" alt="BaBitha's Logo" class="h-16 w-auto object-contain py-1 rounded-sm" />
-      </a>
-
-      <!-- Desktop Navigation Menu -->
-      <nav class="hidden lg:flex space-x-8 text-sm font-semibold tracking-wider uppercase">
-        <a href="#" class="hover-gold-border text-stone-900 transition-colors">Home</a>
-        <a href="catalog.html" class="hover-gold-border text-stone-900 transition-colors">Catalogue</a>
-        <a href="#story" class="hover-gold-border text-stone-900 transition-colors">Brand Story</a>
-        <a href="#collections" class="hover-gold-border text-stone-900 transition-colors">Collections</a>
-        <a href="#why-choose-us" class="hover-gold-border text-stone-900 transition-colors">Why Us</a>
-        <a href="#instagram" class="hover-gold-border text-stone-900 transition-colors">Instagram</a>
-      </nav>
-
-      <!-- Desktop Action Buttons -->
-      <div class="hidden lg:flex items-center space-x-4">
-        <a href="tel:+916238599582" class="flex items-center gap-2 border border-stone-200 text-stone-800 text-xs font-semibold uppercase tracking-wider py-2.5 px-4 rounded hover:bg-stone-50 transition-colors">
-          <i class="fa-solid fa-phone text-stone-500"></i> Call Us
+  <header id="main-header" class="sticky top-0 z-45 w-full transition-all duration-300 bg-cream-50 shadow-sm">
+    
+    <!-- Desktop Header: Two-tier layout -->
+    <div class="hidden lg:block w-full">
+      <!-- Top Tier: Call, Center Logo, Search -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between relative">
+        <!-- Call Action -->
+        <div class="flex items-center gap-2 text-stone-700 text-xs font-semibold uppercase tracking-wider">
+          <a href="tel:+916238599582" class="hover:text-gold-500 transition-colors">
+            <i class="fa-solid fa-phone text-stone-400 mr-1.5"></i> Call: +91 623 8599 582
+          </a>
+        </div>
+        
+        <!-- Centered Logo -->
+        <a href="index.html" class="flex items-center absolute left-1/2 transform -translate-x-1/2">
+          <img src="assets/logo.jpg" alt="BaBitha's Logo" class="h-16 w-auto object-contain py-1 rounded-sm" />
         </a>
-        <button onclick="showWhatsAppDemo('Hi BaBitha\'s, I am interested in inquiring about your traditional saree collection catalog.')" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold uppercase tracking-wider py-2 px-4 rounded shadow transition-colors">
-          <i class="fa-brands fa-whatsapp text-lg"></i> WhatsApp Inquiry
-        </button>
+
+        <!-- Search Input -->
+        <div class="w-64 relative">
+          <form action="catalog.html" method="GET">
+            <span class="absolute inset-y-0 right-3 flex items-center text-stone-400 pointer-events-none">
+              <i class="fa-solid fa-magnifying-glass text-xs"></i>
+            </span>
+            <input type="text" name="search" class="w-full pr-9 pl-4 py-2 rounded-full border border-stone-200 text-xs focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none bg-white" placeholder="I'm looking for...">
+          </form>
+        </div>
       </div>
 
-      <!-- Mobile Hamburger Button -->
-      <button id="mobile-menu-btn" type="button" class="lg:hidden p-2 text-stone-900 focus:outline-none" aria-label="Toggle navigation menu" aria-expanded="false">
-        <svg class="icon-open h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-        </svg>
-        <svg class="icon-close h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
+      <!-- Bottom Tier: Category Bar -->
+      <div class="border-t border-stone-200 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-12 flex items-center justify-center">
+          <nav class="flex space-x-8 text-xs font-semibold tracking-widest uppercase text-stone-800">
+            <a href="index.html" class="hover:text-gold-500 transition-colors font-bold text-gold-600">Home</a>
+            <a href="catalog.html" class="hover:text-gold-500 transition-colors">All Sarees</a>
+            <a href="catalog.html?category=silk" class="hover:text-gold-500 transition-colors">Heritage Silks</a>
+            <a href="catalog.html?category=kasavu" class="hover:text-gold-500 transition-colors">Trivandrum Kasavu</a>
+            <a href="catalog.html?category=linen" class="hover:text-gold-500 transition-colors">Linen & Cotton</a>
+            <a href="#story" class="hover:text-gold-500 transition-colors">Our Story</a>
+            <a href="admin.html" class="hover:text-gold-500 transition-colors">Admin Console</a>
+          </nav>
+        </div>
+      </div>
+    </div>
 
+    <!-- Mobile Header: Hamburger, Center Logo, Search icon -->
+    <div class="flex lg:hidden items-center justify-between h-16 px-4 bg-white border-b border-stone-200">
+      <button id="mobile-menu-btn" type="button" class="p-2 text-stone-900 focus:outline-none" aria-label="Toggle navigation menu" aria-expanded="false">
+        <i class="fa-solid fa-bars text-xl icon-open"></i>
+        <i class="fa-solid fa-xmark text-xl icon-close hidden"></i>
+      </button>
+      
+      <a href="index.html" class="flex items-center">
+        <img src="assets/logo.jpg" alt="Logo" class="h-12 w-auto object-contain">
+      </a>
+      
+      <a href="catalog.html" class="p-2 text-stone-900" aria-label="Search Catalogue">
+        <i class="fa-solid fa-magnifying-glass text-lg"></i>
+      </a>
     </div>
 
     <!-- Mobile Collapsible Menu Panel -->
-    <div id="mobile-menu" class="hidden lg:hidden border-t border-stone-100 bg-white luxury-shadow absolute top-20 left-0 w-full">
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-stone-100 bg-white luxury-shadow absolute top-16 left-0 w-full z-40">
       <div class="px-4 pt-4 pb-6 space-y-4 text-center font-semibold tracking-widest uppercase text-stone-800 text-sm">
-        <a href="#" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Home</a>
-        <a href="catalog.html" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Catalogue</a>
+        <a href="index.html" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Home</a>
+        <a href="catalog.html" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">All Catalogue</a>
+        <a href="catalog.html?category=silk" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Heritage Silks</a>
+        <a href="catalog.html?category=kasavu" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Trivandrum Kasavu</a>
+        <a href="catalog.html?category=linen" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Linen & Cotton</a>
         <a href="#story" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Brand Story</a>
-        <a href="#collections" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Collections</a>
-        <a href="#why-choose-us" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Why Us</a>
-        <a href="#instagram" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Instagram</a>
+        <a href="admin.html" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Admin Console</a>
         
         <div class="pt-4 flex flex-col sm:flex-row gap-3 justify-center">
           <a href="tel:+916238599582" class="flex items-center justify-center gap-2 border border-stone-300 text-stone-800 py-3 px-6 rounded text-xs font-bold tracking-widest uppercase hover:bg-stone-50 transition-colors">
             <i class="fa-solid fa-phone"></i> Call Store
           </a>
-          <button onclick="showWhatsAppDemo('Hi BaBitha\'s, I\'d like to start an inquiry from the mobile menu.')" class="flex items-center justify-center gap-2 bg-[#D4AF37] text-white py-3 px-6 rounded text-xs font-bold tracking-widest uppercase hover:bg-gold-600 transition-colors shadow">
+          <button onclick="showWhatsAppDemo('Hi BaBitha\'s, I\'d like to start an inquiry.')" class="flex items-center justify-center gap-2 bg-[#D4AF37] text-white py-3 px-6 rounded text-xs font-bold tracking-widest uppercase hover:bg-gold-600 transition-colors shadow">
             <i class="fa-brands fa-whatsapp text-base"></i> WhatsApp Inquiry
           </button>
         </div>
@@ -154,7 +176,7 @@
             </div>
           </div>
 
-          <!-- Hero Image Cards (Mobile Stack) -->
+          <!-- Hero Image Cards -->
           <div class="lg:col-span-6 relative">
             <div class="absolute -top-10 -right-10 w-72 h-72 rounded-full bg-gold-200/20 blur-3xl -z-10"></div>
             <div class="absolute -bottom-10 -left-10 w-72 h-72 rounded-full bg-gold-100/30 blur-3xl -z-10"></div>
@@ -186,7 +208,7 @@
       </div>
     </section>
 
-    <!-- Featured Products Section -->
+    <!-- Featured Showcase Section -->
     <section id="featured" class="py-16 md:py-24 bg-cream-50 border-b border-stone-100">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-xl mx-auto mb-12">
@@ -197,7 +219,7 @@
           <div class="w-12 h-[1px] bg-[#D4AF37] mx-auto mt-4"></div>
         </div>
 
-        <!-- Catalog Product Grid -->
+        <!-- Product Grid -->
         <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           <!-- Rendered dynamically by script.js (limited to first 4 products) -->
         </div>
@@ -422,12 +444,12 @@
 
   </main>
 
-  <!-- Foot/Contact Section -->
+  <!-- Footer Contact Section -->
   <footer id="contact" class="bg-stone-900 text-stone-400 py-12 border-t-2 border-[#D4AF37] mb-16 md:mb-0">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
         
-        <!-- Col 1: About Brand -->
+        <!-- Col 1: About -->
         <div class="space-y-4 md:col-span-2">
           <div class="bg-white p-1 rounded-sm max-w-[200px] flex items-center justify-center">
             <img src="assets/logo.jpg" alt="BaBitha's Logo Footer" class="h-10 w-auto object-contain">
@@ -442,7 +464,7 @@
           </div>
         </div>
 
-        <!-- Col 2: Quick Links -->
+        <!-- Col 2: Links -->
         <div class="space-y-3">
           <h4 class="font-serif text-sm font-semibold text-white uppercase tracking-wider">Explore</h4>
           <ul class="text-xs space-y-2 font-light">
@@ -453,7 +475,7 @@
           </ul>
         </div>
 
-        <!-- Col 3: Store Address / Info -->
+        <!-- Col 3: Info -->
         <div class="space-y-3">
           <h4 class="font-serif text-sm font-semibold text-white uppercase tracking-wider">Trivandrum Store</h4>
           <ul class="text-xs space-y-2 font-light">
@@ -466,10 +488,8 @@
 
       </div>
 
-      <!-- Footer Divider -->
       <div class="h-[1px] bg-stone-800 my-8"></div>
 
-      <!-- Copyright Bar -->
       <div class="flex flex-col sm:flex-row items-center justify-between text-[11px] font-light text-stone-500 gap-4">
         <p>© 2026 BaBitha's Clothing Brand. All Rights Reserved.</p>
         <p>Handcrafted Heritage • Trivandrum</p>
@@ -477,66 +497,28 @@
     </div>
   </footer>
 
-  <!-- Mobile Sticky Bottom Call-to-Action Bar (Sticky at bottom, hidden on larger viewports) -->
-  <div class="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-stone-200 px-4 py-2.5 flex items-center gap-3 md:hidden mobile-sticky-action">
-    <a href="tel:+916238599582" class="w-1/2 flex items-center justify-center gap-2 border border-stone-300 text-stone-800 text-xs font-bold tracking-widest uppercase py-3 rounded hover:bg-stone-50 transition-colors">
-      <i class="fa-solid fa-phone text-stone-500"></i> Direct Call
+  <!-- App-like Mobile Sticky Bottom Nav Bar -->
+  <div class="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-stone-200 flex items-center justify-around py-1.5 md:hidden shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+    <a href="index.html" class="flex flex-col items-center gap-0.5 text-gold-600 hover:text-gold-700 transition-colors text-[10px] font-medium w-16">
+      <i class="fa-solid fa-house text-base"></i>
+      <span>Home</span>
     </a>
-    <button onclick="showWhatsAppDemo('Hi BaBitha\'s, I\'m visiting your website on a mobile device and would like to inquire about your saree catalog.')" class="w-1/2 flex items-center justify-center gap-2 bg-[#D4AF37] text-white text-xs font-bold tracking-widest uppercase py-3 rounded shadow transition-all duration-300">
-      <i class="fa-brands fa-whatsapp text-base"></i> WhatsApp Us
+    <a href="catalog.html" class="flex flex-col items-center gap-0.5 text-stone-500 hover:text-gold-500 transition-colors text-[10px] font-medium w-16">
+      <i class="fa-solid fa-store text-base"></i>
+      <span>Shop</span>
+    </a>
+    <a href="tel:+916238599582" class="flex flex-col items-center gap-0.5 text-stone-500 hover:text-gold-500 transition-colors text-[10px] font-medium w-16">
+      <i class="fa-solid fa-phone text-base"></i>
+      <span>Call</span>
+    </a>
+    <button onclick="showWhatsAppDemo('Hi BaBitha\'s, I am browsing your mobile site and would like to start a WhatsApp inquiry.')" class="flex flex-col items-center gap-0.5 text-stone-500 hover:text-gold-500 transition-colors text-[10px] font-medium w-16">
+      <i class="fa-brands fa-whatsapp text-lg"></i>
+      <span>WhatsApp</span>
     </button>
-  </div>
-
-  <!-- Interactive Quick View Modal (Hidden initially) -->
-  <div id="quickview-modal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-sm items-center justify-center p-4">
-    <div class="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto luxury-shadow relative flex flex-col md:flex-row">
-      <button id="close-modal-btn" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-stone-900/10 hover:bg-stone-900/20 text-stone-800 flex items-center justify-center transition-colors">
-        <i class="fa-solid fa-xmark text-lg"></i>
-      </button>
-
-      <div class="w-full md:w-1/2 bg-stone-50 flex items-center justify-center aspect-[3/4] md:aspect-auto">
-        <img id="modal-image" src="" alt="" class="w-full h-full object-cover object-center max-h-[50vh] md:max-h-[75vh]">
-      </div>
-
-      <div class="w-full md:w-1/2 p-6 md:p-8 flex flex-col justify-between">
-        <div class="space-y-4">
-          <span id="modal-category" class="bg-gold-100 text-gold-800 text-[10px] tracking-widest uppercase font-bold px-2 py-0.5 rounded">Category</span>
-          <h2 id="modal-title" class="text-2xl md:text-3xl font-serif font-bold text-stone-900">Saree Name</h2>
-          
-          <div class="grid grid-cols-2 gap-3 pt-2">
-            <div class="bg-cream-50 p-2.5 rounded border border-stone-100">
-              <span class="text-[10px] uppercase text-stone-400 tracking-wider font-semibold">Fabric</span>
-              <p id="modal-fabric" class="text-xs font-semibold text-stone-800 mt-0.5">Saree Fabric</p>
-            </div>
-            <div class="bg-cream-50 p-2.5 rounded border border-stone-100">
-              <span class="text-[10px] uppercase text-stone-400 tracking-wider font-semibold">Weaving Art</span>
-              <p id="modal-craft" class="text-xs font-semibold text-stone-800 mt-0.5">Saree Craft</p>
-            </div>
-          </div>
-
-          <div class="h-[1px] bg-stone-100"></div>
-
-          <div>
-            <h4 class="text-xs uppercase tracking-wider font-bold text-stone-900 mb-1.5">Description</h4>
-            <p id="detail-desc" class="text-stone-600 text-xs md:text-sm leading-relaxed font-light">Product description.</p>
-          </div>
-        </div>
-
-        <div class="pt-6 space-y-3">
-          <button id="modal-wa-btn" class="w-full flex items-center justify-center gap-2 bg-[#D4AF37] hover:bg-gold-600 text-white text-xs font-bold tracking-widest uppercase py-3.5 px-4 rounded shadow transition-colors">
-            <i class="fa-brands fa-whatsapp text-base"></i> Send Inquiry on WhatsApp
-          </button>
-          <div class="flex gap-2">
-            <a href="tel:+916238599582" class="w-1/2 flex items-center justify-center gap-2 border border-stone-200 text-stone-800 text-xs font-bold tracking-widest uppercase py-3 px-4 rounded hover:bg-stone-50 transition-colors">
-              <i class="fa-solid fa-phone"></i> Call Now
-            </a>
-            <button onclick="closeQuickView()" class="w-1/2 border border-stone-200 text-stone-500 text-xs font-bold tracking-widest uppercase py-3 px-4 rounded hover:bg-stone-50 transition-colors">
-              Close Details
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <a href="admin.html" class="flex flex-col items-center gap-0.5 text-stone-500 hover:text-gold-500 transition-colors text-[10px] font-medium w-16">
+      <i class="fa-solid fa-user-gear text-base"></i>
+      <span>Admin</span>
+    </a>
   </div>
 
   <!-- Custom WhatsApp Demo Modal -->

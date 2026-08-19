@@ -60,59 +60,83 @@
   </div>
 
   <!-- Main Navigation Header -->
-  <header id="main-header" class="sticky top-0 z-40 w-full transition-all duration-300 bg-white/95 backdrop-blur-md shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-      
-      <!-- Brand Logo Container -->
-      <a href="index.html" class="flex items-center">
-        <img src="assets/logo.jpg" alt="BaBitha's Logo" class="h-16 w-auto object-contain py-1 rounded-sm" />
-      </a>
-
-      <!-- Desktop Navigation Menu -->
-      <nav class="hidden lg:flex space-x-8 text-sm font-semibold tracking-wider uppercase">
-        <a href="index.html" class="hover-gold-border text-stone-900 transition-colors">Home</a>
-        <a href="catalog.html" class="hover-gold-border text-stone-900 transition-colors font-bold text-gold-600">Catalogue</a>
-        <a href="index.html#story" class="hover-gold-border text-stone-900 transition-colors">Brand Story</a>
-        <a href="index.html#collections" class="hover-gold-border text-stone-900 transition-colors">Collections</a>
-        <a href="admin.html" class="hover-gold-border text-stone-900 transition-colors">Admin Console</a>
-      </nav>
-
-      <!-- Desktop Action Buttons -->
-      <div class="hidden lg:flex items-center space-x-4">
-        <a href="tel:+916238599582" class="flex items-center gap-2 border border-stone-200 text-stone-800 text-xs font-semibold uppercase tracking-wider py-2 px-4 rounded hover:bg-stone-50 transition-colors">
-          <i class="fa-solid fa-phone text-stone-500"></i> Call Us
+  <header id="main-header" class="sticky top-0 z-45 w-full transition-all duration-300 bg-cream-50 shadow-sm">
+    
+    <!-- Desktop Header: Two-tier layout -->
+    <div class="hidden lg:block w-full">
+      <!-- Top Tier: Call, Center Logo, Search -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between relative">
+        <!-- Call Action -->
+        <div class="flex items-center gap-2 text-stone-700 text-xs font-semibold uppercase tracking-wider">
+          <a href="tel:+916238599582" class="hover:text-gold-500 transition-colors">
+            <i class="fa-solid fa-phone text-stone-400 mr-1.5"></i> Call: +91 623 8599 582
+          </a>
+        </div>
+        
+        <!-- Centered Logo -->
+        <a href="index.html" class="flex items-center absolute left-1/2 transform -translate-x-1/2">
+          <img src="assets/logo.jpg" alt="BaBitha's Logo" class="h-16 w-auto object-contain py-1 rounded-sm" />
         </a>
-        <button id="header-wa-btn" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold uppercase tracking-wider py-2 px-4 rounded shadow transition-colors">
-          <i class="fa-brands fa-whatsapp text-lg"></i> WhatsApp Inquiry
-        </button>
+
+        <!-- Search Input -->
+        <div class="w-64 relative">
+          <form action="catalog.html" method="GET">
+            <span class="absolute inset-y-0 right-3 flex items-center text-stone-400 pointer-events-none">
+              <i class="fa-solid fa-magnifying-glass text-xs"></i>
+            </span>
+            <input type="text" name="search" class="w-full pr-9 pl-4 py-2 rounded-full border border-stone-200 text-xs focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none bg-white" placeholder="I'm looking for...">
+          </form>
+        </div>
       </div>
 
-      <!-- Mobile Hamburger Button -->
-      <button id="mobile-menu-btn" type="button" class="lg:hidden p-2 text-stone-900 focus:outline-none" aria-label="Toggle navigation menu" aria-expanded="false">
-        <svg class="icon-open h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-        </svg>
-        <svg class="icon-close h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
+      <!-- Bottom Tier: Category Bar -->
+      <div class="border-t border-stone-200 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-12 flex items-center justify-center">
+          <nav class="flex space-x-8 text-xs font-semibold tracking-widest uppercase text-stone-800">
+            <a href="index.html" class="hover:text-gold-500 transition-colors">Home</a>
+            <a href="catalog.html" class="hover:text-gold-500 transition-colors font-bold text-gold-600">All Sarees</a>
+            <a href="catalog.html?category=silk" class="hover:text-gold-500 transition-colors">Heritage Silks</a>
+            <a href="catalog.html?category=kasavu" class="hover:text-gold-500 transition-colors">Trivandrum Kasavu</a>
+            <a href="catalog.html?category=linen" class="hover:text-gold-500 transition-colors">Linen & Cotton</a>
+            <a href="index.html#story" class="hover:text-gold-500 transition-colors">Our Story</a>
+            <a href="admin.html" class="hover:text-gold-500 transition-colors">Admin Console</a>
+          </nav>
+        </div>
+      </div>
+    </div>
 
+    <!-- Mobile Header: Hamburger, Center Logo, Search icon -->
+    <div class="flex lg:hidden items-center justify-between h-16 px-4 bg-white border-b border-stone-200">
+      <button id="mobile-menu-btn" type="button" class="p-2 text-stone-900 focus:outline-none" aria-label="Toggle navigation menu" aria-expanded="false">
+        <i class="fa-solid fa-bars text-xl icon-open"></i>
+        <i class="fa-solid fa-xmark text-xl icon-close hidden"></i>
+      </button>
+      
+      <a href="index.html" class="flex items-center">
+        <img src="assets/logo.jpg" alt="Logo" class="h-12 w-auto object-contain">
+      </a>
+      
+      <a href="catalog.html" class="p-2 text-stone-900" aria-label="Search Catalogue">
+        <i class="fa-solid fa-magnifying-glass text-lg"></i>
+      </a>
     </div>
 
     <!-- Mobile Collapsible Menu Panel -->
-    <div id="mobile-menu" class="hidden lg:hidden border-t border-stone-100 bg-white luxury-shadow absolute top-20 left-0 w-full">
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-stone-100 bg-white luxury-shadow absolute top-16 left-0 w-full z-45">
       <div class="px-4 pt-4 pb-6 space-y-4 text-center font-semibold tracking-widest uppercase text-stone-800 text-sm">
         <a href="index.html" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Home</a>
-        <a href="catalog.html" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors font-bold text-gold-600">Catalogue</a>
+        <a href="catalog.html" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">All Catalogue</a>
+        <a href="catalog.html?category=silk" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Heritage Silks</a>
+        <a href="catalog.html?category=kasavu" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Trivandrum Kasavu</a>
+        <a href="catalog.html?category=linen" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Linen & Cotton</a>
         <a href="index.html#story" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Brand Story</a>
-        <a href="index.html#collections" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Collections</a>
         <a href="admin.html" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Admin Console</a>
         
         <div class="pt-4 flex flex-col sm:flex-row gap-3 justify-center">
           <a href="tel:+916238599582" class="flex items-center justify-center gap-2 border border-stone-300 text-stone-800 py-3 px-6 rounded text-xs font-bold tracking-widest uppercase hover:bg-stone-50 transition-colors">
             <i class="fa-solid fa-phone"></i> Call Store
           </a>
-          <button id="mobile-menu-wa-btn" class="flex items-center justify-center gap-2 bg-[#D4AF37] text-white py-3 px-6 rounded text-xs font-bold tracking-widest uppercase hover:bg-gold-600 transition-colors shadow">
+          <button onclick="showWhatsAppDemo('Hi BaBitha\'s, I\'d like to start an inquiry.')" class="flex items-center justify-center gap-2 bg-[#D4AF37] text-white py-3 px-6 rounded text-xs font-bold tracking-widest uppercase hover:bg-gold-600 transition-colors shadow">
             <i class="fa-brands fa-whatsapp text-base"></i> WhatsApp Inquiry
           </button>
         </div>
@@ -205,7 +229,7 @@
           <ul class="text-xs space-y-2 font-light">
             <li><span class="text-white">Location:</span> Trivandrum, Kerala, India</li>
             <li><span class="text-white">Call:</span> +91 623 85 99 582</li>
-            <li><span class="text-white">WhatsApp:</span> +91 623 85 99 582</li>
+            <li><span class="text-white flex items-center gap-1">WhatsApp: <button onclick="showWhatsAppDemo('Hi BaBitha\'s, I\'d like to start an inquiry.')" class="text-stone-400 hover:text-gold-500 underline font-light">+91 623 85 99 582</button></span></li>
             <li><span class="text-white">Insta:</span> @BABITHAGB07</li>
           </ul>
         </div>
@@ -223,14 +247,28 @@
     </div>
   </footer>
 
-  <!-- Mobile Sticky Bottom Call-to-Action Bar -->
-  <div class="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-stone-200 px-4 py-2.5 flex items-center gap-3 md:hidden mobile-sticky-action">
-    <a href="tel:+916238599582" class="w-1/2 flex items-center justify-center gap-2 border border-stone-300 text-stone-800 text-xs font-bold tracking-widest uppercase py-3 rounded hover:bg-stone-50 transition-colors">
-      <i class="fa-solid fa-phone text-stone-500"></i> Direct Call
+  <!-- App-like Mobile Sticky Bottom Nav Bar -->
+  <div class="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-stone-200 flex items-center justify-around py-1.5 md:hidden shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+    <a href="index.html" class="flex flex-col items-center gap-0.5 text-stone-500 hover:text-gold-500 transition-colors text-[10px] font-medium w-16">
+      <i class="fa-solid fa-house text-base"></i>
+      <span>Home</span>
     </a>
-    <button id="mobile-sticky-wa-btn" class="w-1/2 flex items-center justify-center gap-2 bg-[#D4AF37] text-white text-xs font-bold tracking-widest uppercase py-3 rounded shadow transition-all duration-300">
-      <i class="fa-brands fa-whatsapp text-base"></i> WhatsApp Us
+    <a href="catalog.html" class="flex flex-col items-center gap-0.5 text-gold-600 hover:text-gold-700 transition-colors text-[10px] font-medium w-16">
+      <i class="fa-solid fa-store text-base"></i>
+      <span>Shop</span>
+    </a>
+    <a href="tel:+916238599582" class="flex flex-col items-center gap-0.5 text-stone-500 hover:text-gold-500 transition-colors text-[10px] font-medium w-16">
+      <i class="fa-solid fa-phone text-base"></i>
+      <span>Call</span>
+    </a>
+    <button onclick="showWhatsAppDemo('Hi BaBitha\'s, I am browsing your mobile site and would like to start a WhatsApp inquiry.')" class="flex flex-col items-center gap-0.5 text-stone-500 hover:text-gold-500 transition-colors text-[10px] font-medium w-16">
+      <i class="fa-brands fa-whatsapp text-lg"></i>
+      <span>WhatsApp</span>
     </button>
+    <a href="admin.html" class="flex flex-col items-center gap-0.5 text-stone-500 hover:text-gold-500 transition-colors text-[10px] font-medium w-16">
+      <i class="fa-solid fa-user-gear text-base"></i>
+      <span>Admin</span>
+    </a>
   </div>
 
   <!-- Custom WhatsApp Demo Modal -->
@@ -319,6 +357,7 @@
       setupSearch();
       setupDemoModalClose();
       setupHeaderActions();
+      setupMobileMenu();
     });
 
     function getProducts() {
@@ -330,10 +369,16 @@
       }
     }
 
-    // Read ?category= URL Parameter on load
+    // Read URL Parameters on load
     function initializeCategoryFromURL() {
       const urlParams = new URLSearchParams(window.location.search);
       const catParam = urlParams.get("category");
+      const searchParam = urlParams.get("search");
+      
+      if (searchParam) {
+        searchQuery = searchParam;
+        document.getElementById("search-input").value = searchParam;
+      }
       
       if (catParam && ["silk", "kasavu", "linen"].includes(catParam)) {
         activeCategory = catParam;
@@ -474,6 +519,22 @@
       document.getElementById("mobile-menu-wa-btn").onclick = clickHandler;
       document.getElementById("mobile-sticky-wa-btn").onclick = clickHandler;
       document.getElementById("footer-wa-btn").onclick = clickHandler;
+    }
+
+    // Mobile menu controls
+    function setupMobileMenu() {
+      const btn = document.getElementById("mobile-menu-btn");
+      const menu = document.getElementById("mobile-menu");
+      
+      if (!btn || !menu) return;
+      
+      btn.addEventListener("click", () => {
+        const isHidden = menu.classList.contains("hidden");
+        menu.classList.toggle("hidden");
+        
+        btn.querySelector(".icon-open").classList.toggle("hidden", !isHidden);
+        btn.querySelector(".icon-close").classList.toggle("hidden", isHidden);
+      });
     }
 
     // Modal Control
