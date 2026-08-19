@@ -126,7 +126,7 @@
       <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800 flex items-start gap-2.5">
         <i class="fa-solid fa-circle-info text-base text-amber-500 mt-0.5"></i>
         <div>
-          <strong>Storage Info:</strong> Storing products in local browser memory (`localStorage`). Image files are automatically resized to fit. Try uploading your own dress photos to see it work!
+          <strong>Storage Info:</strong> Storing products locally. You can upload **multiple photos** (up to 3) for each dress. The image compressor automatically processes them to save storage.
         </div>
       </div>
 
@@ -141,6 +141,7 @@
                 <th scope="col" class="px-6 py-4">Category</th>
                 <th scope="col" class="px-6 py-4">Fabric</th>
                 <th scope="col" class="px-6 py-4">Weaving Art / Craft</th>
+                <th scope="col" class="px-6 py-4">Price</th>
                 <th scope="col" class="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
@@ -185,17 +186,25 @@
             </select>
           </div>
 
+          <!-- Price -->
+          <div>
+            <label for="form-price" class="block uppercase tracking-wider text-stone-500 mb-2">Price (₹, Optional)</label>
+            <input type="number" id="form-price" class="w-full px-4 py-2.5 rounded border border-stone-200 text-sm focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="e.g. 12500 (leave empty for Ask)">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
           <!-- Fabric -->
           <div>
             <label for="form-fabric" class="block uppercase tracking-wider text-stone-500 mb-2">Fabric Type</label>
             <input type="text" id="form-fabric" required class="w-full px-4 py-2.5 rounded border border-stone-200 text-sm focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="e.g. Pure Kanchipuram Silk">
           </div>
-        </div>
 
-        <!-- Craft -->
-        <div>
-          <label for="form-craft" class="block uppercase tracking-wider text-stone-500 mb-2">Weave Craft / Details</label>
-          <input type="text" id="form-craft" required class="w-full px-4 py-2.5 rounded border border-stone-200 text-sm focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="e.g. Handcrafted Zari Brocade">
+          <!-- Craft -->
+          <div>
+            <label for="form-craft" class="block uppercase tracking-wider text-stone-500 mb-2">Weave Craft / Style</label>
+            <input type="text" id="form-craft" required class="w-full px-4 py-2.5 rounded border border-stone-200 text-sm focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="e.g. Handcrafted Zari Brocade">
+          </div>
         </div>
 
         <!-- Description -->
@@ -204,24 +213,26 @@
           <textarea id="form-desc" required rows="3" class="w-full px-4 py-2.5 rounded border border-stone-200 text-sm focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="Provide product details..."></textarea>
         </div>
 
-        <!-- Image Selector -->
+        <!-- Image Selector (Multiple files) -->
         <div>
-          <label class="block uppercase tracking-wider text-stone-500 mb-2">Product Image File</label>
+          <label class="block uppercase tracking-wider text-stone-500 mb-2">Upload Product Images (Up to 3)</label>
           <div class="border-2 border-dashed border-stone-200 rounded-lg p-4 text-center cursor-pointer hover:bg-stone-50 transition-colors relative">
-            <input type="file" id="form-image-file" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="previewUploadedFile(this)">
+            <input type="file" id="form-image-file" accept="image/*" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="previewUploadedFiles(this)">
             
             <div id="image-upload-preview-container" class="hidden space-y-2">
-              <img id="image-upload-preview" src="" alt="Preview" class="h-28 mx-auto object-cover rounded shadow border border-stone-100">
-              <p class="text-[10px] text-stone-400 font-normal">Click or drag another image to change</p>
+              <div id="thumbnails-preview-grid" class="flex items-center justify-center gap-2 flex-wrap">
+                <!-- Dynamic preview grids loaded here -->
+              </div>
+              <p class="text-[10px] text-stone-400 font-normal">Click or drag files to replace all images</p>
             </div>
             
             <div id="image-upload-empty-state" class="space-y-2 py-4">
               <i class="fa-solid fa-cloud-arrow-up text-2xl text-stone-400"></i>
-              <p class="text-xs text-stone-500 font-semibold">Click to select Saree/Dress photo</p>
-              <p class="text-[10px] text-stone-400 font-normal">Accepts PNG, JPG, JPEG (will be optimized to fit)</p>
+              <p class="text-xs text-stone-500 font-semibold">Select 1 to 3 saree/dress photos</p>
+              <p class="text-[10px] text-stone-400 font-normal">Accepts PNG, JPG, JPEG (first image will be primary)</p>
             </div>
           </div>
-          <input type="hidden" id="form-image-base64">
+          <input type="hidden" id="form-images-json">
         </div>
 
         <!-- Form Submit Actions -->
@@ -251,7 +262,9 @@
         category: "silk",
         fabric: "Pure Kanchipuram Silk",
         craft: "Handcrafted Zari Brocade",
+        price: 12500,
         image: "assets/saree_1.jpg",
+        images: ["assets/saree_1.jpg", "assets/saree_2.jpg"],
         desc: "A majestic magenta silk saree decorated with ornate gold zari brocade, featuring a grand floral border and traditional rich pallu. Ideal for weddings and royal celebrations."
       },
       {
@@ -260,7 +273,9 @@
         category: "kasavu",
         fabric: "Premium Kerala Cotton",
         craft: "Trivandrum Gold Handloom",
+        price: 4999,
         image: "assets/saree_2.jpg",
+        images: ["assets/saree_2.jpg", "assets/saree_1.jpg"],
         desc: "The timeless Kerala Kasavu saree, handwoven with fine off-white cotton and a signature rich gold zari border. It represents pure simplicity and cultural heritage."
       },
       {
@@ -269,7 +284,9 @@
         category: "silk",
         fabric: "Katan Silk",
         craft: "Banarasi Cutwork Weave",
+        price: 15999,
         image: "assets/saree_1.jpg",
+        images: ["assets/saree_1.jpg", "assets/saree_2.jpg"],
         desc: "A radiant crimson saree crafted with pure Banarasi silk, displaying heritage gold motifs and an elaborate traditional border that radiates confidence."
       },
       {
@@ -278,7 +295,9 @@
         category: "linen",
         fabric: "100-Count Linen",
         craft: "Modern Border Weaving",
+        price: 3499,
         image: "assets/saree_2.jpg",
+        images: ["assets/saree_2.jpg", "assets/saree_1.jpg"],
         desc: "A breathable, eco-friendly linen saree in pastel sage green, trimmed with subtle silver-gold zari borders, offering both comfort and modern minimalist elegance."
       }
     ];
@@ -303,7 +322,7 @@
         localStorage.setItem("babithas_products", JSON.stringify(productList));
         renderCatalog();
       } catch (e) {
-        alert("Failed to save changes. The image upload might be too large. Try uploading a smaller size image.");
+        alert("Failed to save changes. Image uploads might exceed the browser's 5MB local quota. Try compressing images further or uploading fewer files.");
         console.error("Storage save failed", e);
       }
     }
@@ -360,7 +379,7 @@
       if (productList.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="6" class="px-6 py-12 text-center text-stone-500 font-light">
+            <td colspan="7" class="px-6 py-12 text-center text-stone-500 font-light">
               <i class="fa-solid fa-box-open text-2xl mb-2 text-stone-300 block"></i>
               No products inside the catalog database. Click "Add Product" above to create one.
             </td>
@@ -370,6 +389,7 @@
       }
 
       productList.forEach(prod => {
+        const priceText = prod.price ? `₹${Number(prod.price).toLocaleString()}` : "On Ask";
         const row = document.createElement("tr");
         row.className = "hover:bg-stone-50/50 transition-colors";
         
@@ -385,6 +405,7 @@
           </td>
           <td class="px-6 py-4 whitespace-nowrap text-stone-600 font-medium">${prod.fabric}</td>
           <td class="px-6 py-4 whitespace-nowrap text-stone-500 font-light">${prod.craft}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-stone-900 font-bold">${priceText}</td>
           <td class="px-6 py-4 whitespace-nowrap text-right text-xs font-semibold space-x-2">
             <button onclick="openFormModal(${prod.id})" class="text-gold-700 hover:text-gold-900 font-bold">Edit</button>
             <span class="text-stone-300">|</span>
@@ -406,7 +427,8 @@
       // Reset image preview state
       document.getElementById("image-upload-preview-container").classList.add("hidden");
       document.getElementById("image-upload-empty-state").classList.remove("hidden");
-      document.getElementById("form-image-base64").value = "";
+      document.getElementById("form-images-json").value = "";
+      document.getElementById("thumbnails-preview-grid").innerHTML = "";
 
       if (productId) {
         title.innerText = "Edit Saree Details";
@@ -418,10 +440,21 @@
           document.getElementById("form-fabric").value = prod.fabric;
           document.getElementById("form-craft").value = prod.craft;
           document.getElementById("form-desc").value = prod.desc;
+          document.getElementById("form-price").value = prod.price || "";
           
-          // Image Preview setting
-          document.getElementById("form-image-base64").value = prod.image;
-          document.getElementById("image-upload-preview").src = prod.image;
+          // Image array handling
+          const images = prod.images || [prod.image];
+          document.getElementById("form-images-json").value = JSON.stringify(images);
+          
+          const grid = document.getElementById("thumbnails-preview-grid");
+          grid.innerHTML = "";
+          images.forEach(imgSrc => {
+            const imgEl = document.createElement("img");
+            imgEl.className = "h-20 w-16 object-cover rounded shadow border border-stone-200";
+            imgEl.src = imgSrc;
+            grid.appendChild(imgEl);
+          });
+          
           document.getElementById("image-upload-preview-container").classList.remove("hidden");
           document.getElementById("image-upload-empty-state").classList.add("hidden");
         }
@@ -440,58 +473,82 @@
       modal.classList.remove("flex");
     }
 
-    // Client-side image upload & Canvas Compressor
-    function previewUploadedFile(input) {
-      const file = input.files[0];
-      if (!file) return;
+    // Client-side sequential image uploads & Canvas Compressor
+    async function previewUploadedFiles(input) {
+      const files = Array.from(input.files).slice(0, 3); // Limit to 3 files
+      if (files.length === 0) return;
 
-      // Ensure it is an image
-      if (!file.type.match("image.*")) {
-        alert("Please select a valid image file.");
-        return;
+      const compressedImagesList = [];
+      const grid = document.getElementById("thumbnails-preview-grid");
+      grid.innerHTML = "";
+
+      for (let file of files) {
+        if (!file.type.match("image.*")) continue;
+        
+        try {
+          const base64 = await compressFileAsync(file);
+          compressedImagesList.push(base64);
+          
+          // Render preview thumbnail
+          const imgEl = document.createElement("img");
+          imgEl.className = "h-20 w-16 object-cover rounded shadow border border-stone-200 animate-scale-up";
+          imgEl.src = base64;
+          grid.appendChild(imgEl);
+        } catch (err) {
+          console.error("Compression failed for a file", err);
+        }
       }
 
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        const img = new Image();
-        img.src = event.target.result;
-        img.onload = function() {
-          const canvas = document.createElement("canvas");
-          let width = img.width;
-          let height = img.height;
-          
-          // Downscale parameters: limit width and height to 600px
-          const MAX_WIDTH = 600;
-          const MAX_HEIGHT = 600;
-          
-          if (width > height) {
-            if (width > MAX_WIDTH) {
-              height *= MAX_WIDTH / width;
-              width = MAX_WIDTH;
+      if (compressedImagesList.length > 0) {
+        document.getElementById("form-images-json").value = JSON.stringify(compressedImagesList);
+        document.getElementById("image-upload-preview-container").classList.remove("hidden");
+        document.getElementById("image-upload-empty-state").classList.add("hidden");
+      }
+    }
+
+    // Promise wrapper for canvas compression
+    function compressFileAsync(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = function() {
+            const canvas = document.createElement("canvas");
+            let width = img.width;
+            let height = img.height;
+            
+            // Limit to max 600px width/height
+            const MAX_WIDTH = 600;
+            const MAX_HEIGHT = 600;
+            
+            if (width > height) {
+              if (width > MAX_WIDTH) {
+                height *= MAX_WIDTH / width;
+                width = MAX_WIDTH;
+              }
+            } else {
+              if (height > MAX_HEIGHT) {
+                width *= MAX_HEIGHT / height;
+                height = MAX_HEIGHT;
+              }
             }
-          } else {
-            if (height > MAX_HEIGHT) {
-              width *= MAX_HEIGHT / height;
-              height = MAX_HEIGHT;
-            }
-          }
-          
-          canvas.width = width;
-          canvas.height = height;
-          
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0, width, height);
-          
-          // Compress quality: 0.7 JPEG representation (~30-40KB)
-          const base64Data = canvas.toDataURL("image/jpeg", 0.7);
-          
-          document.getElementById("form-image-base64").value = base64Data;
-          document.getElementById("image-upload-preview").src = base64Data;
-          document.getElementById("image-upload-preview-container").classList.remove("hidden");
-          document.getElementById("image-upload-empty-state").classList.add("hidden");
+            
+            canvas.width = width;
+            canvas.height = height;
+            
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            // Output compressed low-quality JPEG
+            const base64Data = canvas.toDataURL("image/jpeg", 0.75);
+            resolve(base64Data);
+          };
+          img.onerror = reject;
         };
-      };
-      reader.readAsDataURL(file);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
     }
 
     // Form CRUD Actions on Submit
@@ -504,12 +561,24 @@
       const fabric = document.getElementById("form-fabric").value.trim();
       const craft = document.getElementById("form-craft").value.trim();
       const desc = document.getElementById("form-desc").value.trim();
-      let image = document.getElementById("form-image-base64").value;
-
-      // Fallback: If no image is provided, use saree_1.jpg default template
-      if (!image) {
-        image = "assets/saree_1.jpg";
+      
+      const priceVal = document.getElementById("form-price").value;
+      const price = priceVal ? parseFloat(priceVal) : null;
+      
+      const imagesJson = document.getElementById("form-images-json").value;
+      let images = [];
+      try {
+        images = imagesJson ? JSON.parse(imagesJson) : [];
+      } catch(e) {
+        images = [];
       }
+
+      // Fallback: If no image is provided, use default
+      if (images.length === 0) {
+        images = ["assets/saree_1.jpg"];
+      }
+
+      const primaryImage = images[0];
 
       let productList = getProducts();
 
@@ -518,7 +587,7 @@
         const idInt = parseInt(productId);
         productList = productList.map(p => {
           if (p.id === idInt) {
-            return { ...p, name, category, fabric, craft, desc, image };
+            return { ...p, name, category, fabric, craft, desc, price, image: primaryImage, images };
           }
           return p;
         });
@@ -532,7 +601,9 @@
           fabric,
           craft,
           desc,
-          image
+          price,
+          image: primaryImage,
+          images
         };
         productList.push(newProduct);
       }

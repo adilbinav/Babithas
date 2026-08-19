@@ -1,4 +1,4 @@
-// Default product catalog (fallback database initialization)
+// Default product catalog (with pricing and multiple mock images)
 const DEFAULT_PRODUCTS = [
   {
     id: 1,
@@ -6,7 +6,9 @@ const DEFAULT_PRODUCTS = [
     category: "silk",
     fabric: "Pure Kanchipuram Silk",
     craft: "Handcrafted Zari Brocade",
+    price: 12500,
     image: "assets/saree_1.jpg",
+    images: ["assets/saree_1.jpg", "assets/saree_2.jpg"],
     desc: "A majestic magenta silk saree decorated with ornate gold zari brocade, featuring a grand floral border and traditional rich pallu. Ideal for weddings and royal celebrations."
   },
   {
@@ -15,7 +17,9 @@ const DEFAULT_PRODUCTS = [
     category: "kasavu",
     fabric: "Premium Kerala Cotton",
     craft: "Trivandrum Gold Handloom",
+    price: 4999,
     image: "assets/saree_2.jpg",
+    images: ["assets/saree_2.jpg", "assets/saree_1.jpg"],
     desc: "The timeless Kerala Kasavu saree, handwoven with fine off-white cotton and a signature rich gold zari border. It represents pure simplicity and cultural heritage."
   },
   {
@@ -24,7 +28,9 @@ const DEFAULT_PRODUCTS = [
     category: "silk",
     fabric: "Katan Silk",
     craft: "Banarasi Cutwork Weave",
+    price: 15999,
     image: "assets/saree_1.jpg",
+    images: ["assets/saree_1.jpg", "assets/saree_2.jpg"],
     desc: "A radiant crimson saree crafted with pure Banarasi silk, displaying heritage gold motifs and an elaborate traditional border that radiates confidence."
   },
   {
@@ -33,7 +39,9 @@ const DEFAULT_PRODUCTS = [
     category: "linen",
     fabric: "100-Count Linen",
     craft: "Modern Border Weaving",
+    price: 3499,
     image: "assets/saree_2.jpg",
+    images: ["assets/saree_2.jpg", "assets/saree_1.jpg"],
     desc: "A breathable, eco-friendly linen saree in pastel sage green, trimmed with subtle silver-gold zari borders, offering both comfort and modern minimalist elegance."
   }
 ];
@@ -48,7 +56,20 @@ function getProducts() {
       localStorage.setItem("babithas_products", JSON.stringify(DEFAULT_PRODUCTS));
       return DEFAULT_PRODUCTS;
     }
-    return JSON.parse(stored);
+    // Backward compatibility check (make sure images array exists)
+    const list = JSON.parse(stored);
+    let updated = false;
+    const migration = list.map(p => {
+      if (!p.images || !Array.isArray(p.images)) {
+        p.images = [p.image || "assets/saree_1.jpg"];
+        updated = true;
+      }
+      return p;
+    });
+    if (updated) {
+      localStorage.setItem("babithas_products", JSON.stringify(migration));
+    }
+    return migration;
   } catch (e) {
     console.error("Failed to read localStorage", e);
     return DEFAULT_PRODUCTS;
@@ -60,7 +81,6 @@ document.addEventListener("DOMContentLoaded", () => {
   renderProducts(getProducts());
   setupFilters();
   setupMobileMenu();
-  setupQuickViewModal();
   setupScrollEffects();
   setupDemoModalClose();
 });
@@ -118,8 +138,8 @@ function renderProducts(productList) {
   }
 
   productList.forEach(prod => {
-    // Generate WhatsApp text for demo modal
-    const rawText = `Hi BaBitha's, I am interested in inquiring about the "${prod.name}" (${prod.fabric}) saree that I saw on your website catalog. Can you please share more details and availability?`;
+    const priceText = prod.price ? `₹${Number(prod.price).toLocaleString()}` : "Price on Ask";
+    const rawText = `Hi BaBitha's, I am interested in inquiring about the "${prod.name}" (${prod.fabric}) priced at ${priceText} that I saw on your website catalog. Can you please share more details?`;
     const escapedText = rawText.replace(/'/g, "\\'");
 
     const card = document.createElement("div");
@@ -132,26 +152,35 @@ function renderProducts(productList) {
         <span class="absolute top-3 left-3 bg-stone-900/95 text-white text-[9px] tracking-widest uppercase font-semibold px-2 py-0.5 rounded bg-clip-padding backdrop-filter backdrop-blur-sm border border-stone-700/20">
           ${prod.category}
         </span>
+        <!-- Optional Price Tag Overlay -->
+        <span class="absolute bottom-3 right-3 bg-white/90 text-stone-900 text-xs font-bold px-2 py-1 rounded shadow-sm bg-clip-padding backdrop-filter backdrop-blur-sm">
+          ${priceText}
+        </span>
         <div class="hidden md:flex absolute inset-0 bg-stone-950/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-end justify-center p-4">
           <div class="w-full space-y-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-            <button onclick="openQuickView(${prod.id})" class="w-full bg-white text-stone-900 text-xs font-semibold py-2 px-4 rounded shadow hover:bg-stone-50 transition-colors uppercase tracking-wider">
-              Quick View
-            </button>
-            <button onclick="showWhatsAppDemo('${escapedText}')" class="w-full flex items-center justify-center gap-2 bg-[#D4AF37] hover:bg-[#AA771C] text-white text-xs font-semibold py-2 px-4 rounded shadow transition-colors uppercase tracking-wider">
+            <a href="product.html?id=${prod.id}" class="w-full inline-block text-center bg-white text-stone-900 text-xs font-semibold py-2.5 px-4 rounded shadow hover:bg-stone-50 transition-colors uppercase tracking-wider">
+              View Details
+            </a>
+            <button onclick="showWhatsAppDemo('${escapedText}')" class="w-full flex items-center justify-center gap-2 bg-[#D4AF37] hover:bg-[#AA771C] text-white text-xs font-semibold py-2.5 px-4 rounded shadow transition-colors uppercase tracking-wider">
               <i class="fa-brands fa-whatsapp"></i> Inquire Now
             </button>
           </div>
         </div>
       </div>
       <div class="p-4 flex flex-col flex-grow">
-        <p class="text-[10px] uppercase tracking-wider text-[#AA771C] font-semibold mb-1">${prod.fabric}</p>
-        <h3 class="font-serif text-base font-semibold text-stone-900 group-hover:text-[#AA771C] transition-colors mb-2 line-clamp-1">${prod.name}</h3>
+        <div class="flex items-center justify-between gap-2 mb-1">
+          <p class="text-[10px] uppercase tracking-wider text-[#AA771C] font-semibold">${prod.fabric}</p>
+          <span class="text-stone-900 font-bold text-xs">${priceText}</span>
+        </div>
+        <a href="product.html?id=${prod.id}" class="block group-hover:text-[#AA771C]">
+          <h3 class="font-serif text-base font-semibold text-stone-900 group-hover:text-[#AA771C] transition-colors mb-2 line-clamp-1">${prod.name}</h3>
+        </a>
         <p class="text-stone-500 text-xs line-clamp-2 mb-4 flex-grow">${prod.desc}</p>
         
         <div class="mt-auto space-y-2 md:hidden">
-          <button onclick="openQuickView(${prod.id})" class="w-full text-center border border-stone-200 text-stone-800 text-xs font-semibold py-2 px-3 rounded hover:bg-stone-50 transition-colors uppercase tracking-wider">
-            Quick Details
-          </button>
+          <a href="product.html?id=${prod.id}" class="w-full block text-center border border-stone-200 text-stone-800 text-xs font-semibold py-2 px-3 rounded hover:bg-stone-50 transition-colors uppercase tracking-wider">
+            View Details
+          </a>
           <button onclick="showWhatsAppDemo('${escapedText}')" class="w-full flex items-center justify-center gap-2 bg-[#D4AF37] text-white text-xs font-semibold py-2 px-3 rounded shadow transition-colors uppercase tracking-wider">
             <i class="fa-brands fa-whatsapp"></i> Inquire WhatsApp
           </button>
@@ -187,70 +216,6 @@ function setupFilters() {
     });
   });
 }
-
-// Quick View Modal Controls
-let currentOpenProductId = null;
-
-function setupQuickViewModal() {
-  const modal = document.getElementById("quickview-modal");
-  const closeBtn = document.getElementById("close-modal-btn");
-  
-  if (!modal || !closeBtn) return;
-
-  closeBtn.addEventListener("click", () => {
-    closeQuickView();
-  });
-
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) {
-      closeQuickView();
-    }
-  });
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !modal.classList.contains("hidden")) {
-      closeQuickView();
-    }
-  });
-}
-
-window.openQuickView = function(productId) {
-  const modal = document.getElementById("quickview-modal");
-  const product = getProducts().find(p => p.id === productId);
-
-  if (!modal || !product) return;
-  currentOpenProductId = productId;
-
-  document.getElementById("modal-image").src = product.image;
-  document.getElementById("modal-image").alt = product.name;
-  document.getElementById("modal-title").innerText = product.name;
-  document.getElementById("modal-category").innerText = product.category;
-  document.getElementById("modal-fabric").innerText = product.fabric;
-  document.getElementById("modal-craft").innerText = product.craft;
-  document.getElementById("modal-desc").innerText = product.desc;
-
-  const rawText = `Hi BaBitha's, I am interested in inquiring about the "${product.name}" (${product.fabric}) saree that I saw on your website catalog. Can you please share more details and availability?`;
-  const escapedText = rawText.replace(/'/g, "\\'");
-
-  const modalWaBtn = document.getElementById("modal-wa-btn");
-  if (modalWaBtn) {
-    modalWaBtn.setAttribute("onclick", `showWhatsAppDemo('${escapedText}')`);
-  }
-
-  modal.classList.remove("hidden");
-  modal.classList.add("flex");
-  document.body.classList.add("overflow-hidden");
-};
-
-window.closeQuickView = function() {
-  const modal = document.getElementById("quickview-modal");
-  if (!modal) return;
-
-  modal.classList.add("hidden");
-  modal.classList.remove("flex");
-  document.body.classList.remove("overflow-hidden");
-  currentOpenProductId = null;
-};
 
 // WhatsApp Demo Modal Helper Functions
 window.showWhatsAppDemo = function(message) {
