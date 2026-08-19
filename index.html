@@ -80,10 +80,10 @@
 
       <!-- Desktop Action Buttons -->
       <div class="hidden lg:flex items-center space-x-4">
-        <a href="tel:+916238599582" class="flex items-center gap-2 border border-stone-200 text-stone-800 text-xs font-semibold uppercase tracking-wider py-2 px-4 rounded hover:bg-stone-50 transition-colors">
+        <a href="tel:+916238599582" class="flex items-center gap-2 border border-stone-200 text-stone-800 text-xs font-semibold uppercase tracking-wider py-2.5 px-4 rounded hover:bg-stone-50 transition-colors">
           <i class="fa-solid fa-phone text-stone-500"></i> Call Us
         </a>
-        <button onclick="showWhatsAppDemo('Hi BaBitha\'s, I am interested in inquiring about your traditional saree collection catalog.')" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold uppercase tracking-wider py-2.5 px-4 rounded shadow transition-colors">
+        <button onclick="showWhatsAppDemo('Hi BaBitha\'s, I am interested in inquiring about your traditional saree collection catalog.')" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold uppercase tracking-wider py-2 px-4 rounded shadow transition-colors">
           <i class="fa-brands fa-whatsapp text-lg"></i> WhatsApp Inquiry
         </button>
       </div>
@@ -192,14 +192,21 @@
         <div class="text-center max-w-xl mx-auto mb-12">
           <h2 class="text-3xl font-serif font-bold text-stone-900">Featured Showcase</h2>
           <p class="text-stone-500 text-sm mt-2">
-            Click details to inspect fabrics, or contact us directly on WhatsApp to inquire.
+            Explore our select heritage handlooms. Click to view fabric details or to inquire directly.
           </p>
           <div class="w-12 h-[1px] bg-[#D4AF37] mx-auto mt-4"></div>
         </div>
 
         <!-- Catalog Product Grid -->
         <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-          <!-- Rendered dynamically by script.js (exactly 4 products) -->
+          <!-- Rendered dynamically by script.js (limited to first 4 products) -->
+        </div>
+
+        <!-- View All Button -->
+        <div class="text-center mt-12">
+          <a href="catalog.html" class="inline-flex items-center gap-2 border-2 border-stone-900 text-stone-900 hover:bg-stone-900 hover:text-white text-xs font-bold tracking-widest uppercase py-3.5 px-8 rounded transition-colors duration-300">
+            View Entire Catalogue <i class="fa-solid fa-arrow-right"></i>
+          </a>
         </div>
       </div>
     </section>

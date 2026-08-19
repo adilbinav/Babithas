@@ -56,7 +56,6 @@ function getProducts() {
       localStorage.setItem("babithas_products", JSON.stringify(DEFAULT_PRODUCTS));
       return DEFAULT_PRODUCTS;
     }
-    // Backward compatibility check (make sure images array exists)
     const list = JSON.parse(stored);
     let updated = false;
     const migration = list.map(p => {
@@ -120,14 +119,17 @@ function setupMobileMenu() {
   });
 }
 
-// Render Products to Grid
+// Render Products to Grid (Limited to 4 for homepage Featured Showcase)
 function renderProducts(productList) {
   const grid = document.getElementById("product-grid");
   if (!grid) return;
 
   grid.innerHTML = "";
 
-  if (productList.length === 0) {
+  // Slice to only show the first 4 "featured" products on the landing page
+  const featuredList = productList.slice(0, 4);
+
+  if (featuredList.length === 0) {
     grid.innerHTML = `
       <div class="col-span-full py-12 text-center text-stone-500">
         <p class="font-serif text-xl italic mb-2">No items found in this collection</p>
@@ -137,7 +139,7 @@ function renderProducts(productList) {
     return;
   }
 
-  productList.forEach(prod => {
+  featuredList.forEach(prod => {
     const priceText = prod.price ? `₹${Number(prod.price).toLocaleString()}` : "Price on Ask";
     const rawText = `Hi BaBitha's, I am interested in inquiring about the "${prod.name}" (${prod.fabric}) priced at ${priceText} that I saw on your website catalog. Can you please share more details?`;
     const escapedText = rawText.replace(/'/g, "\\'");
@@ -149,11 +151,10 @@ function renderProducts(productList) {
     card.innerHTML = `
       <div class="relative overflow-hidden bg-stone-50 aspect-[3/4]">
         <img src="${prod.image}" alt="${prod.name}" class="product-image-zoom w-full h-full object-cover object-center" loading="lazy">
-        <span class="absolute top-3 left-3 bg-stone-900/95 text-white text-[9px] tracking-widest uppercase font-semibold px-2 py-0.5 rounded bg-clip-padding backdrop-filter backdrop-blur-sm border border-stone-700/20">
+        <span class="absolute top-3 left-3 bg-stone-900/95 text-white text-[9px] tracking-widest uppercase font-semibold px-2 py-0.5 rounded border border-stone-700/20">
           ${prod.category}
         </span>
-        <!-- Optional Price Tag Overlay -->
-        <span class="absolute bottom-3 right-3 bg-white/90 text-stone-900 text-xs font-bold px-2 py-1 rounded shadow-sm bg-clip-padding backdrop-filter backdrop-blur-sm">
+        <span class="absolute bottom-3 right-3 bg-white/90 text-stone-900 text-xs font-bold px-2 py-1 rounded shadow-sm">
           ${priceText}
         </span>
         <div class="hidden md:flex absolute inset-0 bg-stone-950/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-end justify-center p-4">
