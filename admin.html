@@ -122,12 +122,63 @@
         </div>
       </div>
 
-      <!-- Storage Size Alert -->
-      <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800 flex items-start gap-2.5">
-        <i class="fa-solid fa-circle-info text-base text-amber-500 mt-0.5"></i>
-        <div>
-          <strong>Storage Info:</strong> Storing products locally. You can upload **multiple photos** (up to 3) for each dress. The image compressor automatically processes them to save storage.
+      <!-- Settings & Controls Grid (NEW) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Category Manager Card -->
+        <div class="bg-white rounded-lg border border-stone-200 p-5 shadow-sm space-y-4">
+          <div>
+            <h3 class="text-base font-serif font-bold text-stone-900">1. Category Tab Manager</h3>
+            <p class="text-[11px] text-stone-500 font-light mt-0.5">Add or remove custom collection category tabs instantly.</p>
+          </div>
+          
+          <form onsubmit="addCategory(event)" class="grid grid-cols-1 sm:grid-cols-12 gap-2 text-xs">
+            <div class="sm:col-span-4">
+              <label class="sr-only">Category ID</label>
+              <input type="text" id="cat-id-input" required class="w-full px-3 py-2 rounded border border-stone-200 uppercase tracking-widest font-semibold focus:outline-none" placeholder="ID (e.g. kurtas)">
+            </div>
+            <div class="sm:col-span-5">
+              <label class="sr-only">Category Name</label>
+              <input type="text" id="cat-name-input" required class="w-full px-3 py-2 rounded border border-stone-200 focus:outline-none" placeholder="Tab Name (e.g. Kurtas)">
+            </div>
+            <button type="submit" class="sm:col-span-3 bg-stone-900 hover:bg-stone-850 text-white font-bold rounded uppercase tracking-wider py-2 px-3">
+              Add Tab
+            </button>
+          </form>
+
+          <div class="h-[1px] bg-stone-100"></div>
+
+          <div class="space-y-1">
+            <span class="text-[10px] text-stone-400 font-semibold tracking-wider uppercase">Active Categories List:</span>
+            <div id="categories-settings-list" class="flex flex-wrap gap-2 pt-1">
+              <!-- Managed dynamically -->
+            </div>
+          </div>
         </div>
+
+        <!-- Homepage Limits Card -->
+        <div class="bg-white rounded-lg border border-stone-200 p-5 shadow-sm flex flex-col justify-between space-y-4">
+          <div>
+            <h3 class="text-base font-serif font-bold text-stone-900">2. Homepage Showcase Limit</h3>
+            <p class="text-[11px] text-stone-500 font-light mt-0.5">Set the maximum number of featured items displayed on the landing page showcase.</p>
+          </div>
+          
+          <form onsubmit="saveShowcaseLimit(event)" class="flex gap-3 text-xs items-center">
+            <div class="w-24">
+              <label for="showcase-limit-input" class="sr-only">Showcase Limit</label>
+              <input type="number" id="showcase-limit-input" min="1" max="20" required class="w-full px-3 py-2.5 rounded border border-stone-200 font-bold focus:outline-none" placeholder="4">
+            </div>
+            <button type="submit" class="bg-[#D4AF37] hover:bg-gold-600 text-white font-bold uppercase tracking-wider py-2.5 px-5 rounded shadow">
+              Update Limit
+            </button>
+          </form>
+
+          <div class="bg-stone-50 border border-stone-200 p-2.5 rounded text-[11px] text-stone-500 font-light flex items-center gap-2">
+            <i class="fa-solid fa-circle-info text-[#D4AF37]"></i>
+            <span>Mark individual products as "Featured" below to control what displays.</span>
+          </div>
+        </div>
+
       </div>
 
       <!-- Product Catalog Table -->
@@ -142,6 +193,7 @@
                 <th scope="col" class="px-6 py-4">Fabric</th>
                 <th scope="col" class="px-6 py-4">Weaving Art / Craft</th>
                 <th scope="col" class="px-6 py-4">Price</th>
+                <th scope="col" class="px-6 py-4">Featured</th>
                 <th scope="col" class="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
@@ -180,9 +232,7 @@
           <div>
             <label for="form-category" class="block uppercase tracking-wider text-stone-500 mb-2">Category Tab</label>
             <select id="form-category" class="w-full px-4 py-2.5 rounded border border-stone-200 text-sm bg-white focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none">
-              <option value="silk">Heritage Silks</option>
-              <option value="kasavu">Trivandrum Kasavu</option>
-              <option value="linen">Linen & Cotton</option>
+              <!-- Rendered dynamically -->
             </select>
           </div>
 
@@ -193,18 +243,24 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-2 gap-4 items-center">
           <!-- Fabric -->
           <div>
             <label for="form-fabric" class="block uppercase tracking-wider text-stone-500 mb-2">Fabric Type</label>
             <input type="text" id="form-fabric" required class="w-full px-4 py-2.5 rounded border border-stone-200 text-sm focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="e.g. Pure Kanchipuram Silk">
           </div>
 
-          <!-- Craft -->
-          <div>
-            <label for="form-craft" class="block uppercase tracking-wider text-stone-500 mb-2">Weave Craft / Style</label>
-            <input type="text" id="form-craft" required class="w-full px-4 py-2.5 rounded border border-stone-200 text-sm focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="e.g. Handcrafted Zari Brocade">
+          <!-- Featured Checkbox (NEW) -->
+          <div class="flex items-center gap-2 pt-6">
+            <input type="checkbox" id="form-featured" class="w-4 h-4 text-gold-500 border-stone-300 rounded focus:ring-gold-500">
+            <label for="form-featured" class="uppercase tracking-wider text-stone-600 cursor-pointer select-none">Feature on Homepage</label>
           </div>
+        </div>
+
+        <!-- Craft -->
+        <div>
+          <label for="form-craft" class="block uppercase tracking-wider text-stone-500 mb-2">Weave Craft / Style</label>
+          <input type="text" id="form-craft" required class="w-full px-4 py-2.5 rounded border border-stone-200 text-sm focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="e.g. Handcrafted Zari Brocade">
         </div>
 
         <!-- Description -->
@@ -255,6 +311,12 @@
 
   <!-- Admin CMS Logic Scripts -->
   <script>
+    const DEFAULT_CATEGORIES = [
+      { id: "silk", name: "Heritage Silks" },
+      { id: "kasavu", name: "Trivandrum Kasavu" },
+      { id: "linen", name: "Linen & Cotton" }
+    ];
+
     const DEFAULT_PRODUCTS = [
       {
         id: 1,
@@ -263,6 +325,7 @@
         fabric: "Pure Kanchipuram Silk",
         craft: "Handcrafted Zari Brocade",
         price: 12500,
+        featured: true,
         image: "assets/saree_1.jpg",
         images: ["assets/saree_1.jpg", "assets/saree_2.jpg"],
         desc: "A majestic magenta silk saree decorated with ornate gold zari brocade, featuring a grand floral border and traditional rich pallu. Ideal for weddings and royal celebrations."
@@ -274,6 +337,7 @@
         fabric: "Premium Kerala Cotton",
         craft: "Trivandrum Gold Handloom",
         price: 4999,
+        featured: true,
         image: "assets/saree_2.jpg",
         images: ["assets/saree_2.jpg", "assets/saree_1.jpg"],
         desc: "The timeless Kerala Kasavu saree, handwoven with fine off-white cotton and a signature rich gold zari border. It represents pure simplicity and cultural heritage."
@@ -285,6 +349,7 @@
         fabric: "Katan Silk",
         craft: "Banarasi Cutwork Weave",
         price: 15999,
+        featured: true,
         image: "assets/saree_1.jpg",
         images: ["assets/saree_1.jpg", "assets/saree_2.jpg"],
         desc: "A radiant crimson saree crafted with pure Banarasi silk, displaying heritage gold motifs and an elaborate traditional border that radiates confidence."
@@ -296,6 +361,7 @@
         fabric: "100-Count Linen",
         craft: "Modern Border Weaving",
         price: 3499,
+        featured: true,
         image: "assets/saree_2.jpg",
         images: ["assets/saree_2.jpg", "assets/saree_1.jpg"],
         desc: "A breathable, eco-friendly linen saree in pastel sage green, trimmed with subtle silver-gold zari borders, offering both comfort and modern minimalist elegance."
@@ -327,6 +393,37 @@
       }
     }
 
+    function getCategories() {
+      try {
+        const stored = localStorage.getItem("babithas_categories");
+        if (!stored) {
+          localStorage.setItem("babithas_categories", JSON.stringify(DEFAULT_CATEGORIES));
+          return DEFAULT_CATEGORIES;
+        }
+        return JSON.parse(stored);
+      } catch (e) {
+        return DEFAULT_CATEGORIES;
+      }
+    }
+
+    function saveCategories(catList) {
+      try {
+        localStorage.setItem("babithas_categories", JSON.stringify(catList));
+        renderCategoriesList();
+      } catch (e) {
+        console.error("Failed to save categories", e);
+      }
+    }
+
+    function getHomepageLimit() {
+      try {
+        const limit = localStorage.getItem("babithas_homepage_limit");
+        return limit ? parseInt(limit) : 4;
+      } catch (e) {
+        return 4;
+      }
+    }
+
     // Login Authentication Guard
     function checkAuth() {
       const isAuthed = sessionStorage.getItem("babithas_admin_auth") === "true";
@@ -334,7 +431,7 @@
       
       if (isAuthed) {
         overlay.classList.add("hidden");
-        renderCatalog();
+        initDashboard();
       } else {
         overlay.classList.remove("hidden");
       }
@@ -360,11 +457,92 @@
       checkAuth();
     }
 
+    function initDashboard() {
+      renderCatalog();
+      renderCategoriesList();
+      
+      // Load current showcase limit value to input
+      document.getElementById("showcase-limit-input").value = getHomepageLimit();
+    }
+
     // Reset Catalog helper
     function resetToDefaults() {
-      if (confirm("Are you sure you want to reset the catalog? This will restore the original 4 sarees and erase any custom items.")) {
+      if (confirm("Are you sure you want to reset the catalog? This will restore the original 4 sarees, categories, and settings.")) {
         localStorage.removeItem("babithas_products");
-        renderCatalog();
+        localStorage.removeItem("babithas_categories");
+        localStorage.removeItem("babithas_homepage_limit");
+        initDashboard();
+      }
+    }
+
+    // Category CRUD Helpers
+    function renderCategoriesList() {
+      const container = document.getElementById("categories-settings-list");
+      if (!container) return;
+
+      const categories = getCategories();
+      container.innerHTML = "";
+
+      categories.forEach(cat => {
+        const badge = document.createElement("div");
+        badge.className = "flex items-center gap-1.5 bg-stone-100 border border-stone-200 text-stone-800 text-[10px] font-bold uppercase tracking-wider py-1 px-2.5 rounded-full";
+        badge.innerHTML = `
+          <span>${cat.name} (${cat.id})</span>
+          <button type="button" onclick="deleteCategory('${cat.id}')" class="text-stone-400 hover:text-red-600 transition-colors">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        `;
+        container.appendChild(badge);
+      });
+    }
+
+    function addCategory(event) {
+      event.preventDefault();
+      
+      const idInput = document.getElementById("cat-id-input");
+      const nameInput = document.getElementById("cat-name-input");
+      
+      const id = idInput.value.trim().toLowerCase();
+      const name = nameInput.value.trim();
+
+      if (!id || !name) return;
+
+      let catList = getCategories();
+      
+      // Prevent duplicates
+      if (catList.some(c => c.id === id)) {
+        alert("A category with this ID already exists.");
+        return;
+      }
+
+      catList.push({ id, name });
+      saveCategories(catList);
+
+      idInput.value = "";
+      nameInput.value = "";
+    }
+
+    function deleteCategory(id) {
+      if (confirm(`Delete the "${id}" category tab? Products currently under this category will need their categories reassigned.`)) {
+        let catList = getCategories();
+        catList = catList.filter(c => c.id !== id);
+        saveCategories(catList);
+      }
+    }
+
+    // Showcase Limit Settings
+    function saveShowcaseLimit(event) {
+      event.preventDefault();
+      const limitVal = document.getElementById("showcase-limit-input").value;
+      const limit = parseInt(limitVal);
+
+      if (isNaN(limit) || limit < 1) return;
+
+      try {
+        localStorage.setItem("babithas_homepage_limit", limit);
+        alert(`Homepage showcase limit updated to ${limit}!`);
+      } catch (e) {
+        console.error("Storage save limit failed", e);
       }
     }
 
@@ -379,7 +557,7 @@
       if (productList.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="7" class="px-6 py-12 text-center text-stone-500 font-light">
+            <td colspan="8" class="px-6 py-12 text-center text-stone-500 font-light">
               <i class="fa-solid fa-box-open text-2xl mb-2 text-stone-300 block"></i>
               No products inside the catalog database. Click "Add Product" above to create one.
             </td>
@@ -390,6 +568,13 @@
 
       productList.forEach(prod => {
         const priceText = prod.price ? `₹${Number(prod.price).toLocaleString()}` : "On Ask";
+        
+        // Featured toggle indicator badge
+        const isFeatured = prod.featured === true || prod.featured === "true";
+        const featuredBadge = isFeatured 
+          ? `<span class="bg-amber-100 text-amber-800 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider"><i class="fa-solid fa-star text-amber-500 mr-0.5"></i> Yes</span>`
+          : `<span class="text-stone-400 text-[10px] font-normal uppercase tracking-wider">No</span>`;
+
         const row = document.createElement("tr");
         row.className = "hover:bg-stone-50/50 transition-colors";
         
@@ -406,6 +591,7 @@
           <td class="px-6 py-4 whitespace-nowrap text-stone-600 font-medium">${prod.fabric}</td>
           <td class="px-6 py-4 whitespace-nowrap text-stone-500 font-light">${prod.craft}</td>
           <td class="px-6 py-4 whitespace-nowrap text-stone-900 font-bold">${priceText}</td>
+          <td class="px-6 py-4 whitespace-nowrap font-medium">${featuredBadge}</td>
           <td class="px-6 py-4 whitespace-nowrap text-right text-xs font-semibold space-x-2">
             <button onclick="openFormModal(${prod.id})" class="text-gold-700 hover:text-gold-900 font-bold">Edit</button>
             <span class="text-stone-300">|</span>
@@ -430,6 +616,19 @@
       document.getElementById("form-images-json").value = "";
       document.getElementById("thumbnails-preview-grid").innerHTML = "";
 
+      // 1. Populate category dropdown dynamically from settings
+      const categoryDropdown = document.getElementById("form-category");
+      categoryDropdown.innerHTML = "";
+      const categories = getCategories();
+      
+      if (categories.length === 0) {
+        categoryDropdown.innerHTML = `<option value="">No Categories Configured</option>`;
+      } else {
+        categories.forEach(cat => {
+          categoryDropdown.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
+        });
+      }
+
       if (productId) {
         title.innerText = "Edit Saree Details";
         const prod = getProducts().find(p => p.id === productId);
@@ -441,6 +640,9 @@
           document.getElementById("form-craft").value = prod.craft;
           document.getElementById("form-desc").value = prod.desc;
           document.getElementById("form-price").value = prod.price || "";
+          
+          // Load featured boolean state
+          document.getElementById("form-featured").checked = prod.featured === true || prod.featured === "true";
           
           // Image array handling
           const images = prod.images || [prod.image];
@@ -461,6 +663,7 @@
       } else {
         title.innerText = "Add Saree / Dress to Catalog";
         document.getElementById("form-product-id").value = "";
+        document.getElementById("form-featured").checked = true; // Default checked for new products
       }
 
       modal.classList.remove("hidden");
@@ -565,6 +768,8 @@
       const priceVal = document.getElementById("form-price").value;
       const price = priceVal ? parseFloat(priceVal) : null;
       
+      const featured = document.getElementById("form-featured").checked;
+      
       const imagesJson = document.getElementById("form-images-json").value;
       let images = [];
       try {
@@ -587,7 +792,7 @@
         const idInt = parseInt(productId);
         productList = productList.map(p => {
           if (p.id === idInt) {
-            return { ...p, name, category, fabric, craft, desc, price, image: primaryImage, images };
+            return { ...p, name, category, fabric, craft, desc, price, featured, image: primaryImage, images };
           }
           return p;
         });
@@ -602,6 +807,7 @@
           craft,
           desc,
           price,
+          featured,
           image: primaryImage,
           images
         };

@@ -1,4 +1,11 @@
-// Default product catalog (with pricing and multiple mock images)
+// Default category definitions
+const DEFAULT_CATEGORIES = [
+  { id: "silk", name: "Heritage Silks" },
+  { id: "kasavu", name: "Trivandrum Kasavu" },
+  { id: "linen", name: "Linen & Cotton" }
+];
+
+// Default product catalog
 const DEFAULT_PRODUCTS = [
   {
     id: 1,
@@ -7,6 +14,7 @@ const DEFAULT_PRODUCTS = [
     fabric: "Pure Kanchipuram Silk",
     craft: "Handcrafted Zari Brocade",
     price: 12500,
+    featured: true,
     image: "assets/saree_1.jpg",
     images: ["assets/saree_1.jpg", "assets/saree_2.jpg"],
     desc: "A majestic magenta silk saree decorated with ornate gold zari brocade, featuring a grand floral border and traditional rich pallu. Ideal for weddings and royal celebrations."
@@ -18,6 +26,7 @@ const DEFAULT_PRODUCTS = [
     fabric: "Premium Kerala Cotton",
     craft: "Trivandrum Gold Handloom",
     price: 4999,
+    featured: true,
     image: "assets/saree_2.jpg",
     images: ["assets/saree_2.jpg", "assets/saree_1.jpg"],
     desc: "The timeless Kerala Kasavu saree, handwoven with fine off-white cotton and a signature rich gold zari border. It represents pure simplicity and cultural heritage."
@@ -29,6 +38,7 @@ const DEFAULT_PRODUCTS = [
     fabric: "Katan Silk",
     craft: "Banarasi Cutwork Weave",
     price: 15999,
+    featured: true,
     image: "assets/saree_1.jpg",
     images: ["assets/saree_1.jpg", "assets/saree_2.jpg"],
     desc: "A radiant crimson saree crafted with pure Banarasi silk, displaying heritage gold motifs and an elaborate traditional border that radiates confidence."
@@ -40,6 +50,7 @@ const DEFAULT_PRODUCTS = [
     fabric: "100-Count Linen",
     craft: "Modern Border Weaving",
     price: 3499,
+    featured: true,
     image: "assets/saree_2.jpg",
     images: ["assets/saree_2.jpg", "assets/saree_1.jpg"],
     desc: "A breathable, eco-friendly linen saree in pastel sage green, trimmed with subtle silver-gold zari borders, offering both comfort and modern minimalist elegance."
@@ -48,7 +59,7 @@ const DEFAULT_PRODUCTS = [
 
 const WHATSAPP_NUMBER = "916238599582";
 
-// LocalStorage Database helper
+// LocalStorage Database helpers
 function getProducts() {
   try {
     const stored = localStorage.getItem("babithas_products");
@@ -59,8 +70,14 @@ function getProducts() {
     const list = JSON.parse(stored);
     let updated = false;
     const migration = list.map(p => {
+      // Ensure images array exists
       if (!p.images || !Array.isArray(p.images)) {
         p.images = [p.image || "assets/saree_1.jpg"];
+        updated = true;
+      }
+      // Ensure featured boolean exists (default to true for legacy mock data)
+      if (p.featured === undefined) {
+        p.featured = true;
         updated = true;
       }
       return p;
@@ -70,19 +87,68 @@ function getProducts() {
     }
     return migration;
   } catch (e) {
-    console.error("Failed to read localStorage", e);
+    console.error("Failed to read localStorage products", e);
     return DEFAULT_PRODUCTS;
+  }
+}
+
+function getCategories() {
+  try {
+    const stored = localStorage.getItem("babithas_categories");
+    if (!stored) {
+      localStorage.setItem("babithas_categories", JSON.stringify(DEFAULT_CATEGORIES));
+      return DEFAULT_CATEGORIES;
+    }
+    return JSON.parse(stored);
+  } catch (e) {
+    return DEFAULT_CATEGORIES;
+  }
+}
+
+function getHomepageLimit() {
+  try {
+    const stored = localStorage.getItem("babithas_homepage_limit");
+    return stored ? parseInt(stored) : 4;
+  } catch (e) {
+    return 4;
   }
 }
 
 // Initialize elements
 document.addEventListener("DOMContentLoaded", () => {
+  renderFilterTabs();
   renderProducts(getProducts());
-  setupFilters();
   setupMobileMenu();
   setupScrollEffects();
   setupDemoModalClose();
 });
+
+// Render Filter Tabs Dynamically
+function renderFilterTabs() {
+  const container = document.getElementById("filter-btn-container");
+  if (!container) return;
+
+  const categories = getCategories();
+  
+  // Render static 'All' tab first
+  let html = `
+    <button data-category="all" class="filter-btn shrink-0 bg-stone-900 text-white text-xs font-semibold py-2 px-5 rounded-full transition-all duration-300 uppercase tracking-widest shadow-sm">
+      All
+    </button>
+  `;
+
+  // Render rest of categories dynamically
+  categories.forEach(cat => {
+    html += `
+      <button data-category="${cat.id}" class="filter-btn shrink-0 bg-stone-100 text-stone-700 hover:bg-stone-200 text-xs font-semibold py-2 px-5 rounded-full transition-all duration-300 uppercase tracking-widest">
+        ${cat.name}
+      </button>
+    `;
+  });
+
+  container.innerHTML = html;
+  setupFilters();
+}
 
 // Mobile Navbar Toggle
 function setupMobileMenu() {
@@ -119,15 +185,24 @@ function setupMobileMenu() {
   });
 }
 
-// Render Products to Grid (Limited to 4 for homepage Featured Showcase)
+// Render Products to Grid (Filtered by featured status & dynamic limit)
 function renderProducts(productList) {
   const grid = document.getElementById("product-grid");
   if (!grid) return;
 
   grid.innerHTML = "";
 
-  // Slice to only show the first 4 "featured" products on the landing page
-  const featuredList = productList.slice(0, 4);
+  // 1. Filter: Show only products marked as featured
+  let featuredList = productList.filter(p => p.featured === true || p.featured === "true");
+  
+  // Fallback: If no products are checked featured, display all to avoid blank screen
+  if (featuredList.length === 0) {
+    featuredList = productList;
+  }
+
+  // 2. Limit: Slice based on dynamic homepage limit settings
+  const limit = getHomepageLimit();
+  featuredList = featuredList.slice(0, limit);
 
   if (featuredList.length === 0) {
     grid.innerHTML = `
@@ -192,26 +267,37 @@ function renderProducts(productList) {
   });
 }
 
-// Category Filter Event Listeners
+// Category Filter Event Listeners (Triggers on homepage tabs)
 function setupFilters() {
   const filterBtns = document.querySelectorAll(".filter-btn");
 
   filterBtns.forEach(btn => {
     btn.addEventListener("click", () => {
       filterBtns.forEach(b => {
-        b.classList.remove("bg-stone-900", "text-white");
+        b.classList.remove("bg-stone-900", "text-white", "shadow-sm");
         b.classList.add("bg-stone-100", "text-stone-700");
       });
 
       btn.classList.remove("bg-stone-100", "text-stone-700");
-      btn.classList.add("bg-stone-900", "text-white");
+      btn.classList.add("bg-stone-900", "text-white", "shadow-sm");
 
       const category = btn.getAttribute("data-category");
 
+      // Pull getProducts() but limit them for homepage grid rendering
+      const allProducts = getProducts();
+      let featuredList = allProducts.filter(p => p.featured === true || p.featured === "true");
+      if (featuredList.length === 0) {
+        featuredList = allProducts;
+      }
+      
+      const limit = getHomepageLimit();
+      featuredList = featuredList.slice(0, limit);
+
       if (category === "all") {
-        renderProducts(getProducts());
+        renderProducts(allProducts); // In filter mode, render all matches or featured matches
       } else {
-        const filtered = getProducts().filter(p => p.category === category);
+        const filtered = allProducts.filter(p => p.category === category);
+        // Note: For filtering, we display all matching category products
         renderProducts(filtered);
       }
     });

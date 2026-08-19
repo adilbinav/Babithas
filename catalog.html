@@ -167,20 +167,9 @@
         <input type="text" id="search-input" class="w-full pl-9 pr-4 py-2.5 rounded-lg border border-stone-200 text-xs focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="Search by name, fabric, or craft...">
       </div>
 
-      <!-- Filter Navigation Tabs (Category tags) -->
-      <div class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
-        <button data-category="all" class="filter-tab shrink-0 bg-stone-900 text-white text-xs font-semibold py-2 px-4 rounded-full transition-colors uppercase tracking-wider shadow-sm">
-          All
-        </button>
-        <button data-category="silk" class="filter-tab shrink-0 bg-stone-100 text-stone-700 hover:bg-stone-200 text-xs font-semibold py-2 px-4 rounded-full transition-colors uppercase tracking-wider">
-          Heritage Silks
-        </button>
-        <button data-category="kasavu" class="filter-tab shrink-0 bg-stone-100 text-stone-700 hover:bg-stone-200 text-xs font-semibold py-2 px-4 rounded-full transition-colors uppercase tracking-wider">
-          Trivandrum Kasavu
-        </button>
-        <button data-category="linen" class="filter-tab shrink-0 bg-stone-100 text-stone-700 hover:bg-stone-200 text-xs font-semibold py-2 px-4 rounded-full transition-colors uppercase tracking-wider">
-          Linen & Cotton
-        </button>
+      <!-- Filter Navigation Tabs (Rendered dynamically) -->
+      <div id="filter-tabs-container" class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
+        <!-- Built by JavaScript -->
       </div>
 
     </div>
@@ -217,7 +206,7 @@
           <h4 class="font-serif text-sm font-semibold text-white uppercase tracking-wider">Explore</h4>
           <ul class="text-xs space-y-2 font-light">
             <li><a href="index.html" class="hover:text-gold-500 transition-colors">Home Base</a></li>
-            <li><a href="catalog.html" class="hover:text-gold-500 transition-colors">Catalogue</a></li>
+            <li><a href="catalog.html" class="hover:text-gold-500 transition-colors font-bold text-gold-600">Catalogue</a></li>
             <li><a href="index.html#story" class="hover:text-gold-500 transition-colors">Our Philosophy</a></li>
             <li><a href="admin.html" class="hover:text-gold-500 transition-colors">Admin Console</a></li>
           </ul>
@@ -300,6 +289,12 @@
 
   <!-- Client-Side Catalogue Render & Filter Script -->
   <script>
+    const DEFAULT_CATEGORIES = [
+      { id: "silk", name: "Heritage Silks" },
+      { id: "kasavu", name: "Trivandrum Kasavu" },
+      { id: "linen", name: "Linen & Cotton" }
+    ];
+
     const DEFAULT_PRODUCTS = [
       {
         id: 1,
@@ -308,6 +303,7 @@
         fabric: "Pure Kanchipuram Silk",
         craft: "Handcrafted Zari Brocade",
         price: 12500,
+        featured: true,
         image: "assets/saree_1.jpg",
         images: ["assets/saree_1.jpg", "assets/saree_2.jpg"],
         desc: "A majestic magenta silk saree decorated with ornate gold zari brocade, featuring a grand floral border and traditional rich pallu. Ideal for weddings and royal celebrations."
@@ -319,6 +315,7 @@
         fabric: "Premium Kerala Cotton",
         craft: "Trivandrum Gold Handloom",
         price: 4999,
+        featured: true,
         image: "assets/saree_2.jpg",
         images: ["assets/saree_2.jpg", "assets/saree_1.jpg"],
         desc: "The timeless Kerala Kasavu saree, handwoven with fine off-white cotton and a signature rich gold zari border. It represents pure simplicity and cultural heritage."
@@ -330,6 +327,7 @@
         fabric: "Katan Silk",
         craft: "Banarasi Cutwork Weave",
         price: 15999,
+        featured: true,
         image: "assets/saree_1.jpg",
         images: ["assets/saree_1.jpg", "assets/saree_2.jpg"],
         desc: "A radiant crimson saree crafted with pure Banarasi silk, displaying heritage gold motifs and an elaborate traditional border that radiates confidence."
@@ -341,6 +339,7 @@
         fabric: "100-Count Linen",
         craft: "Modern Border Weaving",
         price: 3499,
+        featured: true,
         image: "assets/saree_2.jpg",
         images: ["assets/saree_2.jpg", "assets/saree_1.jpg"],
         desc: "A breathable, eco-friendly linen saree in pastel sage green, trimmed with subtle silver-gold zari borders, offering both comfort and modern minimalist elegance."
@@ -351,9 +350,9 @@
     let searchQuery = "";
 
     document.addEventListener("DOMContentLoaded", () => {
+      renderFilterTabs();
       initializeCategoryFromURL();
       renderCatalogGrid();
-      setupFilters();
       setupSearch();
       setupDemoModalClose();
       setupHeaderActions();
@@ -369,6 +368,39 @@
       }
     }
 
+    function getCategories() {
+      try {
+        const stored = localStorage.getItem("babithas_categories");
+        return stored ? JSON.parse(stored) : DEFAULT_CATEGORIES;
+      } catch (e) {
+        return DEFAULT_CATEGORIES;
+      }
+    }
+
+    // Render filter buttons dynamically
+    function renderFilterTabs() {
+      const container = document.getElementById("filter-tabs-container");
+      if (!container) return;
+
+      const categories = getCategories();
+      let html = `
+        <button data-category="all" class="filter-tab shrink-0 bg-stone-900 text-white text-xs font-semibold py-2 px-4 rounded-full transition-colors uppercase tracking-wider shadow-sm">
+          All
+        </button>
+      `;
+
+      categories.forEach(cat => {
+        html += `
+          <button data-category="${cat.id}" class="filter-tab shrink-0 bg-stone-100 text-stone-700 hover:bg-stone-200 text-xs font-semibold py-2 px-4 rounded-full transition-colors uppercase tracking-wider">
+            ${cat.name}
+          </button>
+        `;
+      });
+
+      container.innerHTML = html;
+      setupFilters();
+    }
+
     // Read URL Parameters on load
     function initializeCategoryFromURL() {
       const urlParams = new URLSearchParams(window.location.search);
@@ -380,7 +412,10 @@
         document.getElementById("search-input").value = searchParam;
       }
       
-      if (catParam && ["silk", "kasavu", "linen"].includes(catParam)) {
+      const categories = getCategories();
+      const validCategories = ["all", ...categories.map(c => c.id)];
+
+      if (catParam && validCategories.includes(catParam)) {
         activeCategory = catParam;
         
         // Update filter tabs UI highlights
@@ -471,7 +506,7 @@
               <a href="product.html?id=${prod.id}" class="w-full block text-center border border-stone-200 text-stone-800 text-xs font-semibold py-2 px-3 rounded hover:bg-stone-50 transition-colors uppercase tracking-wider">
                 View Details
               </a>
-              <button onclick="showWhatsAppDemo('${escapedMsg}')" class="w-full flex items-center justify-center gap-2 bg-[#D4AF37] text-white text-xs font-semibold py-2 px-3 rounded shadow transition-colors uppercase tracking-wider">
+              <button onclick="showWhatsAppDemo('${escapedMsg}')" class="w-full flex items-center justify-center gap-2 bg-[#D4AF37] text-white text-xs font-semibold py-2.5 px-3 rounded shadow transition-colors uppercase tracking-wider">
                 <i class="fa-brands fa-whatsapp"></i> Inquire WhatsApp
               </button>
             </div>
