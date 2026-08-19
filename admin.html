@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BaBitha's CMS | Product Manager Console</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Tailwind Config Customizations -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gold: {
+              50: '#FDFBF7',
+              100: '#FAF4E3',
+              200: '#F3E5BF',
+              300: '#E7CE90',
+              400: '#DAB262',
+              500: '#CBA147', // Primary Brand Gold
+              600: '#B28834',
+              700: '#946E26',
+              800: '#75541C',
+              900: '#543C14',
+            },
+            cream: {
+              50: '#FCFAF6',  // Warm cream background
+              100: '#F6F2E9',
+              200: '#ECE3D1',
+              300: '#DFCFA9',
+            },
+            charcoal: {
+              DEFAULT: '#1C1917', // Text color
+              light: '#44403C',
+            }
+          },
+          fontFamily: {
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #FCFAF6;
+    }
+    h1, h2, h3, h4, .font-serif {
+      font-family: 'Playfair Display', serif;
+    }
+  </style>
+</head>
+<body class="bg-cream-50 text-charcoal min-h-screen flex flex-col">
+
+  <!-- Mock Admin Login Guard Screen (Overlay) -->
+  <div id="login-overlay" class="fixed inset-0 z-50 bg-stone-900 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl max-w-md w-full p-8 border border-stone-100 shadow-2xl space-y-6 text-center">
+      <img src="assets/logo.jpg" alt="BaBitha's Logo" class="h-16 mx-auto object-contain mb-2">
+      <div class="space-y-2">
+        <h2 class="text-2xl font-serif font-bold text-stone-900">CMS Console Login</h2>
+        <p class="text-stone-500 text-xs font-light">Enter administrative passcode to manage products.</p>
+      </div>
+      
+      <form onsubmit="handleLogin(event)" class="space-y-4">
+        <div>
+          <label for="passcode" class="sr-only">Passcode</label>
+          <input type="password" id="passcode" required class="w-full px-4 py-3 rounded border border-stone-200 text-center tracking-widest text-sm focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="••••••••">
+        </div>
+        <div id="login-error" class="hidden text-xs text-red-600 font-semibold">Invalid passcode. (Hint: enter "admin")</div>
+        <button type="submit" class="w-full bg-[#D4AF37] hover:bg-gold-600 text-white font-bold text-xs tracking-widest uppercase py-3.5 px-4 rounded shadow-md transition-colors">
+          Verify Passcode
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main CMS Console Dashboard Header -->
+  <header class="bg-white border-b border-stone-200 shadow-sm py-4 px-6 sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <img src="assets/logo.jpg" alt="Logo" class="h-10 w-auto object-contain">
+        <div class="h-6 w-[1px] bg-stone-200 hidden sm:block"></div>
+        <h1 class="text-lg font-serif font-bold text-stone-900 hidden sm:block">Product Catalogue Manager</h1>
+      </div>
+      <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
+        <a href="index.html" class="flex items-center gap-2 border border-stone-200 text-stone-700 bg-white text-xs font-semibold py-2 px-4 rounded hover:bg-stone-50 transition-colors uppercase tracking-wider">
+          <i class="fa-solid fa-store"></i> View Storefront
+        </a>
+        <button onclick="handleLogout()" class="flex items-center gap-2 border border-stone-200 text-red-600 bg-white text-xs font-semibold py-2 px-4 rounded hover:bg-red-50 transition-colors uppercase tracking-wider">
+          <i class="fa-solid fa-right-from-bracket"></i> Lock Console
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Dashboard Content Container -->
+  <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 flex-grow">
+    <div class="space-y-6">
+      
+      <!-- Top Actions Bar -->
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-4 rounded-lg border border-stone-200 shadow-sm">
+        <div>
+          <h2 class="text-xl font-serif font-bold text-stone-900">Current Catalog Listings</h2>
+          <p class="text-stone-500 text-xs font-light mt-0.5">Manage products and edit fields directly.</p>
+        </div>
+        <div class="flex gap-3 shrink-0">
+          <button onclick="resetToDefaults()" class="border border-stone-200 text-stone-700 text-xs font-semibold uppercase tracking-wider py-2.5 px-4 rounded hover:bg-stone-50 transition-colors">
+            <i class="fa-solid fa-rotate-left mr-1"></i> Reset Defaults
+          </button>
+          <button onclick="openFormModal(null)" class="bg-[#D4AF37] hover:bg-gold-600 text-white text-xs font-bold uppercase tracking-wider py-2.5 px-5 rounded shadow transition-colors">
+            <i class="fa-solid fa-plus mr-1"></i> Add Product
+          </button>
+        </div>
+      </div>
+
+      <!-- Storage Size Alert -->
+      <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800 flex items-start gap-2.5">
+        <i class="fa-solid fa-circle-info text-base text-amber-500 mt-0.5"></i>
+        <div>
+          <strong>Storage Info:</strong> Storing products in local browser memory (`localStorage`). Image files are automatically resized to fit. Try uploading your own dress photos to see it work!
+        </div>
+      </div>
+
+      <!-- Product Catalog Table -->
+      <div class="bg-white border border-stone-200 rounded-lg shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-stone-200 text-left text-xs">
+            <thead class="bg-stone-50 font-bold uppercase tracking-wider text-stone-500 text-[10px]">
+              <tr>
+                <th scope="col" class="px-6 py-4">Image</th>
+                <th scope="col" class="px-6 py-4">Product Name</th>
+                <th scope="col" class="px-6 py-4">Category</th>
+                <th scope="col" class="px-6 py-4">Fabric</th>
+                <th scope="col" class="px-6 py-4">Weaving Art / Craft</th>
+                <th scope="col" class="px-6 py-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="catalog-table-body" class="divide-y divide-stone-100 text-stone-700">
+              <!-- Rendered dynamically by Javascript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Add / Edit Product Modal -->
+  <div id="product-form-modal" class="fixed inset-0 z-40 hidden bg-black/50 backdrop-blur-sm items-center justify-center p-4">
+    <div class="bg-white rounded-xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-stone-100 shadow-2xl p-6 relative">
+      
+      <!-- Close Button -->
+      <button onclick="closeFormModal()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-600 transition-colors w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <h2 id="modal-form-title" class="text-2xl font-serif font-bold text-stone-900 mb-6">Add Saree / Dress</h2>
+      
+      <form id="product-crud-form" onsubmit="handleFormSubmit(event)" class="space-y-5 text-xs font-semibold text-stone-700">
+        <input type="hidden" id="form-product-id">
+
+        <!-- Saree Name -->
+        <div>
+          <label for="form-name" class="block uppercase tracking-wider text-stone-500 mb-2">Product Name</label>
+          <input type="text" id="form-name" required class="w-full px-4 py-2.5 rounded border border-stone-200 text-sm focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="e.g. Valkalam Royal Magenta Silk">
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <!-- Category -->
+          <div>
+            <label for="form-category" class="block uppercase tracking-wider text-stone-500 mb-2">Category Tab</label>
+            <select id="form-category" class="w-full px-4 py-2.5 rounded border border-stone-200 text-sm bg-white focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none">
+              <option value="silk">Heritage Silks</option>
+              <option value="kasavu">Trivandrum Kasavu</option>
+              <option value="linen">Linen & Cotton</option>
+            </select>
+          </div>
+
+          <!-- Fabric -->
+          <div>
+            <label for="form-fabric" class="block uppercase tracking-wider text-stone-500 mb-2">Fabric Type</label>
+            <input type="text" id="form-fabric" required class="w-full px-4 py-2.5 rounded border border-stone-200 text-sm focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="e.g. Pure Kanchipuram Silk">
+          </div>
+        </div>
+
+        <!-- Craft -->
+        <div>
+          <label for="form-craft" class="block uppercase tracking-wider text-stone-500 mb-2">Weave Craft / Details</label>
+          <input type="text" id="form-craft" required class="w-full px-4 py-2.5 rounded border border-stone-200 text-sm focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="e.g. Handcrafted Zari Brocade">
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label for="form-desc" class="block uppercase tracking-wider text-stone-500 mb-2">Detailed Description</label>
+          <textarea id="form-desc" required rows="3" class="w-full px-4 py-2.5 rounded border border-stone-200 text-sm focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="Provide product details..."></textarea>
+        </div>
+
+        <!-- Image Selector -->
+        <div>
+          <label class="block uppercase tracking-wider text-stone-500 mb-2">Product Image File</label>
+          <div class="border-2 border-dashed border-stone-200 rounded-lg p-4 text-center cursor-pointer hover:bg-stone-50 transition-colors relative">
+            <input type="file" id="form-image-file" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="previewUploadedFile(this)">
+            
+            <div id="image-upload-preview-container" class="hidden space-y-2">
+              <img id="image-upload-preview" src="" alt="Preview" class="h-28 mx-auto object-cover rounded shadow border border-stone-100">
+              <p class="text-[10px] text-stone-400 font-normal">Click or drag another image to change</p>
+            </div>
+            
+            <div id="image-upload-empty-state" class="space-y-2 py-4">
+              <i class="fa-solid fa-cloud-arrow-up text-2xl text-stone-400"></i>
+              <p class="text-xs text-stone-500 font-semibold">Click to select Saree/Dress photo</p>
+              <p class="text-[10px] text-stone-400 font-normal">Accepts PNG, JPG, JPEG (will be optimized to fit)</p>
+            </div>
+          </div>
+          <input type="hidden" id="form-image-base64">
+        </div>
+
+        <!-- Form Submit Actions -->
+        <div class="pt-4 flex gap-3">
+          <button type="button" onclick="closeFormModal()" class="w-1/2 border border-stone-200 text-stone-600 font-bold uppercase py-3.5 px-4 rounded hover:bg-stone-50 transition-colors">
+            Cancel
+          </button>
+          <button type="submit" class="w-1/2 bg-[#D4AF37] hover:bg-gold-600 text-white font-bold uppercase py-3.5 px-4 rounded shadow-md transition-colors">
+            Save Product
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer copyright -->
+  <footer class="bg-stone-100 border-t border-stone-200 py-6 text-center text-[10px] text-stone-500 font-light mt-auto">
+    © 2026 BaBitha's CMS Console. Prototype Environment.
+  </footer>
+
+  <!-- Admin CMS Logic Scripts -->
+  <script>
+    const DEFAULT_PRODUCTS = [
+      {
+        id: 1,
+        name: "Valkalam Royal Magenta Silk",
+        category: "silk",
+        fabric: "Pure Kanchipuram Silk",
+        craft: "Handcrafted Zari Brocade",
+        image: "assets/saree_1.jpg",
+        desc: "A majestic magenta silk saree decorated with ornate gold zari brocade, featuring a grand floral border and traditional rich pallu. Ideal for weddings and royal celebrations."
+      },
+      {
+        id: 2,
+        name: "Classic Balaramapuram Kasavu",
+        category: "kasavu",
+        fabric: "Premium Kerala Cotton",
+        craft: "Trivandrum Gold Handloom",
+        image: "assets/saree_2.jpg",
+        desc: "The timeless Kerala Kasavu saree, handwoven with fine off-white cotton and a signature rich gold zari border. It represents pure simplicity and cultural heritage."
+      },
+      {
+        id: 3,
+        name: "Crimson Mughal Brocade Silk",
+        category: "silk",
+        fabric: "Katan Silk",
+        craft: "Banarasi Cutwork Weave",
+        image: "assets/saree_1.jpg",
+        desc: "A radiant crimson saree crafted with pure Banarasi silk, displaying heritage gold motifs and an elaborate traditional border that radiates confidence."
+      },
+      {
+        id: 4,
+        name: "Pastel Sage Organic Linen Saree",
+        category: "linen",
+        fabric: "100-Count Linen",
+        craft: "Modern Border Weaving",
+        image: "assets/saree_2.jpg",
+        desc: "A breathable, eco-friendly linen saree in pastel sage green, trimmed with subtle silver-gold zari borders, offering both comfort and modern minimalist elegance."
+      }
+    ];
+
+    // Read and Write Helper Functions
+    function getProducts() {
+      try {
+        const stored = localStorage.getItem("babithas_products");
+        if (!stored) {
+          localStorage.setItem("babithas_products", JSON.stringify(DEFAULT_PRODUCTS));
+          return DEFAULT_PRODUCTS;
+        }
+        return JSON.parse(stored);
+      } catch (e) {
+        console.error(e);
+        return DEFAULT_PRODUCTS;
+      }
+    }
+
+    function saveProducts(productList) {
+      try {
+        localStorage.setItem("babithas_products", JSON.stringify(productList));
+        renderCatalog();
+      } catch (e) {
+        alert("Failed to save changes. The image upload might be too large. Try uploading a smaller size image.");
+        console.error("Storage save failed", e);
+      }
+    }
+
+    // Login Authentication Guard
+    function checkAuth() {
+      const isAuthed = sessionStorage.getItem("babithas_admin_auth") === "true";
+      const overlay = document.getElementById("login-overlay");
+      
+      if (isAuthed) {
+        overlay.classList.add("hidden");
+        renderCatalog();
+      } else {
+        overlay.classList.remove("hidden");
+      }
+    }
+
+    function handleLogin(event) {
+      event.preventDefault();
+      const passcode = document.getElementById("passcode").value;
+      const loginError = document.getElementById("login-error");
+      
+      if (passcode === "admin") {
+        sessionStorage.setItem("babithas_admin_auth", "true");
+        loginError.classList.add("hidden");
+        checkAuth();
+      } else {
+        loginError.classList.remove("hidden");
+        document.getElementById("passcode").value = "";
+      }
+    }
+
+    function handleLogout() {
+      sessionStorage.removeItem("babithas_admin_auth");
+      checkAuth();
+    }
+
+    // Reset Catalog helper
+    function resetToDefaults() {
+      if (confirm("Are you sure you want to reset the catalog? This will restore the original 4 sarees and erase any custom items.")) {
+        localStorage.removeItem("babithas_products");
+        renderCatalog();
+      }
+    }
+
+    // Render Database in Dashboard Table
+    function renderCatalog() {
+      const tbody = document.getElementById("catalog-table-body");
+      if (!tbody) return;
+
+      const productList = getProducts();
+      tbody.innerHTML = "";
+
+      if (productList.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="px-6 py-12 text-center text-stone-500 font-light">
+              <i class="fa-solid fa-box-open text-2xl mb-2 text-stone-300 block"></i>
+              No products inside the catalog database. Click "Add Product" above to create one.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      productList.forEach(prod => {
+        const row = document.createElement("tr");
+        row.className = "hover:bg-stone-50/50 transition-colors";
+        
+        row.innerHTML = `
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="h-12 w-9 rounded overflow-hidden border border-stone-200 bg-stone-100 shrink-0">
+              <img src="${prod.image}" alt="" class="w-full h-full object-cover">
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap font-semibold text-stone-900">${prod.name}</td>
+          <td class="px-6 py-4 whitespace-nowrap uppercase tracking-wider text-[9px] font-bold text-stone-500">
+            <span class="bg-stone-100 px-2 py-0.5 rounded">${prod.category}</span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-stone-600 font-medium">${prod.fabric}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-stone-500 font-light">${prod.craft}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-right text-xs font-semibold space-x-2">
+            <button onclick="openFormModal(${prod.id})" class="text-gold-700 hover:text-gold-900 font-bold">Edit</button>
+            <span class="text-stone-300">|</span>
+            <button onclick="deleteProduct(${prod.id})" class="text-red-600 hover:text-red-800 font-bold">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // Modal Control: Add/Edit Forms
+    function openFormModal(productId) {
+      const modal = document.getElementById("product-form-modal");
+      const title = document.getElementById("modal-form-title");
+      const form = document.getElementById("product-crud-form");
+      
+      form.reset();
+      
+      // Reset image preview state
+      document.getElementById("image-upload-preview-container").classList.add("hidden");
+      document.getElementById("image-upload-empty-state").classList.remove("hidden");
+      document.getElementById("form-image-base64").value = "";
+
+      if (productId) {
+        title.innerText = "Edit Saree Details";
+        const prod = getProducts().find(p => p.id === productId);
+        if (prod) {
+          document.getElementById("form-product-id").value = prod.id;
+          document.getElementById("form-name").value = prod.name;
+          document.getElementById("form-category").value = prod.category;
+          document.getElementById("form-fabric").value = prod.fabric;
+          document.getElementById("form-craft").value = prod.craft;
+          document.getElementById("form-desc").value = prod.desc;
+          
+          // Image Preview setting
+          document.getElementById("form-image-base64").value = prod.image;
+          document.getElementById("image-upload-preview").src = prod.image;
+          document.getElementById("image-upload-preview-container").classList.remove("hidden");
+          document.getElementById("image-upload-empty-state").classList.add("hidden");
+        }
+      } else {
+        title.innerText = "Add Saree / Dress to Catalog";
+        document.getElementById("form-product-id").value = "";
+      }
+
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    function closeFormModal() {
+      const modal = document.getElementById("product-form-modal");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+
+    // Client-side image upload & Canvas Compressor
+    function previewUploadedFile(input) {
+      const file = input.files[0];
+      if (!file) return;
+
+      // Ensure it is an image
+      if (!file.type.match("image.*")) {
+        alert("Please select a valid image file.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = function() {
+          const canvas = document.createElement("canvas");
+          let width = img.width;
+          let height = img.height;
+          
+          // Downscale parameters: limit width and height to 600px
+          const MAX_WIDTH = 600;
+          const MAX_HEIGHT = 600;
+          
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+          
+          canvas.width = width;
+          canvas.height = height;
+          
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          // Compress quality: 0.7 JPEG representation (~30-40KB)
+          const base64Data = canvas.toDataURL("image/jpeg", 0.7);
+          
+          document.getElementById("form-image-base64").value = base64Data;
+          document.getElementById("image-upload-preview").src = base64Data;
+          document.getElementById("image-upload-preview-container").classList.remove("hidden");
+          document.getElementById("image-upload-empty-state").classList.add("hidden");
+        };
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Form CRUD Actions on Submit
+    function handleFormSubmit(event) {
+      event.preventDefault();
+      
+      const productId = document.getElementById("form-product-id").value;
+      const name = document.getElementById("form-name").value.trim();
+      const category = document.getElementById("form-category").value;
+      const fabric = document.getElementById("form-fabric").value.trim();
+      const craft = document.getElementById("form-craft").value.trim();
+      const desc = document.getElementById("form-desc").value.trim();
+      let image = document.getElementById("form-image-base64").value;
+
+      // Fallback: If no image is provided, use saree_1.jpg default template
+      if (!image) {
+        image = "assets/saree_1.jpg";
+      }
+
+      let productList = getProducts();
+
+      if (productId) {
+        // Edit Mode
+        const idInt = parseInt(productId);
+        productList = productList.map(p => {
+          if (p.id === idInt) {
+            return { ...p, name, category, fabric, craft, desc, image };
+          }
+          return p;
+        });
+      } else {
+        // Add Mode
+        const newId = productList.length > 0 ? Math.max(...productList.map(p => p.id)) + 1 : 1;
+        const newProduct = {
+          id: newId,
+          name,
+          category,
+          fabric,
+          craft,
+          desc,
+          image
+        };
+        productList.push(newProduct);
+      }
+
+      saveProducts(productList);
+      closeFormModal();
+    }
+
+    // Delete Product
+    function deleteProduct(productId) {
+      if (confirm("Are you sure you want to delete this listing? This action cannot be undone.")) {
+        let productList = getProducts();
+        productList = productList.filter(p => p.id !== productId);
+        saveProducts(productList);
+      }
+    }
+
+    // Check login Auth status on page load
+    checkAuth();
+  </script>
+</body>
+</html>

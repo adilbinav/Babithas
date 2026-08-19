@@ -1,5 +1,5 @@
-// Product Data Catalog (Simplified 4 Featured Products)
-const products = [
+// Default product catalog (fallback database initialization)
+const DEFAULT_PRODUCTS = [
   {
     id: 1,
     name: "Valkalam Royal Magenta Silk",
@@ -38,11 +38,26 @@ const products = [
   }
 ];
 
-const WHATSAPP_NUMBER = "+91 623 85 99 582";
+const WHATSAPP_NUMBER = "916238599582";
+
+// LocalStorage Database helper
+function getProducts() {
+  try {
+    const stored = localStorage.getItem("babithas_products");
+    if (!stored) {
+      localStorage.setItem("babithas_products", JSON.stringify(DEFAULT_PRODUCTS));
+      return DEFAULT_PRODUCTS;
+    }
+    return JSON.parse(stored);
+  } catch (e) {
+    console.error("Failed to read localStorage", e);
+    return DEFAULT_PRODUCTS;
+  }
+}
 
 // Initialize elements
 document.addEventListener("DOMContentLoaded", () => {
-  renderProducts(products);
+  renderProducts(getProducts());
   setupFilters();
   setupMobileMenu();
   setupQuickViewModal();
@@ -91,6 +106,16 @@ function renderProducts(productList) {
   if (!grid) return;
 
   grid.innerHTML = "";
+
+  if (productList.length === 0) {
+    grid.innerHTML = `
+      <div class="col-span-full py-12 text-center text-stone-500">
+        <p class="font-serif text-xl italic mb-2">No items found in this collection</p>
+        <p class="text-xs">Add new listings through the Admin Console in the footer.</p>
+      </div>
+    `;
+    return;
+  }
 
   productList.forEach(prod => {
     // Generate WhatsApp text for demo modal
@@ -154,9 +179,9 @@ function setupFilters() {
       const category = btn.getAttribute("data-category");
 
       if (category === "all") {
-        renderProducts(products);
+        renderProducts(getProducts());
       } else {
-        const filtered = products.filter(p => p.category === category);
+        const filtered = getProducts().filter(p => p.category === category);
         renderProducts(filtered);
       }
     });
@@ -191,7 +216,7 @@ function setupQuickViewModal() {
 
 window.openQuickView = function(productId) {
   const modal = document.getElementById("quickview-modal");
-  const product = products.find(p => p.id === productId);
+  const product = getProducts().find(p => p.id === productId);
 
   if (!modal || !product) return;
   currentOpenProductId = productId;
