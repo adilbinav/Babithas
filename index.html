@@ -71,7 +71,7 @@
       <!-- Desktop Navigation Menu -->
       <nav class="hidden lg:flex space-x-8 text-sm font-semibold tracking-wider uppercase">
         <a href="#" class="hover-gold-border text-stone-900 transition-colors">Home</a>
-        <a href="#featured" class="hover-gold-border text-stone-900 transition-colors">Featured</a>
+        <a href="catalog.html" class="hover-gold-border text-stone-900 transition-colors">Catalogue</a>
         <a href="#story" class="hover-gold-border text-stone-900 transition-colors">Brand Story</a>
         <a href="#collections" class="hover-gold-border text-stone-900 transition-colors">Collections</a>
         <a href="#why-choose-us" class="hover-gold-border text-stone-900 transition-colors">Why Us</a>
@@ -80,7 +80,7 @@
 
       <!-- Desktop Action Buttons -->
       <div class="hidden lg:flex items-center space-x-4">
-        <a href="tel:+916238599582" class="flex items-center gap-2 border border-stone-200 text-stone-800 text-xs font-semibold uppercase tracking-wider py-2.5 px-4 rounded hover:bg-stone-50 transition-colors">
+        <a href="tel:+916238599582" class="flex items-center gap-2 border border-stone-200 text-stone-800 text-xs font-semibold uppercase tracking-wider py-2 px-4 rounded hover:bg-stone-50 transition-colors">
           <i class="fa-solid fa-phone text-stone-500"></i> Call Us
         </a>
         <button onclick="showWhatsAppDemo('Hi BaBitha\'s, I am interested in inquiring about your traditional saree collection catalog.')" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold uppercase tracking-wider py-2.5 px-4 rounded shadow transition-colors">
@@ -104,7 +104,7 @@
     <div id="mobile-menu" class="hidden lg:hidden border-t border-stone-100 bg-white luxury-shadow absolute top-20 left-0 w-full">
       <div class="px-4 pt-4 pb-6 space-y-4 text-center font-semibold tracking-widest uppercase text-stone-800 text-sm">
         <a href="#" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Home</a>
-        <a href="#featured" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Featured</a>
+        <a href="catalog.html" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Catalogue</a>
         <a href="#story" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Brand Story</a>
         <a href="#collections" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Collections</a>
         <a href="#why-choose-us" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Why Us</a>
@@ -145,8 +145,8 @@
             </p>
             
             <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-2">
-              <a href="#featured" class="gold-bg-gradient text-white text-xs font-bold tracking-widest uppercase py-4 px-8 rounded shadow-md gold-bg-gradient-hover transition-all duration-300">
-                View Collection
+              <a href="catalog.html" class="gold-bg-gradient text-white text-xs font-bold tracking-widest uppercase py-4 px-8 rounded shadow-md gold-bg-gradient-hover transition-all duration-300">
+                View Catalogue
               </a>
               <button onclick="showWhatsAppDemo('Hi BaBitha\'s, I am interested in booking a consultation for traditional sarees.')" class="flex items-center justify-center gap-2 border-2 border-emerald-600 text-emerald-700 bg-white/50 text-xs font-bold tracking-widest uppercase py-4 px-8 rounded hover:bg-emerald-50 transition-colors">
                 <i class="fa-brands fa-whatsapp text-base"></i> WhatsApp Us
@@ -259,9 +259,9 @@
               </p>
             </div>
             <div class="px-6 pb-6 pt-2">
-              <button onclick="showWhatsAppDemo('Hi BaBitha\'s, I\'d like to view your Royal Silk collections.')" class="w-full flex items-center justify-center gap-2 border border-stone-200 py-2.5 rounded text-xs font-semibold uppercase tracking-wider hover:bg-stone-50 transition-colors">
-                Inquire Silk Sarees
-              </button>
+              <a href="catalog.html?category=silk" class="w-full text-center inline-block border border-stone-200 py-2.5 rounded text-xs font-semibold uppercase tracking-wider hover:bg-stone-50 transition-colors">
+                Explore Silk Catalogue
+              </a>
             </div>
           </div>
 
@@ -275,9 +275,9 @@
               </p>
             </div>
             <div class="px-6 pb-6 pt-2">
-              <button onclick="showWhatsAppDemo('Hi BaBitha\'s, I\'d like to view your Kasavu handloom collections.')" class="w-full flex items-center justify-center gap-2 border border-stone-200 py-2.5 rounded text-xs font-semibold uppercase tracking-wider hover:bg-stone-50 transition-colors">
-                Inquire Kasavu Sarees
-              </button>
+              <a href="catalog.html?category=kasavu" class="w-full text-center inline-block border border-stone-200 py-2.5 rounded text-xs font-semibold uppercase tracking-wider hover:bg-stone-50 transition-colors">
+                Explore Kasavu Catalogue
+              </a>
             </div>
           </div>
 
@@ -291,9 +291,9 @@
               </p>
             </div>
             <div class="px-6 pb-6 pt-2">
-              <button onclick="showWhatsAppDemo('Hi BaBitha\'s, I\'d like to view your Linen and Cotton saree collections.')" class="w-full flex items-center justify-center gap-2 border border-stone-200 py-2.5 rounded text-xs font-semibold uppercase tracking-wider hover:bg-stone-50 transition-colors">
-                Inquire Linen & Cottons
-              </button>
+              <a href="catalog.html?category=linen" class="w-full text-center inline-block border border-stone-200 py-2.5 rounded text-xs font-semibold uppercase tracking-wider hover:bg-stone-50 transition-colors">
+                Explore Linen Catalogue
+              </a>
             </div>
           </div>
 
@@ -440,9 +440,8 @@
           <h4 class="font-serif text-sm font-semibold text-white uppercase tracking-wider">Explore</h4>
           <ul class="text-xs space-y-2 font-light">
             <li><a href="#" class="hover:text-gold-500 transition-colors">Home Base</a></li>
-            <li><a href="#featured" class="hover:text-gold-500 transition-colors">Featured Showcase</a></li>
+            <li><a href="catalog.html" class="hover:text-gold-500 transition-colors">Catalogue</a></li>
             <li><a href="#story" class="hover:text-gold-500 transition-colors">Our Philosophy</a></li>
-            <li><a href="#collections" class="hover:text-gold-500 transition-colors">Curated Collections</a></li>
             <li><a href="admin.html" class="hover:text-gold-500 transition-colors">Admin Console</a></li>
           </ul>
         </div>
@@ -512,7 +511,7 @@
 
           <div>
             <h4 class="text-xs uppercase tracking-wider font-bold text-stone-900 mb-1.5">Description</h4>
-            <p id="modal-desc" class="text-stone-600 text-xs md:text-sm leading-relaxed font-light">Product description.</p>
+            <p id="detail-desc" class="text-stone-600 text-xs md:text-sm leading-relaxed font-light">Product description.</p>
           </div>
         </div>
 

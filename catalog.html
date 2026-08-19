@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BaBitha's Traditional Sarees | Product Catalogue</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Tailwind Config Customizations -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gold: {
+              50: '#FDFBF7',
+              100: '#FAF4E3',
+              200: '#F3E5BF',
+              300: '#E7CE90',
+              400: '#DAB262',
+              500: '#CBA147', // Primary Brand Gold
+              600: '#B28834',
+              700: '#946E26',
+              800: '#75541C',
+              900: '#543C14',
+            },
+            cream: {
+              50: '#FCFAF6',  // Warm cream background
+              100: '#F6F2E9',
+              200: '#ECE3D1',
+              300: '#DFCFA9',
+            },
+            charcoal: {
+              DEFAULT: '#1C1917', // Text color
+              light: '#44403C',
+            }
+          },
+          fontFamily: {
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom Stylesheet Link -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-cream-50 text-charcoal font-sans flex flex-col min-h-screen">
+
+  <!-- Promo Top Bar -->
+  <div class="gold-bg-gradient text-white text-[11px] md:text-xs font-semibold py-2 px-4 text-center tracking-widest uppercase">
+    ✨ Traditional Handcrafted Heritage Sarees | Trivandrum Handlooms | We Ship Globally ✨
+  </div>
+
+  <!-- Main Navigation Header -->
+  <header id="main-header" class="sticky top-0 z-40 w-full transition-all duration-300 bg-white/95 backdrop-blur-md shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo Container -->
+      <a href="index.html" class="flex items-center">
+        <img src="assets/logo.jpg" alt="BaBitha's Logo" class="h-16 w-auto object-contain py-1 rounded-sm" />
+      </a>
+
+      <!-- Desktop Navigation Menu -->
+      <nav class="hidden lg:flex space-x-8 text-sm font-semibold tracking-wider uppercase">
+        <a href="index.html" class="hover-gold-border text-stone-900 transition-colors">Home</a>
+        <a href="catalog.html" class="hover-gold-border text-stone-900 transition-colors font-bold text-gold-600">Catalogue</a>
+        <a href="index.html#story" class="hover-gold-border text-stone-900 transition-colors">Brand Story</a>
+        <a href="index.html#collections" class="hover-gold-border text-stone-900 transition-colors">Collections</a>
+        <a href="admin.html" class="hover-gold-border text-stone-900 transition-colors">Admin Console</a>
+      </nav>
+
+      <!-- Desktop Action Buttons -->
+      <div class="hidden lg:flex items-center space-x-4">
+        <a href="tel:+916238599582" class="flex items-center gap-2 border border-stone-200 text-stone-800 text-xs font-semibold uppercase tracking-wider py-2 px-4 rounded hover:bg-stone-50 transition-colors">
+          <i class="fa-solid fa-phone text-stone-500"></i> Call Us
+        </a>
+        <button id="header-wa-btn" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold uppercase tracking-wider py-2 px-4 rounded shadow transition-colors">
+          <i class="fa-brands fa-whatsapp text-lg"></i> WhatsApp Inquiry
+        </button>
+      </div>
+
+      <!-- Mobile Hamburger Button -->
+      <button id="mobile-menu-btn" type="button" class="lg:hidden p-2 text-stone-900 focus:outline-none" aria-label="Toggle navigation menu" aria-expanded="false">
+        <svg class="icon-open h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+        <svg class="icon-close h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+    </div>
+
+    <!-- Mobile Collapsible Menu Panel -->
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-stone-100 bg-white luxury-shadow absolute top-20 left-0 w-full">
+      <div class="px-4 pt-4 pb-6 space-y-4 text-center font-semibold tracking-widest uppercase text-stone-800 text-sm">
+        <a href="index.html" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Home</a>
+        <a href="catalog.html" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors font-bold text-gold-600">Catalogue</a>
+        <a href="index.html#story" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Brand Story</a>
+        <a href="index.html#collections" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Collections</a>
+        <a href="admin.html" class="block py-2 border-b border-stone-50 hover:text-gold-500 transition-colors">Admin Console</a>
+        
+        <div class="pt-4 flex flex-col sm:flex-row gap-3 justify-center">
+          <a href="tel:+916238599582" class="flex items-center justify-center gap-2 border border-stone-300 text-stone-800 py-3 px-6 rounded text-xs font-bold tracking-widest uppercase hover:bg-stone-50 transition-colors">
+            <i class="fa-solid fa-phone"></i> Call Store
+          </a>
+          <button id="mobile-menu-wa-btn" class="flex items-center justify-center gap-2 bg-[#D4AF37] text-white py-3 px-6 rounded text-xs font-bold tracking-widest uppercase hover:bg-gold-600 transition-colors shadow">
+            <i class="fa-brands fa-whatsapp text-base"></i> WhatsApp Inquiry
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Title and Search Panel -->
+  <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    
+    <!-- Header Title -->
+    <div class="text-center max-w-xl mx-auto mb-10">
+      <h1 class="text-3xl md:text-4xl font-serif font-bold text-stone-900">Explore Our Full Catalogue</h1>
+      <p class="text-stone-500 text-xs md:text-sm mt-2">
+        Browse handloom sarees and designer collections. Filter by type or search by fabric names directly.
+      </p>
+      <div class="w-12 h-[1px] bg-[#D4AF37] mx-auto mt-4"></div>
+    </div>
+
+    <!-- Search & Filter Controls -->
+    <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-4 md:p-6 mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      
+      <!-- Real-time Search Input -->
+      <div class="relative w-full md:max-w-md">
+        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-stone-400">
+          <i class="fa-solid fa-magnifying-glass text-xs"></i>
+        </span>
+        <input type="text" id="search-input" class="w-full pl-9 pr-4 py-2.5 rounded-lg border border-stone-200 text-xs focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="Search by name, fabric, or craft...">
+      </div>
+
+      <!-- Filter Navigation Tabs (Category tags) -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
+        <button data-category="all" class="filter-tab shrink-0 bg-stone-900 text-white text-xs font-semibold py-2 px-4 rounded-full transition-colors uppercase tracking-wider shadow-sm">
+          All
+        </button>
+        <button data-category="silk" class="filter-tab shrink-0 bg-stone-100 text-stone-700 hover:bg-stone-200 text-xs font-semibold py-2 px-4 rounded-full transition-colors uppercase tracking-wider">
+          Heritage Silks
+        </button>
+        <button data-category="kasavu" class="filter-tab shrink-0 bg-stone-100 text-stone-700 hover:bg-stone-200 text-xs font-semibold py-2 px-4 rounded-full transition-colors uppercase tracking-wider">
+          Trivandrum Kasavu
+        </button>
+        <button data-category="linen" class="filter-tab shrink-0 bg-stone-100 text-stone-700 hover:bg-stone-200 text-xs font-semibold py-2 px-4 rounded-full transition-colors uppercase tracking-wider">
+          Linen & Cotton
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Product Grid Container -->
+    <div id="catalog-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+      <!-- Loaded dynamically via JavaScript -->
+    </div>
+
+  </main>
+
+  <!-- Foot/Contact Section -->
+  <footer class="bg-stone-900 text-stone-400 py-12 border-t-2 border-[#D4AF37] mb-16 md:mb-0">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        
+        <!-- Col 1: About Brand -->
+        <div class="space-y-4 md:col-span-2">
+          <div class="bg-white p-1 rounded-sm max-w-[200px] flex items-center justify-center">
+            <img src="assets/logo.jpg" alt="BaBitha's Logo Footer" class="h-10 w-auto object-contain">
+          </div>
+          <p class="text-xs text-stone-400 leading-relaxed font-light">
+            BaBitha's Clothing Brand, founded in Trivandrum, represents premium handloom traditions. Built on the core values of quality craftsmanship, confidence, and ultimate draping comfort.
+          </p>
+          <div class="flex items-center gap-4 text-white text-base">
+            <a href="https://instagram.com/BABITHAGB07" target="_blank" rel="noopener" class="hover:text-gold-500 transition-colors"><i class="fa-brands fa-instagram"></i></a>
+            <button id="footer-wa-btn" class="hover:text-gold-500 transition-colors"><i class="fa-brands fa-whatsapp"></i></button>
+            <a href="tel:+916238599582" class="hover:text-gold-500 transition-colors"><i class="fa-solid fa-phone"></i></a>
+          </div>
+        </div>
+
+        <!-- Col 2: Quick Links -->
+        <div class="space-y-3">
+          <h4 class="font-serif text-sm font-semibold text-white uppercase tracking-wider">Explore</h4>
+          <ul class="text-xs space-y-2 font-light">
+            <li><a href="index.html" class="hover:text-gold-500 transition-colors">Home Base</a></li>
+            <li><a href="catalog.html" class="hover:text-gold-500 transition-colors">Catalogue</a></li>
+            <li><a href="index.html#story" class="hover:text-gold-500 transition-colors">Our Philosophy</a></li>
+            <li><a href="admin.html" class="hover:text-gold-500 transition-colors">Admin Console</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Store Address / Info -->
+        <div class="space-y-3">
+          <h4 class="font-serif text-sm font-semibold text-white uppercase tracking-wider">Trivandrum Store</h4>
+          <ul class="text-xs space-y-2 font-light">
+            <li><span class="text-white">Location:</span> Trivandrum, Kerala, India</li>
+            <li><span class="text-white">Call:</span> +91 623 85 99 582</li>
+            <li><span class="text-white">WhatsApp:</span> +91 623 85 99 582</li>
+            <li><span class="text-white">Insta:</span> @BABITHAGB07</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Footer Divider -->
+      <div class="h-[1px] bg-stone-800 my-8"></div>
+
+      <!-- Copyright Bar -->
+      <div class="flex flex-col sm:flex-row items-center justify-between text-[11px] font-light text-stone-500 gap-4">
+        <p>© 2026 BaBitha's Clothing Brand. All Rights Reserved.</p>
+        <p>Handcrafted Heritage • Trivandrum</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile Sticky Bottom Call-to-Action Bar -->
+  <div class="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-stone-200 px-4 py-2.5 flex items-center gap-3 md:hidden mobile-sticky-action">
+    <a href="tel:+916238599582" class="w-1/2 flex items-center justify-center gap-2 border border-stone-300 text-stone-800 text-xs font-bold tracking-widest uppercase py-3 rounded hover:bg-stone-50 transition-colors">
+      <i class="fa-solid fa-phone text-stone-500"></i> Direct Call
+    </a>
+    <button id="mobile-sticky-wa-btn" class="w-1/2 flex items-center justify-center gap-2 bg-[#D4AF37] text-white text-xs font-bold tracking-widest uppercase py-3 rounded shadow transition-all duration-300">
+      <i class="fa-brands fa-whatsapp text-base"></i> WhatsApp Us
+    </button>
+  </div>
+
+  <!-- Custom WhatsApp Demo Modal -->
+  <div id="whatsapp-demo-modal" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm items-center justify-center p-4">
+    <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-xl border border-stone-100 text-center space-y-4">
+      <div class="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto text-2xl animate-bounce">
+        <i class="fa-brands fa-whatsapp"></i>
+      </div>
+      <h3 class="font-serif text-xl font-bold text-stone-900">WhatsApp Inquiry (Demo Mode)</h3>
+      <p class="text-xs text-stone-500 leading-relaxed">
+        On a live website, this button launches WhatsApp to chat with BaBitha's brand experts at:
+      </p>
+      <div class="bg-stone-50 p-2.5 rounded border border-stone-200 text-xs font-bold text-stone-700">
+        📞 +91 623 85 99 582
+      </div>
+      <div class="text-left space-y-1">
+        <span class="text-[10px] uppercase text-stone-400 tracking-wider font-bold">Prefilled Inquiry Text:</span>
+        <div id="whatsapp-demo-message" class="bg-cream-50 p-3 rounded border border-stone-100 text-xs text-stone-600 italic whitespace-pre-wrap leading-relaxed max-h-32 overflow-y-auto">
+          Message text.
+        </div>
+      </div>
+      <div class="pt-2">
+        <button onclick="closeWhatsAppDemo()" class="w-full bg-[#D4AF37] hover:bg-gold-600 text-white font-bold text-xs tracking-widest uppercase py-3 px-4 rounded shadow transition-colors">
+          Dismiss Demo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Client-Side Catalogue Render & Filter Script -->
+  <script>
+    const DEFAULT_PRODUCTS = [
+      {
+        id: 1,
+        name: "Valkalam Royal Magenta Silk",
+        category: "silk",
+        fabric: "Pure Kanchipuram Silk",
+        craft: "Handcrafted Zari Brocade",
+        price: 12500,
+        image: "assets/saree_1.jpg",
+        images: ["assets/saree_1.jpg", "assets/saree_2.jpg"],
+        desc: "A majestic magenta silk saree decorated with ornate gold zari brocade, featuring a grand floral border and traditional rich pallu. Ideal for weddings and royal celebrations."
+      },
+      {
+        id: 2,
+        name: "Classic Balaramapuram Kasavu",
+        category: "kasavu",
+        fabric: "Premium Kerala Cotton",
+        craft: "Trivandrum Gold Handloom",
+        price: 4999,
+        image: "assets/saree_2.jpg",
+        images: ["assets/saree_2.jpg", "assets/saree_1.jpg"],
+        desc: "The timeless Kerala Kasavu saree, handwoven with fine off-white cotton and a signature rich gold zari border. It represents pure simplicity and cultural heritage."
+      },
+      {
+        id: 3,
+        name: "Crimson Mughal Brocade Silk",
+        category: "silk",
+        fabric: "Katan Silk",
+        craft: "Banarasi Cutwork Weave",
+        price: 15999,
+        image: "assets/saree_1.jpg",
+        images: ["assets/saree_1.jpg", "assets/saree_2.jpg"],
+        desc: "A radiant crimson saree crafted with pure Banarasi silk, displaying heritage gold motifs and an elaborate traditional border that radiates confidence."
+      },
+      {
+        id: 4,
+        name: "Pastel Sage Organic Linen Saree",
+        category: "linen",
+        fabric: "100-Count Linen",
+        craft: "Modern Border Weaving",
+        price: 3499,
+        image: "assets/saree_2.jpg",
+        images: ["assets/saree_2.jpg", "assets/saree_1.jpg"],
+        desc: "A breathable, eco-friendly linen saree in pastel sage green, trimmed with subtle silver-gold zari borders, offering both comfort and modern minimalist elegance."
+      }
+    ];
+
+    let activeCategory = "all";
+    let searchQuery = "";
+
+    document.addEventListener("DOMContentLoaded", () => {
+      initializeCategoryFromURL();
+      renderCatalogGrid();
+      setupFilters();
+      setupSearch();
+      setupDemoModalClose();
+      setupHeaderActions();
+    });
+
+    function getProducts() {
+      try {
+        const stored = localStorage.getItem("babithas_products");
+        return stored ? JSON.parse(stored) : DEFAULT_PRODUCTS;
+      } catch (e) {
+        return DEFAULT_PRODUCTS;
+      }
+    }
+
+    // Read ?category= URL Parameter on load
+    function initializeCategoryFromURL() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const catParam = urlParams.get("category");
+      
+      if (catParam && ["silk", "kasavu", "linen"].includes(catParam)) {
+        activeCategory = catParam;
+        
+        // Update filter tabs UI highlights
+        document.querySelectorAll(".filter-tab").forEach(btn => {
+          if (btn.getAttribute("data-category") === catParam) {
+            btn.classList.remove("bg-stone-100", "text-stone-700");
+            btn.classList.add("bg-stone-900", "text-white", "shadow-sm");
+          } else {
+            btn.classList.add("bg-stone-100", "text-stone-700");
+            btn.classList.remove("bg-stone-900", "text-white", "shadow-sm");
+          }
+        });
+      }
+    }
+
+    // Render cards to grid
+    function renderCatalogGrid() {
+      const grid = document.getElementById("catalog-products-grid");
+      if (!grid) return;
+
+      grid.innerHTML = "";
+      
+      const allProducts = getProducts();
+      
+      // Filter logic: category filter + search text filter
+      const filtered = allProducts.filter(prod => {
+        const matchCategory = activeCategory === "all" || prod.category === activeCategory;
+        
+        const q = searchQuery.toLowerCase();
+        const matchSearch = prod.name.toLowerCase().includes(q) || 
+                            prod.fabric.toLowerCase().includes(q) || 
+                            prod.craft.toLowerCase().includes(q) ||
+                            prod.desc.toLowerCase().includes(q);
+                            
+        return matchCategory && matchSearch;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-16 text-center text-stone-500 font-light bg-white rounded-lg border border-stone-200">
+            <i class="fa-solid fa-magnifying-glass text-3xl text-stone-300 mb-2 block"></i>
+            <p class="font-serif text-lg italic">No sarees match your criteria</p>
+            <p class="text-xs text-stone-400 mt-1">Try resetting the filter tabs or clear your search query.</p>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(prod => {
+        const priceText = prod.price ? `₹${Number(prod.price).toLocaleString()}` : "Price on Ask";
+        const inquiryMsg = `Hi BaBitha's, I am interested in inquiring about the "${prod.name}" (${prod.fabric}) priced at ${priceText} that I saw on your catalogue page.`;
+        const escapedMsg = inquiryMsg.replace(/'/g, "\\'");
+
+        const card = document.createElement("div");
+        card.className = "product-card group bg-white border border-stone-100 rounded-lg overflow-hidden luxury-shadow-sm hover:luxury-shadow transition-all duration-300 flex flex-col animate-scale-up";
+
+        card.innerHTML = `
+          <div class="relative overflow-hidden bg-stone-50 aspect-[3/4]">
+            <img src="${prod.image}" alt="${prod.name}" class="product-image-zoom w-full h-full object-cover object-center">
+            <span class="absolute top-3 left-3 bg-stone-900/95 text-white text-[9px] tracking-widest uppercase font-semibold px-2 py-0.5 rounded border border-stone-700/20">
+              ${prod.category}
+            </span>
+            <span class="absolute bottom-3 right-3 bg-white/90 text-stone-900 text-xs font-bold px-2 py-1 rounded shadow-sm">
+              ${priceText}
+            </span>
+            <div class="hidden md:flex absolute inset-0 bg-stone-950/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-end justify-center p-4">
+              <div class="w-full space-y-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                <a href="product.html?id=${prod.id}" class="w-full inline-block text-center bg-white text-stone-900 text-xs font-semibold py-2.5 px-4 rounded shadow hover:bg-stone-50 transition-colors uppercase tracking-wider">
+                  View Details
+                </a>
+                <button onclick="showWhatsAppDemo('${escapedMsg}')" class="w-full flex items-center justify-center gap-2 bg-[#D4AF37] hover:bg-[#AA771C] text-white text-xs font-semibold py-2.5 px-4 rounded shadow transition-colors uppercase tracking-wider">
+                  <i class="fa-brands fa-whatsapp"></i> Inquire Now
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="p-4 flex flex-col flex-grow">
+            <div class="flex items-center justify-between gap-2 mb-1">
+              <p class="text-[10px] uppercase tracking-wider text-[#AA771C] font-semibold">${prod.fabric}</p>
+              <span class="text-stone-900 font-bold text-xs">${priceText}</span>
+            </div>
+            <a href="product.html?id=${prod.id}" class="block group-hover:text-[#AA771C]">
+              <h3 class="font-serif text-base font-semibold text-stone-900 group-hover:text-[#AA771C] transition-colors mb-2 line-clamp-1">${prod.name}</h3>
+            </a>
+            <p class="text-stone-500 text-xs line-clamp-2 mb-4 flex-grow">${prod.desc}</p>
+            
+            <div class="mt-auto space-y-2 md:hidden">
+              <a href="product.html?id=${prod.id}" class="w-full block text-center border border-stone-200 text-stone-800 text-xs font-semibold py-2 px-3 rounded hover:bg-stone-50 transition-colors uppercase tracking-wider">
+                View Details
+              </a>
+              <button onclick="showWhatsAppDemo('${escapedMsg}')" class="w-full flex items-center justify-center gap-2 bg-[#D4AF37] text-white text-xs font-semibold py-2 px-3 rounded shadow transition-colors uppercase tracking-wider">
+                <i class="fa-brands fa-whatsapp"></i> Inquire WhatsApp
+              </button>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // Set up filter click listeners
+    function setupFilters() {
+      const filterBtns = document.querySelectorAll(".filter-tab");
+      
+      filterBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          filterBtns.forEach(b => {
+            b.classList.remove("bg-stone-900", "text-white", "shadow-sm");
+            b.classList.add("bg-stone-100", "text-stone-700");
+          });
+
+          btn.classList.remove("bg-stone-100", "text-stone-700");
+          btn.classList.add("bg-stone-900", "text-white", "shadow-sm");
+
+          activeCategory = btn.getAttribute("data-category");
+          renderCatalogGrid();
+        });
+      });
+    }
+
+    // Set up real-time search typing listener
+    function setupSearch() {
+      const searchInput = document.getElementById("search-input");
+      if (!searchInput) return;
+
+      searchInput.addEventListener("input", (e) => {
+        searchQuery = e.target.value.trim();
+        renderCatalogGrid();
+      });
+    }
+
+    // Header Action hooks
+    function setupHeaderActions() {
+      const clickHandler = () => showWhatsAppDemo("Hi BaBitha's, I am browsing your online catalog and have a general question.");
+      document.getElementById("header-wa-btn").onclick = clickHandler;
+      document.getElementById("mobile-menu-wa-btn").onclick = clickHandler;
+      document.getElementById("mobile-sticky-wa-btn").onclick = clickHandler;
+      document.getElementById("footer-wa-btn").onclick = clickHandler;
+    }
+
+    // Modal Control
+    function showWhatsAppDemo(message) {
+      const modal = document.getElementById("whatsapp-demo-modal");
+      const msgEl = document.getElementById("whatsapp-demo-message");
+      if (!modal || !msgEl) return;
+      
+      msgEl.innerText = message;
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+      document.body.classList.add("overflow-hidden");
+    }
+
+    function closeWhatsAppDemo() {
+      const modal = document.getElementById("whatsapp-demo-modal");
+      if (!modal) return;
+      
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+      document.body.classList.remove("overflow-hidden");
+    }
+
+    function setupDemoModalClose() {
+      const modal = document.getElementById("whatsapp-demo-modal");
+      if (!modal) return;
+      
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          closeWhatsAppDemo();
+        }
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && !modal.classList.contains("hidden")) {
+          closeWhatsAppDemo();
+        }
+      });
+    }
+  </script>
+</body>
+</html>
