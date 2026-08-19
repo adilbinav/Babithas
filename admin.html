@@ -59,14 +59,14 @@
     }
   </style>
 </head>
-<body class="bg-cream-50 text-charcoal min-h-screen flex flex-col">
+<body class="bg-cream-50 text-charcoal min-h-screen flex flex-col pb-16 sm:pb-0">
 
   <!-- Mock Admin Login Guard Screen (Overlay) -->
   <div id="login-overlay" class="fixed inset-0 z-50 bg-stone-900 flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl max-w-md w-full p-8 border border-stone-100 shadow-2xl space-y-6 text-center">
+    <div class="bg-white rounded-xl max-w-md w-full p-6 sm:p-8 border border-stone-100 shadow-2xl space-y-6 text-center">
       <img src="assets/Logo-web.png" alt="BaBitha's Logo" class="h-16 mx-auto object-contain mb-2">
       <div class="space-y-2">
-        <h2 class="text-2xl font-serif font-bold text-stone-900">CMS Console Login</h2>
+        <h2 class="text-xl sm:text-2xl font-serif font-bold text-stone-900">CMS Console Login</h2>
         <p class="text-stone-500 text-xs font-light">Enter administrative passcode to manage products.</p>
       </div>
       
@@ -75,8 +75,8 @@
           <label for="passcode" class="sr-only">Passcode</label>
           <input type="password" id="passcode" required class="w-full px-4 py-3 rounded border border-stone-200 text-center tracking-widest text-sm focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="••••••••">
         </div>
-        <div id="login-error" class="hidden text-xs text-red-600 font-semibold">Invalid passcode. (Hint: enter "admin")</div>
-        <button type="submit" class="w-full bg-[#D4AF37] hover:bg-gold-600 text-white font-bold text-xs tracking-widest uppercase py-3.5 px-4 rounded shadow-md transition-colors">
+        <div id="login-error" class="hidden text-xs text-red-600 font-semibold animate-pulse">Invalid passcode. (Hint: enter "admin")</div>
+        <button type="submit" class="w-full bg-[#D4AF37] hover:bg-gold-600 text-white font-bold text-xs tracking-widest uppercase py-3.5 px-4 rounded shadow-md transition-colors min-h-[44px]">
           Verify Passcode
         </button>
       </form>
@@ -84,39 +84,39 @@
   </div>
 
   <!-- Main CMS Console Dashboard Header -->
-  <header class="bg-white border-b border-stone-200 shadow-sm py-4 px-6 sticky top-0 z-30">
-    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-4">
-        <img src="assets/Logo-web.png" alt="Logo" class="h-10 w-auto object-contain">
+  <header class="bg-white border-b border-stone-200 shadow-sm py-4 px-4 sm:px-6 sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <img src="assets/Logo-web.png" alt="Logo" class="h-8 sm:h-10 w-auto object-contain">
         <div class="h-6 w-[1px] bg-stone-200 hidden sm:block"></div>
-        <h1 class="text-lg font-serif font-bold text-stone-900 hidden sm:block">Product Catalogue Manager</h1>
+        <h1 class="text-base sm:text-lg font-serif font-bold text-stone-900 hidden sm:block">Product Catalogue Manager</h1>
       </div>
-      <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
-        <a href="index.html" class="flex items-center gap-2 border border-stone-200 text-stone-700 bg-white text-xs font-semibold py-2 px-4 rounded hover:bg-stone-50 transition-colors uppercase tracking-wider">
-          <i class="fa-solid fa-store"></i> View Storefront
+      <div class="flex items-center gap-2">
+        <a href="index.html" class="flex items-center justify-center gap-1.5 border border-stone-200 text-stone-700 bg-white text-[10px] sm:text-xs font-bold py-2.5 px-3 sm:px-4 rounded hover:bg-stone-50 transition-colors uppercase tracking-wider min-h-[38px]">
+          <i class="fa-solid fa-store"></i> <span class="hidden xs:inline">Storefront</span>
         </a>
-        <button onclick="handleLogout()" class="flex items-center gap-2 border border-stone-200 text-red-600 bg-white text-xs font-semibold py-2 px-4 rounded hover:bg-red-50 transition-colors uppercase tracking-wider">
-          <i class="fa-solid fa-right-from-bracket"></i> Lock Console
+        <button onclick="handleLogout()" class="flex items-center justify-center gap-1.5 border border-stone-200 text-red-600 bg-white text-[10px] sm:text-xs font-bold py-2.5 px-3 sm:px-4 rounded hover:bg-red-50 transition-colors uppercase tracking-wider min-h-[38px]">
+          <i class="fa-solid fa-right-from-bracket"></i> <span class="hidden xs:inline">Lock</span>
         </button>
       </div>
     </div>
   </header>
 
   <!-- Dashboard Content Container -->
-  <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 flex-grow">
+  <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-grow">
     <div class="space-y-6">
       
       <!-- Top Actions Bar -->
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-4 rounded-lg border border-stone-200 shadow-sm">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 rounded-xl border border-stone-200 shadow-sm">
         <div>
-          <h2 class="text-xl font-serif font-bold text-stone-900">Current Catalog Listings</h2>
-          <p class="text-stone-500 text-xs font-light mt-0.5">Manage products and edit fields directly.</p>
+          <h2 class="text-lg sm:text-xl font-serif font-bold text-stone-900">Current Catalog Listings</h2>
+          <p class="text-stone-500 text-[11px] sm:text-xs font-light mt-0.5">Manage products and edit fields directly.</p>
         </div>
-        <div class="flex gap-3 shrink-0">
-          <button onclick="resetToDefaults()" class="border border-stone-200 text-stone-700 text-xs font-semibold uppercase tracking-wider py-2.5 px-4 rounded hover:bg-stone-50 transition-colors">
-            <i class="fa-solid fa-rotate-left mr-1"></i> Reset Defaults
+        <div class="flex gap-2 w-full sm:w-auto">
+          <button onclick="resetToDefaults()" class="w-1/2 sm:w-auto border border-stone-200 text-stone-700 text-[10px] sm:text-xs font-bold uppercase tracking-wider py-2.5 px-4 rounded hover:bg-stone-50 transition-colors min-h-[44px]">
+            <i class="fa-solid fa-rotate-left mr-1"></i> Reset
           </button>
-          <button onclick="openFormModal(null)" class="bg-[#D4AF37] hover:bg-gold-600 text-white text-xs font-bold uppercase tracking-wider py-2.5 px-5 rounded shadow transition-colors">
+          <button onclick="openFormModal(null)" class="w-1/2 sm:w-auto bg-[#D4AF37] hover:bg-gold-600 text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider py-2.5 px-4 sm:px-5 rounded shadow transition-colors min-h-[44px]">
             <i class="fa-solid fa-plus mr-1"></i> Add Product
           </button>
         </div>
@@ -126,30 +126,24 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         <!-- Category Manager Card -->
-        <div class="bg-white rounded-lg border border-stone-200 p-5 shadow-sm space-y-4">
+        <div class="bg-white rounded-xl border border-stone-200 p-4 sm:p-5 shadow-sm space-y-4">
           <div>
-            <h3 class="text-base font-serif font-bold text-stone-900">1. Category Tab Manager</h3>
-            <p class="text-[11px] text-stone-500 font-light mt-0.5">Add or remove custom collection category tabs instantly.</p>
+            <h3 class="text-sm sm:text-base font-serif font-bold text-stone-900">1. Category Tab Manager</h3>
+            <p class="text-[10px] sm:text-[11px] text-stone-500 font-light mt-0.5">Add or remove custom collection category tabs instantly.</p>
           </div>
           
-          <form onsubmit="addCategory(event)" class="grid grid-cols-1 sm:grid-cols-12 gap-2 text-xs">
-            <div class="sm:col-span-4">
-              <label class="sr-only">Category ID</label>
-              <input type="text" id="cat-id-input" required class="w-full px-3 py-2 rounded border border-stone-200 uppercase tracking-widest font-semibold focus:outline-none" placeholder="ID (e.g. kurtas)">
-            </div>
-            <div class="sm:col-span-5">
-              <label class="sr-only">Category Name</label>
-              <input type="text" id="cat-name-input" required class="w-full px-3 py-2 rounded border border-stone-200 focus:outline-none" placeholder="Tab Name (e.g. Kurtas)">
-            </div>
-            <button type="submit" class="sm:col-span-3 bg-stone-900 hover:bg-stone-850 text-white font-bold rounded uppercase tracking-wider py-2 px-3">
+          <form onsubmit="addCategory(event)" class="flex flex-col sm:flex-row gap-2 text-xs">
+            <input type="text" id="cat-id-input" required class="w-full sm:w-1/3 px-3 py-2.5 rounded border border-stone-200 uppercase tracking-widest font-semibold focus:outline-none bg-white min-h-[40px]" placeholder="ID (e.g. kurtas)">
+            <input type="text" id="cat-name-input" required class="w-full sm:w-1/3 px-3 py-2.5 rounded border border-stone-200 focus:outline-none bg-white min-h-[40px]" placeholder="Name (e.g. Kurtas)">
+            <button type="submit" class="w-full sm:w-1/3 bg-stone-900 hover:bg-stone-850 text-white font-bold rounded uppercase tracking-wider py-2.5 px-3 min-h-[40px]">
               Add Tab
             </button>
           </form>
 
           <div class="h-[1px] bg-stone-100"></div>
 
-          <div class="space-y-1">
-            <span class="text-[10px] text-stone-400 font-semibold tracking-wider uppercase">Active Categories List:</span>
+          <div class="space-y-1.5">
+            <span class="text-[9px] text-stone-400 font-bold tracking-wider uppercase">Active Categories List:</span>
             <div id="categories-settings-list" class="flex flex-wrap gap-2 pt-1">
               <!-- Managed dynamically -->
             </div>
@@ -157,171 +151,181 @@
         </div>
 
         <!-- Homepage Limits Card -->
-        <div class="bg-white rounded-lg border border-stone-200 p-5 shadow-sm flex flex-col justify-between space-y-4">
+        <div class="bg-white rounded-xl border border-stone-200 p-4 sm:p-5 shadow-sm flex flex-col justify-between space-y-4">
           <div>
-            <h3 class="text-base font-serif font-bold text-stone-900">2. Homepage Showcase Limit</h3>
-            <p class="text-[11px] text-stone-500 font-light mt-0.5">Set the maximum number of featured items displayed on the landing page showcase.</p>
+            <h3 class="text-sm sm:text-base font-serif font-bold text-stone-900">2. Homepage Showcase Limit</h3>
+            <p class="text-[10px] sm:text-[11px] text-stone-500 font-light mt-0.5">Set the maximum number of featured items displayed on the landing page showcase.</p>
           </div>
           
-          <form onsubmit="saveShowcaseLimit(event)" class="flex gap-3 text-xs items-center">
+          <form onsubmit="saveShowcaseLimit(event)" class="flex gap-2 text-xs items-center">
             <div class="w-24">
               <label for="showcase-limit-input" class="sr-only">Showcase Limit</label>
-              <input type="number" id="showcase-limit-input" min="1" max="20" required class="w-full px-3 py-2.5 rounded border border-stone-200 font-bold focus:outline-none" placeholder="4">
+              <input type="number" id="showcase-limit-input" min="1" max="20" required class="w-full px-3 py-2.5 rounded border border-stone-200 font-bold focus:outline-none bg-white min-h-[40px]" placeholder="4">
             </div>
-            <button type="submit" class="bg-[#D4AF37] hover:bg-gold-600 text-white font-bold uppercase tracking-wider py-2.5 px-5 rounded shadow">
+            <button type="submit" class="bg-[#D4AF37] hover:bg-gold-600 text-white font-bold uppercase tracking-wider py-2.5 px-4 rounded shadow min-h-[40px] flex-grow sm:flex-none">
               Update Limit
             </button>
           </form>
 
-          <div class="bg-stone-50 border border-stone-200 p-2.5 rounded text-[11px] text-stone-500 font-light flex items-center gap-2">
-            <i class="fa-solid fa-circle-info text-[#D4AF37]"></i>
+          <div class="bg-stone-50 border border-stone-200 p-2.5 rounded text-[10px] sm:text-[11px] text-stone-500 font-light flex items-center gap-2">
+            <i class="fa-solid fa-circle-info text-[#D4AF37] shrink-0"></i>
             <span>Mark individual products as "Featured" below to control what displays.</span>
           </div>
         </div>
 
       </div>
 
-      <!-- Product Catalog Table -->
-      <div class="bg-white border border-stone-200 rounded-lg shadow-sm overflow-hidden">
-        <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-stone-200 text-left text-xs">
-            <thead class="bg-stone-50 font-bold uppercase tracking-wider text-stone-500 text-[10px]">
-              <tr>
-                <th scope="col" class="px-6 py-4">Image</th>
-                <th scope="col" class="px-6 py-4">Product Name</th>
-                <th scope="col" class="px-6 py-4">Category</th>
-                <th scope="col" class="px-6 py-4">Fabric</th>
-                <th scope="col" class="px-6 py-4">Weaving Art / Craft</th>
-                <th scope="col" class="px-6 py-4">Price</th>
-                <th scope="col" class="px-6 py-4">Featured</th>
-                <th scope="col" class="px-6 py-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="catalog-table-body" class="divide-y divide-stone-100 text-stone-700">
-              <!-- Rendered dynamically by Javascript -->
-            </tbody>
-          </table>
+      <!-- Responsive Product Catalog Table/List -->
+      <div class="space-y-4">
+        
+        <!-- Desktop Table View (Hidden on mobile) -->
+        <div class="hidden md:block bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-stone-200 text-left text-xs">
+              <thead class="bg-stone-50 font-bold uppercase tracking-wider text-stone-500 text-[10px]">
+                <tr>
+                  <th scope="col" class="px-6 py-4">Image</th>
+                  <th scope="col" class="px-6 py-4">Product Name</th>
+                  <th scope="col" class="px-6 py-4">Category</th>
+                  <th scope="col" class="px-6 py-4">Fabric</th>
+                  <th scope="col" class="px-6 py-4">Weaving Art / Craft</th>
+                  <th scope="col" class="px-6 py-4">Price</th>
+                  <th scope="col" class="px-6 py-4">Featured</th>
+                  <th scope="col" class="px-6 py-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="catalog-table-body" class="divide-y divide-stone-100 text-stone-700">
+                <!-- Rendered dynamically by Javascript -->
+              </tbody>
+            </table>
+          </div>
         </div>
+
+        <!-- Mobile Card List View (Visible on mobile/tablet) -->
+        <div id="catalog-mobile-list" class="block md:hidden space-y-3">
+          <!-- Rendered dynamically by Javascript -->
+        </div>
+
       </div>
 
     </div>
   </main>
 
-  <!-- Add / Edit Product Modal -->
+  <!-- Add / Edit Product Modal (Mobile friendly sheet/panel overlay) -->
   <div id="product-form-modal" class="fixed inset-0 z-40 hidden bg-black/50 backdrop-blur-sm items-center justify-center p-4">
-    <div class="bg-white rounded-xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-stone-100 shadow-2xl p-6 relative">
+    <div class="bg-white rounded-xl w-full max-w-lg max-h-[90vh] sm:max-h-[85vh] overflow-y-auto border border-stone-150 shadow-2xl p-5 sm:p-6 relative">
       
       <!-- Close Button -->
-      <button onclick="closeFormModal()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-600 transition-colors w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center">
+      <button onclick="closeFormModal()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-600 transition-colors w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center min-h-[32px] min-w-[32px]">
         <i class="fa-solid fa-xmark"></i>
       </button>
 
-      <h2 id="modal-form-title" class="text-2xl font-serif font-bold text-stone-900 mb-6">Add Saree / Dress</h2>
+      <h2 id="modal-form-title" class="text-xl sm:text-2xl font-serif font-bold text-stone-900 mb-5 pr-8">Add Saree / Dress</h2>
       
-      <form id="product-crud-form" onsubmit="handleFormSubmit(event)" class="space-y-5 text-xs font-semibold text-stone-700">
+      <form id="product-crud-form" onsubmit="handleFormSubmit(event)" class="space-y-4 text-xs font-semibold text-stone-700">
         <input type="hidden" id="form-product-id">
 
         <!-- Saree Name -->
         <div>
-          <label for="form-name" class="block uppercase tracking-wider text-stone-500 mb-2">Product Name</label>
-          <input type="text" id="form-name" required class="w-full px-4 py-2.5 rounded border border-stone-200 text-sm focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="e.g. Valkalam Royal Magenta Silk">
+          <label for="form-name" class="block uppercase tracking-wider text-stone-400 mb-1.5">Product Name</label>
+          <input type="text" id="form-name" required class="w-full px-3.5 py-2.5 rounded border border-stone-200 text-sm font-normal focus:ring-1 focus:ring-gold-500 focus:outline-none bg-white min-h-[44px]" placeholder="e.g. Valkalam Royal Magenta Silk">
         </div>
 
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <!-- Category -->
           <div>
-            <label for="form-category" class="block uppercase tracking-wider text-stone-500 mb-2">Category Tab</label>
-            <select id="form-category" class="w-full px-4 py-2.5 rounded border border-stone-200 text-sm bg-white focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none">
+            <label for="form-category" class="block uppercase tracking-wider text-stone-400 mb-1.5">Category Tab</label>
+            <select id="form-category" class="w-full px-3.5 py-2.5 rounded border border-stone-200 text-sm font-normal bg-white focus:ring-1 focus:ring-gold-500 focus:outline-none min-h-[44px]">
               <!-- Rendered dynamically -->
             </select>
           </div>
 
           <!-- Price -->
           <div>
-            <label for="form-price" class="block uppercase tracking-wider text-stone-500 mb-2">Price (₹, Optional)</label>
-            <input type="number" id="form-price" class="w-full px-4 py-2.5 rounded border border-stone-200 text-sm focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="e.g. 12500 (leave empty for Ask)">
+            <label for="form-price" class="block uppercase tracking-wider text-stone-400 mb-1.5">Price (₹, Optional)</label>
+            <input type="number" id="form-price" class="w-full px-3.5 py-2.5 rounded border border-stone-200 text-sm font-normal focus:ring-1 focus:ring-gold-500 focus:outline-none bg-white min-h-[44px]" placeholder="e.g. 12500 (leave blank for On Ask)">
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-4 items-center">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
           <!-- Fabric -->
           <div>
-            <label for="form-fabric" class="block uppercase tracking-wider text-stone-500 mb-2">Fabric Type</label>
-            <input type="text" id="form-fabric" required class="w-full px-4 py-2.5 rounded border border-stone-200 text-sm focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="e.g. Pure Kanchipuram Silk">
+            <label for="form-fabric" class="block uppercase tracking-wider text-stone-400 mb-1.5">Fabric Type</label>
+            <input type="text" id="form-fabric" required class="w-full px-3.5 py-2.5 rounded border border-stone-200 text-sm font-normal focus:ring-1 focus:ring-gold-500 focus:outline-none bg-white min-h-[44px]" placeholder="e.g. Pure Kanchipuram Silk">
           </div>
 
           <!-- Featured Checkbox -->
-          <div class="flex items-center gap-2 pt-6">
-            <input type="checkbox" id="form-featured" class="w-4 h-4 text-gold-500 border-stone-300 rounded focus:ring-gold-500">
-            <label for="form-featured" class="uppercase tracking-wider text-stone-600 cursor-pointer select-none">Feature on Homepage</label>
+          <div class="flex items-center gap-2 pt-2 sm:pt-6">
+            <input type="checkbox" id="form-featured" class="w-5 h-5 text-gold-500 border-stone-300 rounded focus:ring-gold-500 cursor-pointer min-h-[24px]">
+            <label for="form-featured" class="uppercase tracking-wider text-stone-600 cursor-pointer select-none text-[11px]">Feature on Homepage</label>
           </div>
         </div>
 
         <!-- Craft -->
         <div>
-          <label for="form-craft" class="block uppercase tracking-wider text-stone-500 mb-2">Weave Craft / Style</label>
-          <input type="text" id="form-craft" required class="w-full px-4 py-2.5 rounded border border-stone-200 text-sm focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="e.g. Handcrafted Zari Brocade">
+          <label for="form-craft" class="block uppercase tracking-wider text-stone-400 mb-1.5">Weave Craft / Style</label>
+          <input type="text" id="form-craft" required class="w-full px-3.5 py-2.5 rounded border border-stone-200 text-sm font-normal focus:ring-1 focus:ring-gold-500 focus:outline-none bg-white min-h-[44px]" placeholder="e.g. Handcrafted Zari Brocade">
         </div>
 
-        <!-- Apparel Specs (Length, Blouse, Sizes) (NEW) -->
-        <div class="border border-stone-200 p-4 rounded-lg bg-stone-50/50 space-y-4">
-          <span class="text-[10px] text-stone-400 font-bold uppercase tracking-wider block">Apparel Specifications (Fill based on product type)</span>
+        <!-- Apparel Specs (Length, Blouse, Sizes) -->
+        <div class="border border-stone-200 p-3 sm:p-4 rounded-xl bg-stone-50/50 space-y-3.5">
+          <span class="text-[9px] sm:text-[10px] text-stone-400 font-bold uppercase tracking-wider block">Apparel Specifications (Optional Specs)</span>
           
-          <div class="grid grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <!-- Saree Length -->
             <div>
-              <label for="form-length" class="block uppercase tracking-wider text-stone-500 mb-1">Saree Length (Optional)</label>
-              <input type="text" id="form-length" class="w-full px-3 py-2 rounded border border-stone-200 font-normal focus:outline-none bg-white" placeholder="e.g. 5.5 Metres">
+              <label for="form-length" class="block uppercase tracking-wider text-stone-500 mb-1">Saree Length</label>
+              <input type="text" id="form-length" class="w-full px-3 py-2 rounded border border-stone-200 font-normal focus:outline-none bg-white min-h-[38px]" placeholder="e.g. 5.5 Metres">
             </div>
 
             <!-- Blouse Piece -->
             <div>
-              <label for="form-blouse" class="block uppercase tracking-wider text-stone-500 mb-1">Blouse Piece (Optional)</label>
-              <input type="text" id="form-blouse" class="w-full px-3 py-2 rounded border border-stone-200 font-normal focus:outline-none bg-white" placeholder="e.g. Yes, Matching">
+              <label for="form-blouse" class="block uppercase tracking-wider text-stone-500 mb-1">Blouse Piece</label>
+              <input type="text" id="form-blouse" class="w-full px-3 py-2 rounded border border-stone-200 font-normal focus:outline-none bg-white min-h-[38px]" placeholder="e.g. Yes, Matching">
             </div>
           </div>
 
           <!-- Available Sizes -->
           <div>
-            <label for="form-sizes" class="block uppercase tracking-wider text-stone-500 mb-1">Available Sizes (Dresses/Kurtas, Optional)</label>
-            <input type="text" id="form-sizes" class="w-full px-3 py-2 rounded border border-stone-200 font-normal focus:outline-none bg-white" placeholder="e.g. S, M, L, XL or Unstitched Material">
+            <label for="form-sizes" class="block uppercase tracking-wider text-stone-500 mb-1">Available Sizes (Dresses/Kurtas)</label>
+            <input type="text" id="form-sizes" class="w-full px-3 py-2 rounded border border-stone-200 font-normal focus:outline-none bg-white min-h-[38px]" placeholder="e.g. S, M, L, XL or Unstitched Material">
           </div>
         </div>
 
         <!-- Description -->
         <div>
-          <label for="form-desc" class="block uppercase tracking-wider text-stone-500 mb-2">Detailed Description</label>
-          <textarea id="form-desc" required rows="3" class="w-full px-4 py-2.5 rounded border border-stone-200 text-sm focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="Provide product details..."></textarea>
+          <label for="form-desc" class="block uppercase tracking-wider text-stone-400 mb-1.5">Detailed Description</label>
+          <textarea id="form-desc" required rows="3" class="w-full px-3.5 py-2.5 rounded border border-stone-200 text-sm font-normal focus:ring-1 focus:ring-gold-500 focus:outline-none bg-white" placeholder="Provide product details..."></textarea>
         </div>
 
-        <!-- Image Selector (Multiple files) -->
+        <!-- Image Selector -->
         <div>
-          <label class="block uppercase tracking-wider text-stone-500 mb-2">Upload Product Images (Up to 3)</label>
-          <div class="border-2 border-dashed border-stone-200 rounded-lg p-4 text-center cursor-pointer hover:bg-stone-50 transition-colors relative">
+          <label class="block uppercase tracking-wider text-stone-400 mb-1.5">Upload Product Images (Up to 3)</label>
+          <div class="border-2 border-dashed border-stone-200 rounded-xl p-4 text-center cursor-pointer hover:bg-stone-50 transition-colors relative min-h-[100px] flex flex-col justify-center items-center">
             <input type="file" id="form-image-file" accept="image/*" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="previewUploadedFiles(this)">
             
             <div id="image-upload-preview-container" class="hidden space-y-2">
               <div id="thumbnails-preview-grid" class="flex items-center justify-center gap-2 flex-wrap">
                 <!-- Dynamic preview grids loaded here -->
               </div>
-              <p class="text-[10px] text-stone-400 font-normal">Click or drag files to replace all images</p>
+              <p class="text-[9px] text-stone-400 font-normal">Tap or drag files to replace all images</p>
             </div>
             
-            <div id="image-upload-empty-state" class="space-y-2 py-4">
-              <i class="fa-solid fa-cloud-arrow-up text-2xl text-stone-400"></i>
+            <div id="image-upload-empty-state" class="space-y-1.5">
+              <i class="fa-solid fa-cloud-arrow-up text-xl text-stone-400"></i>
               <p class="text-xs text-stone-500 font-semibold">Select 1 to 3 saree/dress photos</p>
-              <p class="text-[10px] text-stone-400 font-normal">Accepts PNG, JPG, JPEG (first image will be primary)</p>
+              <p class="text-[9px] text-stone-400 font-normal">PNG, JPG, JPEG (first photo is primary)</p>
             </div>
           </div>
           <input type="hidden" id="form-images-json">
         </div>
 
         <!-- Form Submit Actions -->
-        <div class="pt-4 flex gap-3">
-          <button type="button" onclick="closeFormModal()" class="w-1/2 border border-stone-200 text-stone-600 font-bold uppercase py-3.5 px-4 rounded hover:bg-stone-50 transition-colors">
+        <div class="pt-2 flex gap-3">
+          <button type="button" onclick="closeFormModal()" class="w-1/2 border border-stone-200 text-stone-600 font-bold uppercase py-3 px-4 rounded hover:bg-stone-50 transition-colors min-h-[44px]">
             Cancel
           </button>
-          <button type="submit" class="w-1/2 bg-[#D4AF37] hover:bg-gold-600 text-white font-bold uppercase py-3.5 px-4 rounded shadow-md transition-colors">
+          <button type="submit" class="w-1/2 bg-[#D4AF37] hover:bg-gold-600 text-white font-bold uppercase py-3 px-4 rounded shadow-md transition-colors min-h-[44px]">
             Save Product
           </button>
         </div>
@@ -333,6 +337,16 @@
   <footer class="bg-stone-100 border-t border-stone-200 py-6 text-center text-[10px] text-stone-500 font-light mt-auto">
     © 2026 BaBitha's CMS Console. Prototype Environment.
   </footer>
+
+  <!-- Mobile Quick Action Floating Panel (Sticky at bottom for mobile) -->
+  <div class="fixed bottom-0 left-0 right-0 z-20 bg-white border-t border-stone-200 p-3 flex gap-2 md:hidden shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
+    <a href="index.html" class="w-1/2 border border-stone-200 text-stone-700 bg-white text-xs font-bold uppercase tracking-wider py-3 rounded-lg text-center flex items-center justify-center gap-1.5 min-h-[44px]">
+      <i class="fa-solid fa-house"></i> Storefront
+    </a>
+    <button onclick="openFormModal(null)" class="w-1/2 bg-[#D4AF37] text-white text-xs font-bold uppercase tracking-wider py-3 rounded-lg text-center flex items-center justify-center gap-1.5 min-h-[44px] shadow">
+      <i class="fa-solid fa-plus"></i> Add Product
+    </button>
+  </div>
 
   <!-- Admin CMS Logic Scripts -->
   <script>
@@ -443,7 +457,6 @@
       }
     }
 
-    // Save categories list helper
     function saveCategories(catList) {
       try {
         localStorage.setItem("babithas_categories", JSON.stringify(catList));
@@ -523,11 +536,11 @@
 
       categories.forEach(cat => {
         const badge = document.createElement("div");
-        badge.className = "flex items-center gap-1.5 bg-stone-100 border border-stone-200 text-stone-800 text-[10px] font-bold uppercase tracking-wider py-1 px-2.5 rounded-full";
+        badge.className = "flex items-center gap-1.5 bg-stone-100 border border-stone-200 text-stone-800 text-[10px] font-bold uppercase tracking-wider py-1.5 px-3 rounded-full min-h-[28px]";
         badge.innerHTML = `
           <span>${cat.name} (${cat.id})</span>
-          <button type="button" onclick="deleteCategory('${cat.id}')" class="text-stone-400 hover:text-red-600 transition-colors">
-            <i class="fa-solid fa-xmark"></i>
+          <button type="button" onclick="deleteCategory('${cat.id}')" class="text-stone-400 hover:text-red-600 transition-colors p-0.5">
+            <i class="fa-solid fa-xmark text-[11px]"></i>
           </button>
         `;
         container.appendChild(badge);
@@ -584,60 +597,102 @@
       }
     }
 
-    // Render Database in Dashboard Table
+    // Render Database in Dashboard Table and Mobile List
     function renderCatalog() {
       const tbody = document.getElementById("catalog-table-body");
-      if (!tbody) return;
+      const mobileList = document.getElementById("catalog-mobile-list");
+      if (!tbody || !mobileList) return;
 
       const productList = getProducts();
       tbody.innerHTML = "";
+      mobileList.innerHTML = "";
 
       if (productList.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="8" class="px-6 py-12 text-center text-stone-500 font-light">
-              <i class="fa-solid fa-box-open text-2xl mb-2 text-stone-300 block"></i>
-              No products inside the catalog database. Click "Add Product" above to create one.
-            </td>
-          </tr>
+        const emptyHtml = `
+          <div class="py-12 text-center text-stone-500 font-light bg-white border border-stone-200 rounded-xl shadow-sm">
+            <i class="fa-solid fa-box-open text-2xl mb-2 text-stone-300 block"></i>
+            No products inside the catalog database. Tap "Add Product" to create one.
+          </div>
         `;
+        tbody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-stone-400 font-light">No products found.</td></tr>`;
+        mobileList.innerHTML = emptyHtml;
         return;
       }
 
+      let desktopHtml = "";
+      let mobileHtml = "";
+
       productList.forEach(prod => {
         const priceText = prod.price ? `₹${Number(prod.price).toLocaleString()}` : "On Ask";
-        
-        // Featured toggle indicator badge
         const isFeatured = prod.featured === true || prod.featured === "true";
-        const featuredBadge = isFeatured 
-          ? `<span class="bg-amber-100 text-amber-800 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider"><i class="fa-solid fa-star text-amber-500 mr-0.5"></i> Yes</span>`
-          : `<span class="text-stone-400 text-[10px] font-normal uppercase tracking-wider">No</span>`;
-
-        const row = document.createElement("tr");
-        row.className = "hover:bg-stone-50/50 transition-colors";
         
-        row.innerHTML = `
-          <td class="px-6 py-4 whitespace-nowrap">
-            <div class="h-12 w-9 rounded overflow-hidden border border-stone-200 bg-stone-100 shrink-0">
-              <img src="${prod.image}" alt="" class="w-full h-full object-cover">
-            </div>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap font-semibold text-stone-900">${prod.name}</td>
-          <td class="px-6 py-4 whitespace-nowrap uppercase tracking-wider text-[9px] font-bold text-stone-500">
-            <span class="bg-stone-100 px-2 py-0.5 rounded">${prod.category}</span>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-stone-600 font-medium">${prod.fabric}</td>
-          <td class="px-6 py-4 whitespace-nowrap text-stone-500 font-light">${prod.craft}</td>
-          <td class="px-6 py-4 whitespace-nowrap text-stone-900 font-bold">${priceText}</td>
-          <td class="px-6 py-4 whitespace-nowrap font-medium">${featuredBadge}</td>
-          <td class="px-6 py-4 whitespace-nowrap text-right text-xs font-semibold space-x-2">
-            <button onclick="openFormModal(${prod.id})" class="text-gold-700 hover:text-gold-900 font-bold">Edit</button>
-            <span class="text-stone-300">|</span>
-            <button onclick="deleteProduct(${prod.id})" class="text-red-600 hover:text-red-800 font-bold">Delete</button>
-          </td>
+        // Stacking Badge
+        const featuredBadge = isFeatured 
+          ? `<span class="bg-amber-100 text-amber-800 text-[9px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-0.5"><i class="fa-solid fa-star text-amber-500"></i> Featured</span>`
+          : `<span class="bg-stone-100 text-stone-400 text-[9px] font-medium px-2.5 py-1 rounded-full uppercase tracking-wider">Catalog Only</span>`;
+
+        // Render Desktop Row
+        desktopHtml += `
+          <tr class="hover:bg-stone-50/50 transition-colors">
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="h-12 w-9 rounded overflow-hidden border border-stone-200 bg-stone-100 shrink-0">
+                <img src="${prod.image}" alt="" class="w-full h-full object-cover">
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap font-semibold text-stone-900">${prod.name}</td>
+            <td class="px-6 py-4 whitespace-nowrap uppercase tracking-wider text-[9px] font-bold text-stone-500">
+              <span class="bg-stone-100 px-2 py-0.5 rounded">${prod.category}</span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-stone-600 font-medium">${prod.fabric}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-stone-500 font-light">${prod.craft}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-stone-900 font-bold">${priceText}</td>
+            <td class="px-6 py-4 whitespace-nowrap font-medium">
+              ${isFeatured ? `<span class="bg-amber-100 text-amber-800 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider"><i class="fa-solid fa-star text-amber-500 mr-0.5"></i> Yes</span>` : `<span class="text-stone-400 text-[10px] font-normal uppercase tracking-wider">No</span>`}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-xs font-semibold space-x-2">
+              <button onclick="openFormModal(${prod.id})" class="text-gold-700 hover:text-gold-900 font-bold p-1">Edit</button>
+              <span class="text-stone-300">|</span>
+              <button onclick="deleteProduct(${prod.id})" class="text-red-600 hover:text-red-800 font-bold p-1">Delete</button>
+            </td>
+          </tr>
         `;
-        tbody.appendChild(row);
+
+        // Render Mobile Card (Clean layout with high tap-target sizes)
+        mobileHtml += `
+          <div class="bg-white rounded-xl border border-stone-200 p-4 shadow-sm space-y-3">
+            <div class="flex gap-4">
+              <div class="h-20 w-15 rounded overflow-hidden border border-stone-200 bg-stone-100 shrink-0 aspect-[3/4]">
+                <img src="${prod.image}" alt="" class="w-full h-full object-cover">
+              </div>
+              <div class="flex-grow space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-[9px] uppercase tracking-wider text-stone-400 font-bold bg-stone-150/50 px-1.5 py-0.5 rounded">${prod.category}</span>
+                  <span class="text-stone-900 font-bold text-sm">${priceText}</span>
+                </div>
+                <h4 class="font-serif text-sm font-semibold text-stone-900 leading-tight line-clamp-1">${prod.name}</h4>
+                <p class="text-[10px] text-stone-500 font-light leading-none">${prod.fabric} • ${prod.craft}</p>
+                <div class="pt-0.5 flex items-center justify-between">
+                  ${featuredBadge}
+                </div>
+              </div>
+            </div>
+            
+            <div class="h-[1px] bg-stone-100"></div>
+            
+            <div class="flex gap-2">
+              <button onclick="openFormModal(${prod.id})" class="w-1/2 flex items-center justify-center gap-1.5 border border-stone-200 text-stone-700 bg-stone-50 rounded-lg py-2.5 text-center font-bold min-h-[44px]">
+                <i class="fa-solid fa-pen-to-square text-xs"></i> Edit
+              </button>
+              <button onclick="deleteProduct(${prod.id})" class="w-1/2 flex items-center justify-center gap-1.5 border border-red-100 text-red-600 bg-red-50/30 rounded-lg py-2.5 text-center font-bold min-h-[44px]">
+                <i class="fa-solid fa-trash-can text-xs"></i> Delete
+              </button>
+            </div>
+          </div>
+        `;
       });
+
+      tbody.innerHTML = desktopHtml;
+      mobileList.innerHTML = mobileHtml;
     }
 
     // Modal Control: Add/Edit Forms
