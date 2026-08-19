@@ -122,7 +122,7 @@
         </div>
       </div>
 
-      <!-- Settings & Controls Grid (NEW) -->
+      <!-- Settings & Controls Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         <!-- Category Manager Card -->
@@ -250,7 +250,7 @@
             <input type="text" id="form-fabric" required class="w-full px-4 py-2.5 rounded border border-stone-200 text-sm focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="e.g. Pure Kanchipuram Silk">
           </div>
 
-          <!-- Featured Checkbox (NEW) -->
+          <!-- Featured Checkbox -->
           <div class="flex items-center gap-2 pt-6">
             <input type="checkbox" id="form-featured" class="w-4 h-4 text-gold-500 border-stone-300 rounded focus:ring-gold-500">
             <label for="form-featured" class="uppercase tracking-wider text-stone-600 cursor-pointer select-none">Feature on Homepage</label>
@@ -261,6 +261,31 @@
         <div>
           <label for="form-craft" class="block uppercase tracking-wider text-stone-500 mb-2">Weave Craft / Style</label>
           <input type="text" id="form-craft" required class="w-full px-4 py-2.5 rounded border border-stone-200 text-sm focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="e.g. Handcrafted Zari Brocade">
+        </div>
+
+        <!-- Apparel Specs (Length, Blouse, Sizes) (NEW) -->
+        <div class="border border-stone-200 p-4 rounded-lg bg-stone-50/50 space-y-4">
+          <span class="text-[10px] text-stone-400 font-bold uppercase tracking-wider block">Apparel Specifications (Fill based on product type)</span>
+          
+          <div class="grid grid-cols-2 gap-4">
+            <!-- Saree Length -->
+            <div>
+              <label for="form-length" class="block uppercase tracking-wider text-stone-500 mb-1">Saree Length (Optional)</label>
+              <input type="text" id="form-length" class="w-full px-3 py-2 rounded border border-stone-200 font-normal focus:outline-none bg-white" placeholder="e.g. 5.5 Metres">
+            </div>
+
+            <!-- Blouse Piece -->
+            <div>
+              <label for="form-blouse" class="block uppercase tracking-wider text-stone-500 mb-1">Blouse Piece (Optional)</label>
+              <input type="text" id="form-blouse" class="w-full px-3 py-2 rounded border border-stone-200 font-normal focus:outline-none bg-white" placeholder="e.g. Yes, Matching">
+            </div>
+          </div>
+
+          <!-- Available Sizes -->
+          <div>
+            <label for="form-sizes" class="block uppercase tracking-wider text-stone-500 mb-1">Available Sizes (Dresses/Kurtas, Optional)</label>
+            <input type="text" id="form-sizes" class="w-full px-3 py-2 rounded border border-stone-200 font-normal focus:outline-none bg-white" placeholder="e.g. S, M, L, XL or Unstitched Material">
+          </div>
         </div>
 
         <!-- Description -->
@@ -326,6 +351,9 @@
         craft: "Handcrafted Zari Brocade",
         price: 12500,
         featured: true,
+        length: "5.5 Metres",
+        blouse: "Yes, Matching Unstitched",
+        sizes: "",
         image: "assets/saree_1.jpg",
         images: ["assets/saree_1.jpg", "assets/saree_2.jpg"],
         desc: "A majestic magenta silk saree decorated with ornate gold zari brocade, featuring a grand floral border and traditional rich pallu. Ideal for weddings and royal celebrations."
@@ -338,6 +366,9 @@
         craft: "Trivandrum Gold Handloom",
         price: 4999,
         featured: true,
+        length: "6.2 Metres (includes Blouse)",
+        blouse: "Yes, Contrast Zari Stripe",
+        sizes: "",
         image: "assets/saree_2.jpg",
         images: ["assets/saree_2.jpg", "assets/saree_1.jpg"],
         desc: "The timeless Kerala Kasavu saree, handwoven with fine off-white cotton and a signature rich gold zari border. It represents pure simplicity and cultural heritage."
@@ -350,6 +381,9 @@
         craft: "Banarasi Cutwork Weave",
         price: 15999,
         featured: true,
+        length: "5.5 Metres",
+        blouse: "Yes, Banarasi Brocade Piece",
+        sizes: "",
         image: "assets/saree_1.jpg",
         images: ["assets/saree_1.jpg", "assets/saree_2.jpg"],
         desc: "A radiant crimson saree crafted with pure Banarasi silk, displaying heritage gold motifs and an elaborate traditional border that radiates confidence."
@@ -362,6 +396,9 @@
         craft: "Modern Border Weaving",
         price: 3499,
         featured: true,
+        length: "5.5 Metres",
+        blouse: "No (Saree only)",
+        sizes: "",
         image: "assets/saree_2.jpg",
         images: ["assets/saree_2.jpg", "assets/saree_1.jpg"],
         desc: "A breathable, eco-friendly linen saree in pastel sage green, trimmed with subtle silver-gold zari borders, offering both comfort and modern minimalist elegance."
@@ -406,6 +443,7 @@
       }
     }
 
+    // Save categories list helper
     function saveCategories(catList) {
       try {
         localStorage.setItem("babithas_categories", JSON.stringify(catList));
@@ -467,7 +505,7 @@
 
     // Reset Catalog helper
     function resetToDefaults() {
-      if (confirm("Are you sure you want to reset the catalog? This will restore the original 4 sarees, categories, and settings.")) {
+      if (confirm("Are you sure you want to reset the catalog? This will restore the original mock sarees, categories, and settings.")) {
         localStorage.removeItem("babithas_products");
         localStorage.removeItem("babithas_categories");
         localStorage.removeItem("babithas_homepage_limit");
@@ -641,6 +679,11 @@
           document.getElementById("form-desc").value = prod.desc;
           document.getElementById("form-price").value = prod.price || "";
           
+          // Load specs
+          document.getElementById("form-length").value = prod.length || "";
+          document.getElementById("form-blouse").value = prod.blouse || "";
+          document.getElementById("form-sizes").value = prod.sizes || "";
+          
           // Load featured boolean state
           document.getElementById("form-featured").checked = prod.featured === true || prod.featured === "true";
           
@@ -663,6 +706,9 @@
       } else {
         title.innerText = "Add Saree / Dress to Catalog";
         document.getElementById("form-product-id").value = "";
+        document.getElementById("form-length").value = "";
+        document.getElementById("form-blouse").value = "";
+        document.getElementById("form-sizes").value = "";
         document.getElementById("form-featured").checked = true; // Default checked for new products
       }
 
@@ -765,6 +811,11 @@
       const craft = document.getElementById("form-craft").value.trim();
       const desc = document.getElementById("form-desc").value.trim();
       
+      // Dynamic specs values
+      const length = document.getElementById("form-length").value.trim();
+      const blouse = document.getElementById("form-blouse").value.trim();
+      const sizes = document.getElementById("form-sizes").value.trim();
+      
       const priceVal = document.getElementById("form-price").value;
       const price = priceVal ? parseFloat(priceVal) : null;
       
@@ -792,7 +843,7 @@
         const idInt = parseInt(productId);
         productList = productList.map(p => {
           if (p.id === idInt) {
-            return { ...p, name, category, fabric, craft, desc, price, featured, image: primaryImage, images };
+            return { ...p, name, category, fabric, craft, desc, price, featured, length, blouse, sizes, image: primaryImage, images };
           }
           return p;
         });
@@ -808,6 +859,9 @@
           desc,
           price,
           featured,
+          length,
+          blouse,
+          sizes,
           image: primaryImage,
           images
         };

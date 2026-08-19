@@ -15,6 +15,9 @@ const DEFAULT_PRODUCTS = [
     craft: "Handcrafted Zari Brocade",
     price: 12500,
     featured: true,
+    length: "5.5 Metres",
+    blouse: "Yes, Matching Unstitched",
+    sizes: null, // Saree does not have S/M/L sizes
     image: "assets/saree_1.jpg",
     images: ["assets/saree_1.jpg", "assets/saree_2.jpg"],
     desc: "A majestic magenta silk saree decorated with ornate gold zari brocade, featuring a grand floral border and traditional rich pallu. Ideal for weddings and royal celebrations."
@@ -27,6 +30,9 @@ const DEFAULT_PRODUCTS = [
     craft: "Trivandrum Gold Handloom",
     price: 4999,
     featured: true,
+    length: "6.2 Metres (includes Blouse)",
+    blouse: "Yes, Contrast Zari Stripe",
+    sizes: null,
     image: "assets/saree_2.jpg",
     images: ["assets/saree_2.jpg", "assets/saree_1.jpg"],
     desc: "The timeless Kerala Kasavu saree, handwoven with fine off-white cotton and a signature rich gold zari border. It represents pure simplicity and cultural heritage."
@@ -39,6 +45,9 @@ const DEFAULT_PRODUCTS = [
     craft: "Banarasi Cutwork Weave",
     price: 15999,
     featured: true,
+    length: "5.5 Metres",
+    blouse: "Yes, Banarasi Brocade Piece",
+    sizes: null,
     image: "assets/saree_1.jpg",
     images: ["assets/saree_1.jpg", "assets/saree_2.jpg"],
     desc: "A radiant crimson saree crafted with pure Banarasi silk, displaying heritage gold motifs and an elaborate traditional border that radiates confidence."
@@ -51,6 +60,9 @@ const DEFAULT_PRODUCTS = [
     craft: "Modern Border Weaving",
     price: 3499,
     featured: true,
+    length: "5.5 Metres",
+    blouse: "No (Saree only)",
+    sizes: null,
     image: "assets/saree_2.jpg",
     images: ["assets/saree_2.jpg", "assets/saree_1.jpg"],
     desc: "A breathable, eco-friendly linen saree in pastel sage green, trimmed with subtle silver-gold zari borders, offering both comfort and modern minimalist elegance."
@@ -75,9 +87,22 @@ function getProducts() {
         p.images = [p.image || "assets/saree_1.jpg"];
         updated = true;
       }
-      // Ensure featured boolean exists (default to true for legacy mock data)
+      // Ensure featured boolean exists
       if (p.featured === undefined) {
         p.featured = true;
+        updated = true;
+      }
+      // Ensure length, blouse and sizes exist (initialize to empty/null if missing)
+      if (p.length === undefined) {
+        p.length = p.category === "silk" || p.category === "kasavu" || p.category === "linen" ? "5.5 Metres" : "";
+        updated = true;
+      }
+      if (p.blouse === undefined) {
+        p.blouse = p.category === "silk" || p.category === "kasavu" || p.category === "linen" ? "Yes" : "";
+        updated = true;
+      }
+      if (p.sizes === undefined) {
+        p.sizes = "";
         updated = true;
       }
       return p;
@@ -257,7 +282,7 @@ function renderProducts(productList) {
           <a href="product.html?id=${prod.id}" class="w-full block text-center border border-stone-200 text-stone-800 text-xs font-semibold py-2 px-3 rounded hover:bg-stone-50 transition-colors uppercase tracking-wider">
             View Details
           </a>
-          <button onclick="showWhatsAppDemo('${escapedText}')" class="w-full flex items-center justify-center gap-2 bg-[#D4AF37] text-white text-xs font-semibold py-2 px-3 rounded shadow transition-colors uppercase tracking-wider">
+          <button onclick="showWhatsAppDemo('${escapedText}')" class="w-full flex items-center justify-center gap-2 bg-[#D4AF37] text-white text-xs font-semibold py-2.5 px-3 rounded shadow transition-colors uppercase tracking-wider">
             <i class="fa-brands fa-whatsapp"></i> Inquire WhatsApp
           </button>
         </div>

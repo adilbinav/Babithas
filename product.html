@@ -185,16 +185,9 @@
         <!-- Product Name -->
         <h1 id="detail-name" class="text-3xl md:text-4xl font-serif font-bold text-stone-900 leading-tight">Saree Title</h1>
         
-        <!-- Specs Details Cards -->
-        <div class="grid grid-cols-2 gap-3.5 pt-2">
-          <div class="bg-cream-50 p-3 rounded border border-stone-100 shadow-inner">
-            <span class="text-[9px] uppercase text-stone-400 tracking-wider font-bold">Fabric Material</span>
-            <p id="detail-fabric" class="text-xs font-semibold text-stone-800 mt-0.5">Pure Cotton / Silk</p>
-          </div>
-          <div class="bg-cream-50 p-3 rounded border border-stone-100 shadow-inner">
-            <span class="text-[9px] uppercase text-stone-400 tracking-wider font-bold">Weaving Craft</span>
-            <p id="detail-craft" class="text-xs font-semibold text-stone-800 mt-0.5">Handcrafted Zari</p>
-          </div>
+        <!-- Specs Details Cards (Populated Dynamically) -->
+        <div id="specs-grid" class="grid grid-cols-2 gap-3.5 pt-2">
+          <!-- Content built by JavaScript based on filled properties -->
         </div>
 
         <div class="h-[1px] bg-stone-100"></div>
@@ -373,12 +366,50 @@
       // 3. Render specs and titles
       document.getElementById("detail-name").innerText = product.name;
       document.getElementById("detail-category").innerText = product.category;
-      document.getElementById("detail-fabric").innerText = product.fabric;
-      document.getElementById("detail-craft").innerText = product.craft;
       document.getElementById("detail-desc").innerText = product.desc;
       
       const priceText = product.price ? `₹${Number(product.price).toLocaleString()}` : "Price on Ask";
       document.getElementById("detail-price").innerText = priceText;
+
+      // Render Specifications dynamically based on filled values
+      const specsGrid = document.getElementById("specs-grid");
+      specsGrid.innerHTML = `
+        <div class="bg-cream-50 p-3 rounded border border-stone-100 shadow-inner">
+          <span class="text-[9px] uppercase text-stone-400 tracking-wider font-bold">Fabric Material</span>
+          <p class="text-xs font-semibold text-stone-800 mt-0.5">${product.fabric}</p>
+        </div>
+        <div class="bg-cream-50 p-3 rounded border border-stone-100 shadow-inner">
+          <span class="text-[9px] uppercase text-stone-400 tracking-wider font-bold">Weaving Craft</span>
+          <p class="text-xs font-semibold text-stone-800 mt-0.5">${product.craft}</p>
+        </div>
+      `;
+
+      if (product.length && product.length.trim() !== "") {
+        specsGrid.innerHTML += `
+          <div class="bg-cream-50 p-3 rounded border border-stone-100 shadow-inner">
+            <span class="text-[9px] uppercase text-stone-400 tracking-wider font-bold">Saree Length</span>
+            <p class="text-xs font-semibold text-stone-800 mt-0.5">${product.length}</p>
+          </div>
+        `;
+      }
+
+      if (product.blouse && product.blouse.trim() !== "") {
+        specsGrid.innerHTML += `
+          <div class="bg-cream-50 p-3 rounded border border-stone-100 shadow-inner">
+            <span class="text-[9px] uppercase text-stone-400 tracking-wider font-bold">Blouse Piece</span>
+            <p class="text-xs font-semibold text-stone-800 mt-0.5">${product.blouse}</p>
+          </div>
+        `;
+      }
+
+      if (product.sizes && product.sizes.trim() !== "") {
+        specsGrid.innerHTML += `
+          <div class="bg-cream-50 p-3 rounded border border-stone-100 shadow-inner">
+            <span class="text-[9px] uppercase text-stone-400 tracking-wider font-bold">Available Sizes</span>
+            <p class="text-xs font-semibold text-stone-800 mt-0.5">${product.sizes}</p>
+          </div>
+        `;
+      }
 
       // 4. Render main image
       document.getElementById("main-gallery-image").src = product.image;
@@ -392,12 +423,10 @@
 
       imageList.forEach((imgSrc, index) => {
         const thumb = document.createElement("button");
-        // Active borders highlight on the first image
         const activeClass = index === 0 ? "border-gold-500 shadow-sm" : "border-stone-200";
         thumb.className = `thumbnail-btn border-2 ${activeClass} rounded-lg overflow-hidden bg-stone-50 aspect-square transition-all duration-300`;
         thumb.innerHTML = `<img src="${imgSrc}" alt="" class="w-full h-full object-cover">`;
         
-        // Thumbnail click handler: switches main image and active borders
         thumb.addEventListener("click", () => {
           document.getElementById("main-gallery-image").src = imgSrc;
           document.querySelectorAll(".thumbnail-btn").forEach(btn => {
@@ -424,7 +453,6 @@ Link: ${currentPageURL}
 
 Could you please confirm if this item is in stock? Thank you!`;
 
-      // Set triggers for all page buttons
       const clickHandler = () => showWhatsAppDemo(customMsg);
       document.getElementById("detail-wa-btn").onclick = clickHandler;
       document.getElementById("header-wa-btn").onclick = () => showWhatsAppDemo(`Hi BaBitha's, I am looking at the product page for "${product.name}" and have a few questions.`);
