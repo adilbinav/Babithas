@@ -58,28 +58,10 @@
       font-family: 'Playfair Display', serif;
     }
   </style>
-  <!-- Supabase JS Client CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- Supabase Configuration Loader -->
+  <!-- Configuration Loader -->
   <script src="config.js"></script>
   <!-- Unified Database Adapter -->
   <script src="db.js"></script>
-
-  <!-- PWA Installable Manifest Configurations -->
-  <link rel="manifest" href="admin_manifest.json">
-  <meta name="theme-color" content="#CBA147">
-  <script>
-    // Unregister service worker during active development to prevent aggressive caching lockout
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(registrations => {
-        for (let registration of registrations) {
-          registration.unregister().then(() => {
-            console.log('Active service worker unregistered to prevent cache locks.');
-          });
-        }
-      });
-    }
-  </script>
 </head>
 <body class="bg-cream-50 text-charcoal min-h-screen flex flex-col pb-16 sm:pb-0">
 
