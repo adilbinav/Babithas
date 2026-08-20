@@ -3,13 +3,13 @@
 const SUPABASE_URL = "YOUR_SUPABASE_URL";
 const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 
-let supabase = null;
-let useSupabase = false;
+window.supabaseInstance = null;
+window.useSupabase = false;
 
 if (SUPABASE_URL && SUPABASE_URL !== "YOUR_SUPABASE_URL") {
   try {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    useSupabase = true;
+    window.supabaseInstance = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    window.useSupabase = true;
     console.log("Supabase database connected successfully!");
   } catch (e) {
     console.error("Supabase failed to initialize, falling back to localStorage", e);

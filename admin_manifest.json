@@ -8,9 +8,9 @@
   "theme_color": "#CBA147",
   "icons": [
     {
-      "src": "assets/Logo-web.png",
+      "src": "assets/logo.jpg",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/jpeg"
     }
   ]
 }

@@ -82,7 +82,7 @@ window.db = {
   // --- PRODUCTS MANAGEMENT ---
   async getProducts() {
     if (window.useSupabase) {
-      const { data, error } = await window.supabase
+      const { data, error } = await window.supabaseInstance
         .from('products')
         .select('*')
         .order('display_order', { ascending: true })
@@ -141,14 +141,14 @@ window.db = {
 
       if (prod.id) {
         // Update product
-        const { error } = await window.supabase
+        const { error } = await window.supabaseInstance
           .from('products')
           .update(dbProd)
           .eq('id', prod.id);
         if (error) throw error;
       } else {
         // Insert product (ID SERIAL auto-incremented by Postgres)
-        const { error } = await window.supabase
+        const { error } = await window.supabaseInstance
           .from('products')
           .insert([dbProd]);
         if (error) throw error;
@@ -171,7 +171,7 @@ window.db = {
 
   async deleteProduct(productId) {
     if (window.useSupabase) {
-      const { error } = await window.supabase
+      const { error } = await window.supabaseInstance
         .from('products')
         .delete()
         .eq('id', productId);
@@ -186,7 +186,7 @@ window.db = {
   // --- CATEGORIES MANAGEMENT ---
   async getCategories() {
     if (window.useSupabase) {
-      const { data, error } = await window.supabase
+      const { data, error } = await window.supabaseInstance
         .from('categories')
         .select('*')
         .order('id', { ascending: true });
@@ -211,7 +211,7 @@ window.db = {
 
   async saveCategory(cat) {
     if (window.useSupabase) {
-      const { error } = await window.supabase
+      const { error } = await window.supabaseInstance
         .from('categories')
         .insert([cat]);
       if (error) throw error;
@@ -224,7 +224,7 @@ window.db = {
 
   async deleteCategory(id) {
     if (window.useSupabase) {
-      const { error } = await window.supabase
+      const { error } = await window.supabaseInstance
         .from('categories')
         .delete()
         .eq('id', id);
@@ -239,7 +239,7 @@ window.db = {
   // --- SETTINGS MANAGEMENT ---
   async getHomepageLimit() {
     if (window.useSupabase) {
-      const { data, error } = await window.supabase
+      const { data, error } = await window.supabaseInstance
         .from('settings')
         .select('value')
         .eq('key', 'homepage_limit')
@@ -254,7 +254,7 @@ window.db = {
 
   async saveHomepageLimit(limit) {
     if (window.useSupabase) {
-      const { error } = await window.supabase
+      const { error } = await window.supabaseInstance
         .from('settings')
         .upsert({ key: 'homepage_limit', value: String(limit) });
       if (error) throw error;
@@ -265,8 +265,8 @@ window.db = {
 
   async getCelebration() {
     if (window.useSupabase) {
-      const { data: titleData } = await window.supabase.from('settings').select('value').eq('key', 'celebration_title').single();
-      const { data: descData } = await window.supabase.from('settings').select('value').eq('key', 'celebration_desc').single();
+      const { data: titleData } = await window.supabaseInstance.from('settings').select('value').eq('key', 'celebration_title').single();
+      const { data: descData } = await window.supabaseInstance.from('settings').select('value').eq('key', 'celebration_desc').single();
       
       return {
         title: titleData ? titleData.value : "",
@@ -282,8 +282,8 @@ window.db = {
 
   async saveCelebration(title, desc) {
     if (window.useSupabase) {
-      await window.supabase.from('settings').upsert({ key: 'celebration_title', value: title });
-      await window.supabase.from('settings').upsert({ key: 'celebration_desc', value: desc });
+      await window.supabaseInstance.from('settings').upsert({ key: 'celebration_title', value: title });
+      await window.supabaseInstance.from('settings').upsert({ key: 'celebration_desc', value: desc });
     } else {
       localStorage.setItem("babithas_celebration_title", title);
       localStorage.setItem("babithas_celebration_desc", desc);
@@ -294,15 +294,15 @@ window.db = {
   async resetToDefaults() {
     if (window.useSupabase) {
       // Re-initialize Supabase data rows
-      await window.supabase.from('products').delete().neq('id', 0);
-      await window.supabase.from('categories').delete().neq('id', '');
-      await window.supabase.from('settings').delete().neq('key', '');
+      await window.supabaseInstance.from('products').delete().neq('id', 0);
+      await window.supabaseInstance.from('categories').delete().neq('id', '');
+      await window.supabaseInstance.from('settings').delete().neq('key', '');
 
       // Insert default tables rows
       for (let cat of DB_DEFAULT_CATEGORIES) {
-        await window.supabase.from('categories').insert([cat]);
+        await window.supabaseInstance.from('categories').insert([cat]);
       }
-      await window.supabase.from('settings').insert([
+      await window.supabaseInstance.from('settings').insert([
         { key: 'homepage_limit', value: '4' },
         { key: 'celebration_title', value: 'Onam Collections' },
         { key: 'celebration_desc', value: 'Embrace the harvest festival of Kerala.' }
@@ -323,7 +323,7 @@ window.db = {
         images: p.images,
         desc_text: p.desc
       }));
-      await window.supabase.from('products').insert(mapped);
+      await window.supabaseInstance.from('products').insert(mapped);
     } else {
       localStorage.removeItem("babithas_products");
       localStorage.removeItem("babithas_categories");
@@ -353,7 +353,7 @@ window.db = {
         const blob = window.base64ToBlob(base64, 'image/jpeg');
         const filename = `products/${Date.now()}_${i}.jpg`;
         
-        const { data, error } = await window.supabase.storage
+        const { data, error } = await window.supabaseInstance.storage
           .from('product-images')
           .upload(filename, blob, { contentType: 'image/jpeg' });
           
@@ -362,7 +362,7 @@ window.db = {
           throw error;
         }
 
-        const { data: urlData } = window.supabase.storage
+        const { data: urlData } = window.supabaseInstance.storage
           .from('product-images')
           .getPublicUrl(filename);
           

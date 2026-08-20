@@ -1,11 +1,10 @@
 const CACHE_NAME = 'babithas-cms-v1';
 const ASSETS_TO_CACHE = [
-  '/',
-  '/admin.html',
-  '/config.js',
-  '/db.js',
-  '/admin_manifest.json',
-  '/assets/Logo-web.png',
+  'admin.html',
+  'config.js',
+  'db.js',
+  'admin_manifest.json',
+  'assets/logo.jpg',
   'https://cdn.tailwindcss.com',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
 ];
@@ -13,7 +12,14 @@ const ASSETS_TO_CACHE = [
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(ASSETS_TO_CACHE);
+      // Map assets and cache them individually so one missing asset doesn't break PWA setup
+      return Promise.allSettled(
+        ASSETS_TO_CACHE.map(url => {
+          return cache.add(url).catch(err => {
+            console.warn('Failed to cache asset: ' + url, err);
+          });
+        })
+      );
     }).then(() => self.skipWaiting())
   );
 });
