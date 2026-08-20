@@ -322,14 +322,8 @@ function setupFilters() {
 
 // WhatsApp Demo Modal Helper Functions
 window.showWhatsAppDemo = function(message) {
-  const modal = document.getElementById("whatsapp-demo-modal");
-  const msgEl = document.getElementById("whatsapp-demo-message");
-  if (!modal || !msgEl) return;
-  
-  msgEl.innerText = message;
-  modal.classList.remove("hidden");
-  modal.classList.add("flex");
-  document.body.classList.add("overflow-hidden");
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  window.open(url, '_blank');
 };
 
 window.closeWhatsAppDemo = function() {

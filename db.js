@@ -78,104 +78,289 @@ const DB_DEFAULT_PRODUCTS = [
 window.db = {
   // --- PRODUCTS MANAGEMENT ---
   async getProducts() {
-    try {
-      const stored = localStorage.getItem("babithas_products");
-      if (!stored) {
-        localStorage.setItem("babithas_products", JSON.stringify(DB_DEFAULT_PRODUCTS));
+    if (window.useSupabase) {
+      const { data, error } = await window.supabaseInstance
+        .from('products')
+        .select('*')
+        .order('display_order', { ascending: true })
+        .order('id', { ascending: true });
+        
+      if (error) {
+        console.error("Error fetching Supabase products:", error);
         return DB_DEFAULT_PRODUCTS;
       }
-      const parsed = JSON.parse(stored);
-      return parsed.sort((a, b) => {
-        const ordA = a.display_order !== undefined ? a.display_order : a.id;
-        const ordB = b.display_order !== undefined ? b.display_order : b.id;
-        return ordA - ordB;
-      });
-    } catch (e) {
-      return DB_DEFAULT_PRODUCTS;
+      
+      // Map Supabase column desc_text back to frontend schema property desc
+      return (data || []).map(p => ({
+        ...p,
+        desc: p.desc_text
+      }));
+    } else {
+      // LocalStorage Fallback
+      try {
+        const stored = localStorage.getItem("babithas_products");
+        if (!stored) {
+          localStorage.setItem("babithas_products", JSON.stringify(DB_DEFAULT_PRODUCTS));
+          return DB_DEFAULT_PRODUCTS;
+        }
+        const parsed = JSON.parse(stored);
+        return parsed.sort((a, b) => {
+          const ordA = a.display_order !== undefined ? a.display_order : a.id;
+          const ordB = b.display_order !== undefined ? b.display_order : b.id;
+          return ordA - ordB;
+        });
+      } catch (e) {
+        return DB_DEFAULT_PRODUCTS;
+      }
     }
   },
 
   async saveProduct(prod) {
-    let list = await this.getProducts();
-    if (prod.id) {
-      prod.display_order = prod.display_order !== undefined ? prod.display_order : prod.id;
-      list = list.map(p => (p.id === parseInt(prod.id) ? prod : p));
+    if (window.useSupabase) {
+      const dbProd = {
+        name: prod.name,
+        category: prod.category,
+        fabric: prod.fabric,
+        craft: prod.craft,
+        price: prod.price,
+        featured: prod.featured,
+        celebration: prod.celebration,
+        length: prod.length,
+        blouse: prod.blouse,
+        sizes: prod.sizes,
+        image: prod.image,
+        images: prod.images,
+        desc_text: prod.desc,
+        display_order: prod.display_order !== undefined ? prod.display_order : 0
+      };
+
+      if (prod.id) {
+        const { error } = await window.supabaseInstance
+          .from('products')
+          .update(dbProd)
+          .eq('id', prod.id);
+        if (error) throw error;
+      } else {
+        const { error } = await window.supabaseInstance
+          .from('products')
+          .insert([dbProd]);
+        if (error) throw error;
+      }
     } else {
-      const newId = list.length > 0 ? Math.max(...list.map(p => p.id)) + 1 : 1;
-      prod.id = newId;
-      prod.display_order = prod.display_order !== undefined ? prod.display_order : newId;
-      list.push(prod);
+      let list = await this.getProducts();
+      if (prod.id) {
+        prod.display_order = prod.display_order !== undefined ? prod.display_order : prod.id;
+        list = list.map(p => (p.id === parseInt(prod.id) ? prod : p));
+      } else {
+        const newId = list.length > 0 ? Math.max(...list.map(p => p.id)) + 1 : 1;
+        prod.id = newId;
+        prod.display_order = prod.display_order !== undefined ? prod.display_order : newId;
+        list.push(prod);
+      }
+      localStorage.setItem("babithas_products", JSON.stringify(list));
     }
-    localStorage.setItem("babithas_products", JSON.stringify(list));
   },
 
   async deleteProduct(productId) {
-    let list = await this.getProducts();
-    list = list.filter(p => p.id !== productId);
-    localStorage.setItem("babithas_products", JSON.stringify(list));
+    if (window.useSupabase) {
+      const { error } = await window.supabaseInstance
+        .from('products')
+        .delete()
+        .eq('id', productId);
+      if (error) throw error;
+    } else {
+      let list = await this.getProducts();
+      list = list.filter(p => p.id !== productId);
+      localStorage.setItem("babithas_products", JSON.stringify(list));
+    }
   },
 
   // --- CATEGORIES MANAGEMENT ---
   async getCategories() {
-    try {
-      const stored = localStorage.getItem("babithas_categories");
-      if (!stored) {
-        localStorage.setItem("babithas_categories", JSON.stringify(DB_DEFAULT_CATEGORIES));
+    if (window.useSupabase) {
+      const { data, error } = await window.supabaseInstance
+        .from('categories')
+        .select('*')
+        .order('id', { ascending: true });
+      if (error) {
+        console.error("Error fetching Supabase categories:", error);
         return DB_DEFAULT_CATEGORIES;
       }
-      return JSON.parse(stored);
-    } catch (e) {
-      return DB_DEFAULT_CATEGORIES;
+      return data || [];
+    } else {
+      try {
+        const stored = localStorage.getItem("babithas_categories");
+        if (!stored) {
+          localStorage.setItem("babithas_categories", JSON.stringify(DB_DEFAULT_CATEGORIES));
+          return DB_DEFAULT_CATEGORIES;
+        }
+        return JSON.parse(stored);
+      } catch (e) {
+        return DB_DEFAULT_CATEGORIES;
+      }
     }
   },
 
   async saveCategory(cat) {
-    let list = await this.getCategories();
-    list.push(cat);
-    localStorage.setItem("babithas_categories", JSON.stringify(list));
+    if (window.useSupabase) {
+      const { error } = await window.supabaseInstance
+        .from('categories')
+        .insert([cat]);
+      if (error) throw error;
+    } else {
+      let list = await this.getCategories();
+      list.push(cat);
+      localStorage.setItem("babithas_categories", JSON.stringify(list));
+    }
   },
 
   async deleteCategory(id) {
-    let list = await this.getCategories();
-    list = list.filter(c => c.id !== id);
-    localStorage.setItem("babithas_categories", JSON.stringify(list));
+    if (window.useSupabase) {
+      const { error } = await window.supabaseInstance
+        .from('categories')
+        .delete()
+        .eq('id', id);
+      if (error) throw error;
+    } else {
+      let list = await this.getCategories();
+      list = list.filter(c => c.id !== id);
+      localStorage.setItem("babithas_categories", JSON.stringify(list));
+    }
   },
 
   // --- SETTINGS MANAGEMENT ---
   async getHomepageLimit() {
-    const limit = localStorage.getItem("babithas_homepage_limit");
-    return limit ? parseInt(limit) : 4;
+    if (window.useSupabase) {
+      const { data, error } = await window.supabaseInstance
+        .from('settings')
+        .select('value')
+        .eq('key', 'homepage_limit')
+        .single();
+      if (error || !data) return 4;
+      return parseInt(data.value);
+    } else {
+      const limit = localStorage.getItem("babithas_homepage_limit");
+      return limit ? parseInt(limit) : 4;
+    }
   },
 
   async saveHomepageLimit(limit) {
-    localStorage.setItem("babithas_homepage_limit", limit);
+    if (window.useSupabase) {
+      const { error } = await window.supabaseInstance
+        .from('settings')
+        .upsert({ key: 'homepage_limit', value: String(limit) });
+      if (error) throw error;
+    } else {
+      localStorage.setItem("babithas_homepage_limit", limit);
+    }
   },
 
   async getCelebration() {
-    return {
-      title: localStorage.getItem("babithas_celebration_title") || "Onam Collections",
-      desc: localStorage.getItem("babithas_celebration_desc") || "Embrace the harvest festival of Kerala."
-    };
+    if (window.useSupabase) {
+      const { data: titleData } = await window.supabaseInstance.from('settings').select('value').eq('key', 'celebration_title').single();
+      const { data: descData } = await window.supabaseInstance.from('settings').select('value').eq('key', 'celebration_desc').single();
+      
+      return {
+        title: titleData ? titleData.value : "",
+        desc: descData ? descData.value : ""
+      };
+    } else {
+      return {
+        title: localStorage.getItem("babithas_celebration_title") || "Onam Collections",
+        desc: localStorage.getItem("babithas_celebration_desc") || "Embrace the harvest festival of Kerala."
+      };
+    }
   },
 
   async saveCelebration(title, desc) {
-    localStorage.setItem("babithas_celebration_title", title);
-    localStorage.setItem("babithas_celebration_desc", desc);
+    if (window.useSupabase) {
+      await window.supabaseInstance.from('settings').upsert({ key: 'celebration_title', value: title });
+      await window.supabaseInstance.from('settings').upsert({ key: 'celebration_desc', value: desc });
+    } else {
+      localStorage.setItem("babithas_celebration_title", title);
+      localStorage.setItem("babithas_celebration_desc", desc);
+    }
   },
 
   // --- RESET UTILS ---
   async resetToDefaults() {
-    localStorage.removeItem("babithas_products");
-    localStorage.removeItem("babithas_categories");
-    localStorage.removeItem("babithas_homepage_limit");
-    localStorage.removeItem("babithas_celebration_title");
-    localStorage.removeItem("babithas_celebration_desc");
+    if (window.useSupabase) {
+      await window.supabaseInstance.from('products').delete().neq('id', 0);
+      await window.supabaseInstance.from('categories').delete().neq('id', '');
+      await window.supabaseInstance.from('settings').delete().neq('key', '');
+
+      for (let cat of DB_DEFAULT_CATEGORIES) {
+        await window.supabaseInstance.from('categories').insert([cat]);
+      }
+      await window.supabaseInstance.from('settings').insert([
+        { key: 'homepage_limit', value: '4' },
+        { key: 'celebration_title', value: 'Onam Collections' },
+        { key: 'celebration_desc', value: 'Embrace the harvest festival of Kerala with our traditional Kasavu handlooms.' }
+      ]);
+      
+      const mapped = DB_DEFAULT_PRODUCTS.map(p => ({
+        id: p.id,
+        name: p.name,
+        category: p.category,
+        fabric: p.fabric,
+        craft: p.craft,
+        price: p.price,
+        featured: p.featured,
+        celebration: p.celebration,
+        length: p.length,
+        blouse: p.blouse,
+        sizes: p.sizes,
+        image: p.image,
+        images: p.images,
+        desc_text: p.desc,
+        display_order: p.display_order
+      }));
+      await window.supabaseInstance.from('products').insert(mapped);
+    } else {
+      localStorage.removeItem("babithas_products");
+      localStorage.removeItem("babithas_categories");
+      localStorage.removeItem("babithas_homepage_limit");
+      localStorage.removeItem("babithas_celebration_title");
+      localStorage.removeItem("babithas_celebration_desc");
+    }
   },
 
   // --- IMAGE UPLOADS HANDLER ---
   async uploadImages(base64ImagesList) {
-    // In local prototype mode, keep the compressed base64 strings directly
-    return base64ImagesList || [];
+    if (!base64ImagesList || base64ImagesList.length === 0) return [];
+
+    if (window.useSupabase) {
+      const publicUrls = [];
+      for (let i = 0; i < base64ImagesList.length; i++) {
+        const base64 = base64ImagesList[i];
+        
+        if (base64.startsWith('http://') || base64.startsWith('https://')) {
+          publicUrls.push(base64);
+          continue;
+        }
+
+        const blob = window.base64ToBlob(base64, 'image/jpeg');
+        const filename = `products/${Date.now()}_${i}.jpg`;
+        
+        const { data, error } = await window.supabaseInstance.storage
+          .from('product-images')
+          .upload(filename, blob, { contentType: 'image/jpeg' });
+          
+        if (error) {
+          console.error("Supabase image upload failed:", error);
+          throw error;
+        }
+
+        const { data: urlData } = window.supabaseInstance.storage
+          .from('product-images')
+          .getPublicUrl(filename);
+          
+        publicUrls.push(urlData.publicUrl);
+      }
+      return publicUrls;
+    } else {
+      return base64ImagesList;
+    }
   },
 
   async swapProductOrder(productId1, productId2) {

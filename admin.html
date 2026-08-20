@@ -58,6 +58,8 @@
       font-family: 'Playfair Display', serif;
     }
   </style>
+  <!-- Supabase JS Client CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <!-- Configuration Loader -->
   <script src="config.js"></script>
   <!-- Unified Database Adapter -->
@@ -90,17 +92,21 @@
       <img src="assets/Logo-web.png" alt="BaBitha's Logo" class="h-16 mx-auto object-contain mb-2">
       <div class="space-y-2">
         <h2 class="text-xl sm:text-2xl font-serif font-bold text-stone-900">CMS Console Login</h2>
-        <p class="text-stone-500 text-xs font-light">Enter administrative passcode to manage products.</p>
+        <p class="text-stone-500 text-xs font-light">Enter credentials to manage products.</p>
       </div>
       
-      <div class="space-y-4">
+      <div class="space-y-4 text-left">
         <div>
-          <label for="passcode" class="sr-only">Passcode</label>
-          <input type="password" id="passcode" required onkeydown="if(event.key === 'Enter') handleLogin()" class="w-full px-4 py-3 rounded border border-stone-200 text-center tracking-widest text-sm focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="••••••••">
+          <label class="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1">Email Address</label>
+          <input type="email" id="admin-email" class="w-full px-4 py-2.5 rounded border border-stone-200 text-sm focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="admin@test.com">
         </div>
-        <div id="login-error" class="hidden text-xs text-red-600 font-semibold animate-pulse">Invalid passcode. (Hint: enter "admin")</div>
-        <button type="button" onclick="handleLogin()" class="w-full bg-[#D4AF37] hover:bg-gold-600 text-white font-bold text-xs tracking-widest uppercase py-3.5 px-4 rounded shadow-md transition-colors min-h-[44px]">
-          Verify Passcode
+        <div>
+          <label class="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1">Password</label>
+          <input type="password" id="admin-password" onkeydown="if(event.key === 'Enter') handleLogin()" class="w-full px-4 py-2.5 rounded border border-stone-200 text-sm focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none" placeholder="••••••••">
+        </div>
+        <div id="login-error" class="hidden text-xs text-red-600 font-semibold animate-pulse text-center">Invalid credentials.</div>
+        <button type="button" id="login-btn" onclick="handleLogin()" class="w-full bg-[#D4AF37] hover:bg-gold-600 text-white font-bold text-xs tracking-widest uppercase py-3.5 px-4 rounded shadow-md transition-colors min-h-[44px]">
+          Verify Credentials
         </button>
       </div>
     </div>
@@ -425,10 +431,20 @@
     // Login Authentication Guard
     async function checkAuth() {
       let isAuthed = false;
-      try {
-        isAuthed = sessionStorage.getItem("babithas_admin_auth") === "true";
-      } catch (e) {
-        isAuthed = window.babithas_admin_auth === "true";
+      if (window.useSupabase) {
+        try {
+          const { data: { session } } = await window.supabaseInstance.auth.getSession();
+          isAuthed = session !== null;
+        } catch (err) {
+          console.error("Supabase auth check failed:", err);
+          isAuthed = false;
+        }
+      } else {
+        try {
+          isAuthed = sessionStorage.getItem("babithas_admin_auth") === "true";
+        } catch (e) {
+          isAuthed = window.babithas_admin_auth === "true";
+        }
       }
 
       const overlay = document.getElementById("login-overlay");
@@ -446,35 +462,70 @@
       }
     }
 
-    function handleLogin(event) {
+    async function handleLogin(event) {
       if (event && event.preventDefault) {
         event.preventDefault();
       }
-      const passcode = document.getElementById("passcode").value;
+      const email = document.getElementById("admin-email").value.trim();
+      const password = document.getElementById("admin-password").value;
       const loginError = document.getElementById("login-error");
+      const loginBtn = document.getElementById("login-btn");
       
-      // Trim and ignore case to prevent mobile keyboard auto-capitalize ("Admin") or space auto-complete ("admin ") lockouts
-      if (passcode && passcode.trim().toLowerCase() === "admin") {
+      loginBtn.innerText = "Signing in...";
+      loginBtn.disabled = true;
+
+      if (window.useSupabase) {
         try {
-          sessionStorage.setItem("babithas_admin_auth", "true");
-        } catch (e) {
-          console.warn("sessionStorage block fallback used", e);
-          window.babithas_admin_auth = "true";
+          const { data, error } = await window.supabaseInstance.auth.signInWithPassword({
+            email: email,
+            password: password
+          });
+
+          if (error) {
+            loginError.innerText = error.message;
+            loginError.classList.remove("hidden");
+            loginBtn.innerText = "Verify Credentials";
+            loginBtn.disabled = false;
+            return;
+          }
+          
+          loginError.classList.add("hidden");
+          await checkAuth();
+        } catch (err) {
+          loginError.innerText = "Connection error: " + err.message;
+          loginError.classList.remove("hidden");
         }
-        loginError.classList.add("hidden");
-        checkAuth();
       } else {
-        loginError.classList.remove("hidden");
-        document.getElementById("passcode").value = "";
+        // Local Prototype Mode Fallback
+        if (email.toLowerCase() === "admin@test.com" && password === "admin") {
+          try {
+            sessionStorage.setItem("babithas_admin_auth", "true");
+          } catch (e) {
+            window.babithas_admin_auth = "true";
+          }
+          loginError.classList.add("hidden");
+          await checkAuth();
+        } else {
+          loginError.innerText = "Invalid credentials. (Hint: enter admin@test.com / admin)";
+          loginError.classList.remove("hidden");
+          document.getElementById("admin-password").value = "";
+        }
       }
+      
+      loginBtn.innerText = "Verify Credentials";
+      loginBtn.disabled = false;
     }
 
-    function handleLogout() {
-      try {
-        sessionStorage.removeItem("babithas_admin_auth");
-      } catch (e) {}
-      window.babithas_admin_auth = "false";
-      checkAuth();
+    async function handleLogout() {
+      if (window.useSupabase) {
+        await window.supabaseInstance.auth.signOut();
+      } else {
+        try {
+          sessionStorage.removeItem("babithas_admin_auth");
+        } catch (e) {}
+        window.babithas_admin_auth = "false";
+      }
+      await checkAuth();
     }
 
     async function initDashboard() {

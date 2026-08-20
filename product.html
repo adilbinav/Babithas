@@ -51,6 +51,8 @@
   
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Supabase JS Client CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <!-- Configuration Loader -->
   <script src="config.js"></script>
   <!-- Unified Database Adapter -->
@@ -502,14 +504,9 @@ Could you please confirm if this item is in stock? Thank you!`;
 
     // Modal Control
     function showWhatsAppDemo(message) {
-      const modal = document.getElementById("whatsapp-demo-modal");
-      const msgEl = document.getElementById("whatsapp-demo-message");
-      if (!modal || !msgEl) return;
-      
-      msgEl.innerText = message;
-      modal.classList.remove("hidden");
-      modal.classList.add("flex");
-      document.body.classList.add("overflow-hidden");
+      const number = "916238599582";
+      const url = `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
     }
 
     function closeWhatsAppDemo() {
