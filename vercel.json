@@ -1,0 +1,28 @@
+{
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/admin.html",
+      "has": [
+        {
+          "type": "host",
+          "value": "babithas.com"
+        }
+      ],
+      "destination": "https://admin.babithas.com/",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "admin.babithas.com"
+        }
+      ],
+      "destination": "/admin.html"
+    }
+  ]
+}
