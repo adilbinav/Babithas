@@ -25,7 +25,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   await renderFilterTabs();
   const products = await getProducts();
-  renderProducts(products);
+  
+  const section = document.getElementById("featured");
+  if (products.length === 0) {
+    if (section) section.classList.add("hidden");
+  } else {
+    if (section) section.classList.remove("hidden");
+    renderProducts(products);
+  }
+  
   await renderCelebrationSection();
   setupMobileMenu();
   setupScrollEffects();
@@ -215,9 +223,10 @@ function renderProducts(productList) {
 
   if (featuredList.length === 0) {
     grid.innerHTML = `
-      <div class="col-span-full py-12 text-center text-stone-500">
-        <p class="font-serif text-xl italic mb-2">No items found in this collection</p>
-        <p class="text-xs">Add new listings through the Admin Console in the footer.</p>
+      <div class="col-span-full py-16 text-center text-stone-500 font-light">
+        <i class="fa-solid fa-wand-magic-sparkles text-2xl text-stone-300 mb-2 block animate-pulse"></i>
+        <p class="font-serif text-lg italic mb-1 text-stone-800">This collection is currently being curated</p>
+        <p class="text-xs text-stone-400">Please browse our other categories or check back soon!</p>
       </div>
     `;
     return;
