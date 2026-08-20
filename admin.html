@@ -58,6 +58,12 @@
       font-family: 'Playfair Display', serif;
     }
   </style>
+  <!-- Supabase JS Client CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Supabase Configuration Loader -->
+  <script src="config.js"></script>
+  <!-- Unified Database Adapter -->
+  <script src="db.js"></script>
 </head>
 <body class="bg-cream-50 text-charcoal min-h-screen flex flex-col pb-16 sm:pb-0">
 
@@ -385,145 +391,26 @@
     </button>
   </div>
 
-  <!-- Admin CMS Logic Scripts -->
-  <script>
-    const DEFAULT_CATEGORIES = [
-      { id: "silk", name: "Heritage Silks" },
-      { id: "kasavu", name: "Trivandrum Kasavu" },
-      { id: "linen", name: "Linen & Cotton" }
-    ];
-
-    const DEFAULT_PRODUCTS = [
-      {
-        id: 1,
-        name: "Valkalam Royal Magenta Silk",
-        category: "silk",
-        fabric: "Pure Kanchipuram Silk",
-        craft: "Handcrafted Zari Brocade",
-        price: 12500,
-        featured: true,
-        celebration: true,
-        length: "5.5 Metres",
-        blouse: "Yes, Matching Unstitched",
-        sizes: "",
-        image: "assets/saree_1.jpg",
-        images: ["assets/saree_1.jpg", "assets/saree_2.jpg", "assets/saree_3.jpg"],
-        desc: "A majestic magenta silk saree decorated with ornate gold zari brocade, featuring a grand floral border and traditional rich pallu. Ideal for weddings and royal celebrations."
-      },
-      {
-        id: 2,
-        name: "Classic Balaramapuram Kasavu",
-        category: "kasavu",
-        fabric: "Premium Kerala Cotton",
-        craft: "Trivandrum Gold Handloom",
-        price: 4999,
-        featured: true,
-        celebration: true,
-        length: "6.2 Metres (includes Blouse)",
-        blouse: "Yes, Contrast Zari Stripe",
-        sizes: "",
-        image: "assets/saree_4.jpg",
-        images: ["assets/saree_4.jpg", "assets/saree_5.jpg", "assets/saree_6.jpg"],
-        desc: "The timeless Kerala Kasavu saree, handwoven with fine off-white cotton and a signature rich gold zari border. It represents pure simplicity and cultural heritage."
-      },
-      {
-        id: 3,
-        name: "Crimson Mughal Brocade Silk",
-        category: "silk",
-        fabric: "Katan Silk",
-        craft: "Banarasi Cutwork Weave",
-        price: 15999,
-        featured: true,
-        celebration: true,
-        length: "5.5 Metres",
-        blouse: "Yes, Banarasi Brocade Piece",
-        sizes: "",
-        image: "assets/saree_3.jpg",
-        images: ["assets/saree_3.jpg", "assets/saree_1.jpg", "assets/saree_2.jpg"],
-        desc: "A radiant crimson saree crafted with pure Banarasi silk, displaying heritage gold motifs and an elaborate traditional border that radiates confidence."
-      },
-      {
-        id: 4,
-        name: "Pastel Sage Organic Linen Saree",
-        category: "linen",
-        fabric: "100-Count Linen",
-        craft: "Modern Border Weaving",
-        price: 3499,
-        featured: true,
-        celebration: false,
-        length: "5.5 Metres",
-        blouse: "No (Saree only)",
-        sizes: "",
-        image: "assets/saree_6.jpg",
-        images: ["assets/saree_6.jpg", "assets/saree_4.jpg", "assets/saree_5.jpg"],
-        desc: "A breathable, eco-friendly linen saree in pastel sage green, trimmed with subtle silver-gold zari borders, offering both comfort and modern minimalist elegance."
-      }
-    ];
-
-    // Read and Write Helper Functions
-    function getProducts() {
-      try {
-        const stored = localStorage.getItem("babithas_products");
-        if (!stored) {
-          localStorage.setItem("babithas_products", JSON.stringify(DEFAULT_PRODUCTS));
-          return DEFAULT_PRODUCTS;
-        }
-        return JSON.parse(stored);
-      } catch (e) {
-        console.error(e);
-        return DEFAULT_PRODUCTS;
-      }
+  <!-- Admin CMS Logic Scri    async function getProducts() {
+      return await window.db.getProducts();
     }
 
-    function saveProducts(productList) {
-      try {
-        localStorage.setItem("babithas_products", JSON.stringify(productList));
-        renderCatalog();
-      } catch (e) {
-        alert("Failed to save changes. Image uploads might exceed the browser's 5MB local quota. Try compressing images further or uploading fewer files.");
-        console.error("Storage save failed", e);
-      }
+    async function getCategories() {
+      return await window.db.getCategories();
     }
 
-    function getCategories() {
-      try {
-        const stored = localStorage.getItem("babithas_categories");
-        if (!stored) {
-          localStorage.setItem("babithas_categories", JSON.stringify(DEFAULT_CATEGORIES));
-          return DEFAULT_CATEGORIES;
-        }
-        return JSON.parse(stored);
-      } catch (e) {
-        return DEFAULT_CATEGORIES;
-      }
-    }
-
-    function saveCategories(catList) {
-      try {
-        localStorage.setItem("babithas_categories", JSON.stringify(catList));
-        renderCategoriesList();
-      } catch (e) {
-        console.error("Failed to save categories", e);
-      }
-    }
-
-    function getHomepageLimit() {
-      try {
-        const limit = localStorage.getItem("babithas_homepage_limit");
-        return limit ? parseInt(limit) : 4;
-      } catch (e) {
-        return 4;
-      }
+    async function getHomepageLimit() {
+      return await window.db.getHomepageLimit();
     }
 
     // Login Authentication Guard
-    function checkAuth() {
+    async function checkAuth() {
       const isAuthed = sessionStorage.getItem("babithas_admin_auth") === "true";
       const overlay = document.getElementById("login-overlay");
       
       if (isAuthed) {
         overlay.classList.add("hidden");
-        initDashboard();
+        await initDashboard();
       } else {
         overlay.classList.remove("hidden");
       }
@@ -549,36 +436,33 @@
       checkAuth();
     }
 
-    function initDashboard() {
-      renderCatalog();
-      renderCategoriesList();
+    async function initDashboard() {
+      await renderCatalog();
+      await renderCategoriesList();
       
       // Load current showcase limit value to input
-      document.getElementById("showcase-limit-input").value = getHomepageLimit();
+      document.getElementById("showcase-limit-input").value = await getHomepageLimit();
 
       // Load celebration title/desc
-      document.getElementById("celebration-title-input").value = localStorage.getItem("babithas_celebration_title") || "";
-      document.getElementById("celebration-desc-input").value = localStorage.getItem("babithas_celebration_desc") || "";
+      const celebrationInfo = await window.db.getCelebration();
+      document.getElementById("celebration-title-input").value = celebrationInfo.title;
+      document.getElementById("celebration-desc-input").value = celebrationInfo.desc;
     }
 
     // Reset Catalog helper
-    function resetToDefaults() {
+    async function resetToDefaults() {
       if (confirm("Are you sure you want to reset the catalog? This will restore the original mock sarees, categories, and settings.")) {
-        localStorage.removeItem("babithas_products");
-        localStorage.removeItem("babithas_categories");
-        localStorage.removeItem("babithas_homepage_limit");
-        localStorage.removeItem("babithas_celebration_title");
-        localStorage.removeItem("babithas_celebration_desc");
-        initDashboard();
+        await window.db.resetToDefaults();
+        await initDashboard();
       }
     }
 
     // Category CRUD Helpers
-    function renderCategoriesList() {
+    async function renderCategoriesList() {
       const container = document.getElementById("categories-settings-list");
       if (!container) return;
 
-      const categories = getCategories();
+      const categories = await getCategories();
       container.innerHTML = "";
 
       categories.forEach(cat => {
@@ -586,7 +470,7 @@
         badge.className = "flex items-center gap-1.5 bg-stone-100 border border-stone-200 text-stone-800 text-[10px] font-bold uppercase tracking-wider py-1.5 px-3 rounded-full min-h-[28px]";
         badge.innerHTML = `
           <span>${cat.name} (${cat.id})</span>
-          <button type="button" onclick="deleteCategory('${cat.id}')" class="text-stone-400 hover:text-red-600 transition-colors p-0.5">
+          <button type="button" onclick="deleteCategory('${cat.id}')" class="text-stone-400 hover:text-red-650 transition-colors p-0.5">
             <i class="fa-solid fa-xmark text-[11px]"></i>
           </button>
         `;
@@ -594,7 +478,7 @@
       });
     }
 
-    function addCategory(event) {
+    async function addCategory(event) {
       event.preventDefault();
       
       const idInput = document.getElementById("cat-id-input");
@@ -605,7 +489,7 @@
 
       if (!id || !name) return;
 
-      let catList = getCategories();
+      let catList = await getCategories();
       
       // Prevent duplicates
       if (catList.some(c => c.id === id)) {
@@ -613,23 +497,22 @@
         return;
       }
 
-      catList.push({ id, name });
-      saveCategories(catList);
+      await window.db.saveCategory({ id, name });
+      await renderCategoriesList();
 
       idInput.value = "";
       nameInput.value = "";
     }
 
-    function deleteCategory(id) {
+    async function deleteCategory(id) {
       if (confirm(`Delete the "${id}" category tab? Products currently under this category will need their categories reassigned.`)) {
-        let catList = getCategories();
-        catList = catList.filter(c => c.id !== id);
-        saveCategories(catList);
+        await window.db.deleteCategory(id);
+        await renderCategoriesList();
       }
     }
 
     // Showcase Limit Settings
-    function saveShowcaseLimit(event) {
+    async function saveShowcaseLimit(event) {
       event.preventDefault();
       const limitVal = document.getElementById("showcase-limit-input").value;
       const limit = parseInt(limitVal);
@@ -637,7 +520,7 @@
       if (isNaN(limit) || limit < 1) return;
 
       try {
-        localStorage.setItem("babithas_homepage_limit", limit);
+        await window.db.saveHomepageLimit(limit);
         alert(`Homepage showcase limit updated to ${limit}!`);
       } catch (e) {
         console.error("Storage save limit failed", e);
@@ -645,33 +528,31 @@
     }
 
     // Celebration Settings Card Submit
-    function saveCelebrationSettings(event) {
+    async function saveCelebrationSettings(event) {
       event.preventDefault();
       const title = document.getElementById("celebration-title-input").value.trim();
       const desc = document.getElementById("celebration-desc-input").value.trim();
 
-      localStorage.setItem("babithas_celebration_title", title);
-      localStorage.setItem("babithas_celebration_desc", desc);
+      await window.db.saveCelebration(title, desc);
       alert("Festive Celebration settings updated!");
     }
 
-    function clearCelebrationSettings() {
+    async function clearCelebrationSettings() {
       if (confirm("Disable the Festive Celebration section? This will hide the banner from the storefront landing page.")) {
         document.getElementById("celebration-title-input").value = "";
         document.getElementById("celebration-desc-input").value = "";
-        localStorage.setItem("babithas_celebration_title", "");
-        localStorage.setItem("babithas_celebration_desc", "");
+        await window.db.saveCelebration("", "");
         alert("Festive Celebration section disabled.");
       }
     }
 
     // Render Database in Dashboard Table and Mobile List
-    function renderCatalog() {
+    async function renderCatalog() {
       const tbody = document.getElementById("catalog-table-body");
       const mobileList = document.getElementById("catalog-mobile-list");
       if (!tbody || !mobileList) return;
 
-      const productList = getProducts();
+      const productList = await getProducts();
       tbody.innerHTML = "";
       mobileList.innerHTML = "";
 
@@ -729,7 +610,7 @@
             <td class="px-6 py-4 whitespace-nowrap text-right text-xs font-semibold space-x-2">
               <button onclick="openFormModal(${prod.id})" class="text-gold-700 hover:text-gold-900 font-bold p-1">Edit</button>
               <span class="text-stone-300">|</span>
-              <button onclick="deleteProduct(${prod.id})" class="text-red-600 hover:text-red-800 font-bold p-1">Delete</button>
+              <button onclick="deleteProduct(${prod.id})" class="text-red-650 hover:text-red-800 font-bold p-1">Delete</button>
             </td>
           </tr>
         `;
@@ -761,7 +642,7 @@
               <button onclick="openFormModal(${prod.id})" class="w-1/2 flex items-center justify-center gap-1.5 border border-stone-200 text-stone-700 bg-stone-50 rounded-lg py-2.5 text-center font-bold min-h-[44px]">
                 <i class="fa-solid fa-pen-to-square text-xs"></i> Edit
               </button>
-              <button onclick="deleteProduct(${prod.id})" class="w-1/2 flex items-center justify-center gap-1.5 border border-red-100 text-red-600 bg-red-50/30 rounded-lg py-2.5 text-center font-bold min-h-[44px]">
+              <button onclick="deleteProduct(${prod.id})" class="w-1/2 flex items-center justify-center gap-1.5 border border-red-100 text-red-650 bg-red-50/30 rounded-lg py-2.5 text-center font-bold min-h-[44px]">
                 <i class="fa-solid fa-trash-can text-xs"></i> Delete
               </button>
             </div>
@@ -774,7 +655,7 @@
     }
 
     // Modal Control: Add/Edit Forms
-    function openFormModal(productId) {
+    async function openFormModal(productId) {
       const modal = document.getElementById("product-form-modal");
       const title = document.getElementById("modal-form-title");
       const form = document.getElementById("product-crud-form");
@@ -790,7 +671,7 @@
       // 1. Populate category dropdown dynamically from settings
       const categoryDropdown = document.getElementById("form-category");
       categoryDropdown.innerHTML = "";
-      const categories = getCategories();
+      const categories = await getCategories();
       
       if (categories.length === 0) {
         categoryDropdown.innerHTML = `<option value="">No Categories Configured</option>`;
@@ -802,7 +683,8 @@
 
       if (productId) {
         title.innerText = "Edit Saree Details";
-        const prod = getProducts().find(p => p.id === productId);
+        const products = await getProducts();
+        const prod = products.find(p => p.id === productId);
         if (prod) {
           document.getElementById("form-product-id").value = prod.id;
           document.getElementById("form-name").value = prod.name;
@@ -934,7 +816,7 @@
     }
 
     // Form CRUD Actions on Submit
-    function handleFormSubmit(event) {
+    async function handleFormSubmit(event) {
       event.preventDefault();
       
       const productId = document.getElementById("form-product-id").value;
@@ -956,35 +838,29 @@
       const celebration = document.getElementById("form-celebration").checked;
       
       const imagesJson = document.getElementById("form-images-json").value;
-      let images = [];
+      let rawImages = [];
       try {
-        images = imagesJson ? JSON.parse(imagesJson) : [];
+        rawImages = imagesJson ? JSON.parse(imagesJson) : [];
       } catch(e) {
-        images = [];
+        rawImages = [];
       }
 
-      if (images.length === 0) {
-        images = ["assets/saree_1.jpg"];
+      if (rawImages.length === 0) {
+        rawImages = ["assets/saree_1.jpg"];
       }
 
-      const primaryImage = images[0];
+      // Show saving spinner
+      const submitBtn = event.target.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerText;
+      submitBtn.innerText = "Saving to database...";
+      submitBtn.disabled = true;
 
-      let productList = getProducts();
+      try {
+        // Upload images to Supabase Storage if active, or keep base64 local
+        const uploadedImages = await window.db.uploadImages(rawImages);
+        const primaryImage = uploadedImages[0];
 
-      if (productId) {
-        // Edit Mode
-        const idInt = parseInt(productId);
-        productList = productList.map(p => {
-          if (p.id === idInt) {
-            return { ...p, name, category, fabric, craft, desc, price, featured, celebration, length, blouse, sizes, image: primaryImage, images };
-          }
-          return p;
-        });
-      } else {
-        // Add Mode
-        const newId = productList.length > 0 ? Math.max(...productList.map(p => p.id)) + 1 : 1;
-        const newProduct = {
-          id: newId,
+        const productData = {
           name,
           category,
           fabric,
@@ -997,21 +873,30 @@
           blouse,
           sizes,
           image: primaryImage,
-          images
+          images: uploadedImages
         };
-        productList.push(newProduct);
-      }
 
-      saveProducts(productList);
-      closeFormModal();
+        if (productId) {
+          productData.id = parseInt(productId);
+        }
+
+        await window.db.saveProduct(productData);
+        await renderCatalog();
+        closeFormModal();
+      } catch (err) {
+        console.error("Save product failed:", err);
+        alert("Failed to save product: " + err.message);
+      } finally {
+        submitBtn.innerText = originalText;
+        submitBtn.disabled = false;
+      }
     }
 
     // Delete Product
-    function deleteProduct(productId) {
+    async function deleteProduct(productId) {
       if (confirm("Are you sure you want to delete this listing? This action cannot be undone.")) {
-        let productList = getProducts();
-        productList = productList.filter(p => p.id !== productId);
-        saveProducts(productList);
+        await window.db.deleteProduct(productId);
+        await renderCatalog();
       }
     }
 

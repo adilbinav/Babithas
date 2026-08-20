@@ -51,6 +51,12 @@
   
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Supabase JS Client CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Supabase Configuration Loader -->
+  <script src="config.js"></script>
+  <!-- Unified Database Adapter -->
+  <script src="db.js"></script>
 </head>
 <body class="bg-cream-50 text-charcoal font-sans flex flex-col min-h-screen">
 
@@ -289,117 +295,34 @@
 
   <!-- Client-Side Catalogue Render & Filter Script -->
   <script>
-    const DEFAULT_CATEGORIES = [
-      { id: "silk", name: "Heritage Silks" },
-      { id: "kasavu", name: "Trivandrum Kasavu" },
-      { id: "linen", name: "Linen & Cotton" }
-    ];
-
-    const DEFAULT_PRODUCTS = [
-      {
-        id: 1,
-        name: "Valkalam Royal Magenta Silk",
-        category: "silk",
-        fabric: "Pure Kanchipuram Silk",
-        craft: "Handcrafted Zari Brocade",
-        price: 12500,
-        featured: true,
-        celebration: true,
-        length: "5.5 Metres",
-        blouse: "Yes, Matching Unstitched",
-        sizes: "",
-        image: "assets/saree_1.jpg",
-        images: ["assets/saree_1.jpg", "assets/saree_2.jpg", "assets/saree_3.jpg"],
-        desc: "A majestic magenta silk saree decorated with ornate gold zari brocade, featuring a grand floral border and traditional rich pallu. Ideal for weddings and royal celebrations."
-      },
-      {
-        id: 2,
-        name: "Classic Balaramapuram Kasavu",
-        category: "kasavu",
-        fabric: "Premium Kerala Cotton",
-        craft: "Trivandrum Gold Handloom",
-        price: 4999,
-        featured: true,
-        celebration: true,
-        length: "6.2 Metres (includes Blouse)",
-        blouse: "Yes, Contrast Zari Stripe",
-        sizes: "",
-        image: "assets/saree_4.jpg",
-        images: ["assets/saree_4.jpg", "assets/saree_5.jpg", "assets/saree_6.jpg"],
-        desc: "The timeless Kerala Kasavu saree, handwoven with fine off-white cotton and a signature rich gold zari border. It represents pure simplicity and cultural heritage."
-      },
-      {
-        id: 3,
-        name: "Crimson Mughal Brocade Silk",
-        category: "silk",
-        fabric: "Katan Silk",
-        craft: "Banarasi Cutwork Weave",
-        price: 15999,
-        featured: true,
-        celebration: true,
-        length: "5.5 Metres",
-        blouse: "Yes, Banarasi Brocade Piece",
-        sizes: "",
-        image: "assets/saree_3.jpg",
-        images: ["assets/saree_3.jpg", "assets/saree_1.jpg", "assets/saree_2.jpg"],
-        desc: "A radiant crimson saree crafted with pure Banarasi silk, displaying heritage gold motifs and an elaborate traditional border that radiates confidence."
-      },
-      {
-        id: 4,
-        name: "Pastel Sage Organic Linen Saree",
-        category: "linen",
-        fabric: "100-Count Linen",
-        craft: "Modern Border Weaving",
-        price: 3499,
-        featured: true,
-        celebration: false,
-        length: "5.5 Metres",
-        blouse: "No (Saree only)",
-        sizes: "",
-        image: "assets/saree_6.jpg",
-        images: ["assets/saree_6.jpg", "assets/saree_4.jpg", "assets/saree_5.jpg"],
-        desc: "A breathable, eco-friendly linen saree in pastel sage green, trimmed with subtle silver-gold zari borders, offering both comfort and modern minimalist elegance."
-      }
-    ];
-
     let activeCategory = "all";
     let searchQuery = "";
     let isCelebration = false;
 
-    document.addEventListener("DOMContentLoaded", () => {
-      renderFilterTabs();
+    document.addEventListener("DOMContentLoaded", async () => {
+      await renderFilterTabs();
       initializeCategoryFromURL();
-      renderCatalogGrid();
+      await renderCatalogGrid();
       setupSearch();
       setupDemoModalClose();
       setupHeaderActions();
       setupMobileMenu();
     });
 
-    function getProducts() {
-      try {
-        const stored = localStorage.getItem("babithas_products");
-        return stored ? JSON.parse(stored) : DEFAULT_PRODUCTS;
-      } catch (e) {
-        return DEFAULT_PRODUCTS;
-      }
+    async function getProducts() {
+      return await window.db.getProducts();
     }
 
-    function getCategories() {
-      try {
-        const stored = localStorage.getItem("babithas_categories");
-        return stored ? JSON.parse(stored) : DEFAULT_CATEGORIES;
-      } catch (e) {
-        return DEFAULT_CATEGORIES;
-      }
+    async function getCategories() {
+      return await window.db.getCategories();
     }
 
     // Render filter tabs dynamically
-    function renderFilterTabs() {
+    async function renderFilterTabs() {
       const container = document.getElementById("filter-tabs-container");
       if (!container) return;
 
-      const categories = getCategories();
+      const categories = await getCategories();
       let html = `
         <button data-category="all" class="filter-tab shrink-0 bg-stone-900 text-white text-xs font-semibold py-2 px-4 rounded-full transition-colors uppercase tracking-wider shadow-sm">
           All
@@ -443,7 +366,11 @@
         if (taglineEl) taglineEl.innerText = cDesc;
       }
       
-      const categories = getCategories();
+      const categories = [
+        { id: "silk", name: "Heritage Silks" },
+        { id: "kasavu", name: "Trivandrum Kasavu" },
+        { id: "linen", name: "Linen & Cotton" }
+      ]; // Temporary fallback validation list
       const validCategories = ["all", ...categories.map(c => c.id)];
 
       if (catParam && validCategories.includes(catParam)) {
@@ -463,13 +390,13 @@
     }
 
     // Render cards to grid
-    function renderCatalogGrid() {
+    async function renderCatalogGrid() {
       const grid = document.getElementById("catalog-products-grid");
       if (!grid) return;
 
       grid.innerHTML = "";
       
-      const allProducts = getProducts();
+      const allProducts = await getProducts();
       
       // Filter logic: category filter + search text filter + celebration filter
       const filtered = allProducts.filter(prod => {
@@ -554,7 +481,7 @@
       const filterBtns = document.querySelectorAll(".filter-tab");
       
       filterBtns.forEach(btn => {
-        btn.addEventListener("click", () => {
+        btn.addEventListener("click", async () => {
           filterBtns.forEach(b => {
             b.classList.remove("bg-stone-900", "text-white", "shadow-sm");
             b.classList.add("bg-stone-100", "text-stone-700");
@@ -564,7 +491,7 @@
           btn.classList.add("bg-stone-900", "text-white", "shadow-sm");
 
           activeCategory = btn.getAttribute("data-category");
-          renderCatalogGrid();
+          await renderCatalogGrid();
         });
       });
     }
@@ -574,9 +501,9 @@
       const searchInput = document.getElementById("search-input");
       if (!searchInput) return;
 
-      searchInput.addEventListener("input", (e) => {
+      searchInput.addEventListener("input", async (e) => {
         searchQuery = e.target.value.trim();
-        renderCatalogGrid();
+        await renderCatalogGrid();
       });
     }
 

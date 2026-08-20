@@ -51,6 +51,12 @@
   
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Supabase JS Client CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Supabase Configuration Loader -->
+  <script src="config.js"></script>
+  <!-- Unified Database Adapter -->
+  <script src="db.js"></script>
 </head>
 <body class="bg-cream-50 text-charcoal font-sans flex flex-col min-h-screen">
 
@@ -329,22 +335,17 @@
 
   <!-- Client-Side Product Parsing Script -->
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      loadProductDetails();
+    document.addEventListener("DOMContentLoaded", async () => {
+      await loadProductDetails();
       setupDemoModalClose();
       setupMobileMenu();
     });
 
-    function getProducts() {
-      try {
-        const stored = localStorage.getItem("babithas_products");
-        return stored ? JSON.parse(stored) : [];
-      } catch (e) {
-        return [];
-      }
+    async function getProducts() {
+      return await window.db.getProducts();
     }
 
-    function loadProductDetails() {
+    async function loadProductDetails() {
       // 1. Parse ID from Query String
       const urlParams = new URLSearchParams(window.location.search);
       const productId = parseInt(urlParams.get("id"));
@@ -354,8 +355,8 @@
         return;
       }
 
-      // 2. Fetch from localStorage database
-      const products = getProducts();
+      // 2. Fetch from database
+      const products = await getProducts();
       const product = products.find(p => p.id === productId);
 
       if (!product) {
