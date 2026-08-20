@@ -1,4 +1,4 @@
-const CACHE_NAME = 'babithas-cms-v1';
+const CACHE_NAME = 'babithas-cms-v2';
 const ASSETS_TO_CACHE = [
   'admin.html',
   'config.js',
