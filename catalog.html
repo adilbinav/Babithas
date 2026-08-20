@@ -149,8 +149,8 @@
     
     <!-- Header Title -->
     <div class="text-center max-w-xl mx-auto mb-10">
-      <h1 class="text-3xl md:text-4xl font-serif font-bold text-stone-900">Explore Our Full Catalogue</h1>
-      <p class="text-stone-500 text-xs md:text-sm mt-2">
+      <h1 id="catalog-title" class="text-3xl md:text-4xl font-serif font-bold text-stone-900">Explore Our Full Catalogue</h1>
+      <p id="catalog-tagline" class="text-stone-500 text-xs md:text-sm mt-2">
         Browse handloom sarees and designer collections. Filter by type or search by fabric names directly.
       </p>
       <div class="w-12 h-[1px] bg-[#D4AF37] mx-auto mt-4"></div>
@@ -364,6 +364,7 @@
 
     let activeCategory = "all";
     let searchQuery = "";
+    let isCelebration = false;
 
     document.addEventListener("DOMContentLoaded", () => {
       renderFilterTabs();
@@ -393,7 +394,7 @@
       }
     }
 
-    // Render filter buttons dynamically
+    // Render filter tabs dynamically
     function renderFilterTabs() {
       const container = document.getElementById("filter-tabs-container");
       if (!container) return;
@@ -422,10 +423,24 @@
       const urlParams = new URLSearchParams(window.location.search);
       const catParam = urlParams.get("category");
       const searchParam = urlParams.get("search");
+      const celebrationParam = urlParams.get("celebration");
       
       if (searchParam) {
         searchQuery = searchParam;
         document.getElementById("search-input").value = searchParam;
+      }
+
+      if (celebrationParam === "true") {
+        isCelebration = true;
+        
+        // Dynamically update page headings to active Celebration configurations
+        const cTitle = localStorage.getItem("babithas_celebration_title") || "Festive Collections";
+        const cDesc = localStorage.getItem("babithas_celebration_desc") || "Explore our select seasonal handlooms.";
+        
+        const headingEl = document.getElementById("catalog-title");
+        const taglineEl = document.getElementById("catalog-tagline");
+        if (headingEl) headingEl.innerText = cTitle;
+        if (taglineEl) taglineEl.innerText = cDesc;
       }
       
       const categories = getCategories();
@@ -456,7 +471,7 @@
       
       const allProducts = getProducts();
       
-      // Filter logic: category filter + search text filter
+      // Filter logic: category filter + search text filter + celebration filter
       const filtered = allProducts.filter(prod => {
         const matchCategory = activeCategory === "all" || prod.category === activeCategory;
         
@@ -465,8 +480,10 @@
                             prod.fabric.toLowerCase().includes(q) || 
                             prod.craft.toLowerCase().includes(q) ||
                             prod.desc.toLowerCase().includes(q);
+        
+        const matchCelebration = !isCelebration || prod.celebration === true || prod.celebration === "true";
                             
-        return matchCategory && matchSearch;
+        return matchCategory && matchSearch && matchCelebration;
       });
 
       if (filtered.length === 0) {

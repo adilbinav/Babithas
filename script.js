@@ -216,7 +216,10 @@ function renderCelebrationSection() {
   descEl.innerText = desc;
   grid.innerHTML = "";
 
-  celebrationList.forEach(prod => {
+  // Slice list to display max 4 featured items on landing page
+  const slicedList = celebrationList.slice(0, 4);
+
+  slicedList.forEach(prod => {
     const priceText = prod.price ? `₹${Number(prod.price).toLocaleString()}` : "Price on Ask";
     const rawText = `Hi BaBitha's, I am interested in inquiring about the "${prod.name}" (${prod.fabric}) priced at ${priceText} from your "${title}" festive showcase.`;
     const escapedText = rawText.replace(/'/g, "\\'");
@@ -266,6 +269,19 @@ function renderCelebrationSection() {
     `;
     grid.appendChild(card);
   });
+
+  // Dynamic View All Button configuration
+  const viewAllContainer = document.getElementById("celebration-view-all-container");
+  const viewAllBtn = document.getElementById("celebration-view-all-btn");
+
+  if (viewAllContainer && viewAllBtn) {
+    if (celebrationList.length > 4) {
+      viewAllBtn.innerHTML = `View Full ${title} <i class="fa-solid fa-arrow-right"></i>`;
+      viewAllContainer.classList.remove("hidden");
+    } else {
+      viewAllContainer.classList.add("hidden");
+    }
+  }
 
   section.classList.remove("hidden");
 }
