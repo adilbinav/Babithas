@@ -64,6 +64,19 @@
   <script src="config.js"></script>
   <!-- Unified Database Adapter -->
   <script src="db.js"></script>
+
+  <!-- PWA Installable Manifest Configurations -->
+  <link rel="manifest" href="admin_manifest.json">
+  <meta name="theme-color" content="#CBA147">
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('admin_sw.js')
+          .then(reg => console.log('Admin CMS Service Worker registered successfully!'))
+          .catch(err => console.error('Admin CMS Service Worker registration failed:', err));
+      });
+    }
+  </script>
 </head>
 <body class="bg-cream-50 text-charcoal min-h-screen flex flex-col pb-16 sm:pb-0">
 

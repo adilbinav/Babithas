@@ -1,0 +1,16 @@
+{
+  "name": "BaBitha's CMS Console",
+  "short_name": "Babithas CMS",
+  "description": "Product Catalogue CMS Panel for BaBitha's Boutique.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FCFAF6",
+  "theme_color": "#CBA147",
+  "icons": [
+    {
+      "src": "assets/Logo-web.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
