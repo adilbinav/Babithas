@@ -15,9 +15,10 @@ const DEFAULT_PRODUCTS = [
     craft: "Handcrafted Zari Brocade",
     price: 12500,
     featured: true,
+    celebration: false,
     length: "5.5 Metres",
     blouse: "Yes, Matching Unstitched",
-    sizes: null, // Saree does not have S/M/L sizes
+    sizes: "", 
     image: "assets/saree_1.jpg",
     images: ["assets/saree_1.jpg", "assets/saree_2.jpg"],
     desc: "A majestic magenta silk saree decorated with ornate gold zari brocade, featuring a grand floral border and traditional rich pallu. Ideal for weddings and royal celebrations."
@@ -30,9 +31,10 @@ const DEFAULT_PRODUCTS = [
     craft: "Trivandrum Gold Handloom",
     price: 4999,
     featured: true,
+    celebration: true, // Default to Onam Collection
     length: "6.2 Metres (includes Blouse)",
     blouse: "Yes, Contrast Zari Stripe",
-    sizes: null,
+    sizes: "",
     image: "assets/saree_2.jpg",
     images: ["assets/saree_2.jpg", "assets/saree_1.jpg"],
     desc: "The timeless Kerala Kasavu saree, handwoven with fine off-white cotton and a signature rich gold zari border. It represents pure simplicity and cultural heritage."
@@ -45,9 +47,10 @@ const DEFAULT_PRODUCTS = [
     craft: "Banarasi Cutwork Weave",
     price: 15999,
     featured: true,
+    celebration: false,
     length: "5.5 Metres",
     blouse: "Yes, Banarasi Brocade Piece",
-    sizes: null,
+    sizes: "",
     image: "assets/saree_1.jpg",
     images: ["assets/saree_1.jpg", "assets/saree_2.jpg"],
     desc: "A radiant crimson saree crafted with pure Banarasi silk, displaying heritage gold motifs and an elaborate traditional border that radiates confidence."
@@ -60,9 +63,10 @@ const DEFAULT_PRODUCTS = [
     craft: "Modern Border Weaving",
     price: 3499,
     featured: true,
+    celebration: false,
     length: "5.5 Metres",
     blouse: "No (Saree only)",
-    sizes: null,
+    sizes: "",
     image: "assets/saree_2.jpg",
     images: ["assets/saree_2.jpg", "assets/saree_1.jpg"],
     desc: "A breathable, eco-friendly linen saree in pastel sage green, trimmed with subtle silver-gold zari borders, offering both comfort and modern minimalist elegance."
@@ -82,17 +86,18 @@ function getProducts() {
     const list = JSON.parse(stored);
     let updated = false;
     const migration = list.map(p => {
-      // Ensure images array exists
       if (!p.images || !Array.isArray(p.images)) {
         p.images = [p.image || "assets/saree_1.jpg"];
         updated = true;
       }
-      // Ensure featured boolean exists
       if (p.featured === undefined) {
         p.featured = true;
         updated = true;
       }
-      // Ensure length, blouse and sizes exist (initialize to empty/null if missing)
+      if (p.celebration === undefined) {
+        p.celebration = p.id === 2; // Saree 2 (Kasavu) defaulted
+        updated = true;
+      }
       if (p.length === undefined) {
         p.length = p.category === "silk" || p.category === "kasavu" || p.category === "linen" ? "5.5 Metres" : "";
         updated = true;
@@ -141,8 +146,15 @@ function getHomepageLimit() {
 
 // Initialize elements
 document.addEventListener("DOMContentLoaded", () => {
+  // Initialize default celebration details if never configured
+  if (localStorage.getItem("babithas_celebration_title") === null) {
+    localStorage.setItem("babithas_celebration_title", "Onam Collections");
+    localStorage.setItem("babithas_celebration_desc", "Embrace the harvest festival of Kerala with our traditional Balaramapuram Kasavu handlooms and gold brocade design collections.");
+  }
+
   renderFilterTabs();
   renderProducts(getProducts());
+  renderCelebrationSection();
   setupMobileMenu();
   setupScrollEffects();
   setupDemoModalClose();
@@ -155,14 +167,12 @@ function renderFilterTabs() {
 
   const categories = getCategories();
   
-  // Render static 'All' tab first
   let html = `
     <button data-category="all" class="filter-btn shrink-0 bg-stone-900 text-white text-xs font-semibold py-2 px-5 rounded-full transition-all duration-300 uppercase tracking-widest shadow-sm">
       All
     </button>
   `;
 
-  // Render rest of categories dynamically
   categories.forEach(cat => {
     html += `
       <button data-category="${cat.id}" class="filter-btn shrink-0 bg-stone-100 text-stone-700 hover:bg-stone-200 text-xs font-semibold py-2 px-5 rounded-full transition-all duration-300 uppercase tracking-widest">
@@ -173,6 +183,91 @@ function renderFilterTabs() {
 
   container.innerHTML = html;
   setupFilters();
+}
+
+// Render dynamic Festive Celebration section banner and grid
+function renderCelebrationSection() {
+  const section = document.getElementById("celebration-section");
+  const titleEl = document.getElementById("celebration-title");
+  const descEl = document.getElementById("celebration-desc");
+  const grid = document.getElementById("celebration-grid");
+
+  if (!section || !titleEl || !descEl || !grid) return;
+
+  const title = localStorage.getItem("babithas_celebration_title") || "";
+  const desc = localStorage.getItem("babithas_celebration_desc") || "";
+
+  // Hide section completely if title is empty
+  if (!title.trim()) {
+    section.classList.add("hidden");
+    return;
+  }
+
+  const allProducts = getProducts();
+  const celebrationList = allProducts.filter(p => p.celebration === true || p.celebration === "true");
+
+  // Hide section if no products are marked for celebration
+  if (celebrationList.length === 0) {
+    section.classList.add("hidden");
+    return;
+  }
+
+  titleEl.innerText = title;
+  descEl.innerText = desc;
+  grid.innerHTML = "";
+
+  celebrationList.forEach(prod => {
+    const priceText = prod.price ? `₹${Number(prod.price).toLocaleString()}` : "Price on Ask";
+    const rawText = `Hi BaBitha's, I am interested in inquiring about the "${prod.name}" (${prod.fabric}) priced at ${priceText} from your "${title}" festive showcase.`;
+    const escapedText = rawText.replace(/'/g, "\\'");
+
+    const card = document.createElement("div");
+    card.className = "product-card group bg-white border border-stone-100 rounded-lg overflow-hidden luxury-shadow-sm hover:luxury-shadow transition-all duration-300 flex flex-col";
+    
+    card.innerHTML = `
+      <div class="relative overflow-hidden bg-stone-50 aspect-[3/4]">
+        <img src="${prod.image}" alt="${prod.name}" class="product-image-zoom w-full h-full object-cover object-center" loading="lazy">
+        <span class="absolute top-3 left-3 bg-amber-500 text-white text-[9px] tracking-widest uppercase font-semibold px-2 py-0.5 rounded border border-stone-700/20">
+          Festive
+        </span>
+        <span class="absolute bottom-3 right-3 bg-white/90 text-stone-900 text-xs font-bold px-2 py-1 rounded shadow-sm">
+          ${priceText}
+        </span>
+        <div class="hidden md:flex absolute inset-0 bg-stone-950/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-end justify-center p-4">
+          <div class="w-full space-y-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+            <a href="product.html?id=${prod.id}" class="w-full inline-block text-center bg-white text-stone-900 text-xs font-semibold py-2.5 px-4 rounded shadow hover:bg-stone-50 transition-colors uppercase tracking-wider">
+              View Details
+            </a>
+            <button onclick="showWhatsAppDemo('${escapedText}')" class="w-full flex items-center justify-center gap-2 bg-[#D4AF37] hover:bg-[#AA771C] text-white text-xs font-semibold py-2.5 px-4 rounded shadow transition-colors uppercase tracking-wider">
+              <i class="fa-brands fa-whatsapp"></i> Inquire Now
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="p-4 flex flex-col flex-grow">
+        <div class="flex items-center justify-between gap-2 mb-1">
+          <p class="text-[10px] uppercase tracking-wider text-[#AA771C] font-semibold">${prod.fabric}</p>
+          <span class="text-stone-900 font-bold text-xs">${priceText}</span>
+        </div>
+        <a href="product.html?id=${prod.id}" class="block group-hover:text-[#AA771C]">
+          <h3 class="font-serif text-base font-semibold text-stone-900 group-hover:text-[#AA771C] transition-colors mb-2 line-clamp-1">${prod.name}</h3>
+        </a>
+        <p class="text-stone-500 text-xs line-clamp-2 mb-4 flex-grow">${prod.desc}</p>
+        
+        <div class="mt-auto space-y-2 md:hidden">
+          <a href="product.html?id=${prod.id}" class="w-full block text-center border border-stone-200 text-stone-800 text-xs font-semibold py-2 px-3 rounded hover:bg-stone-50 transition-colors uppercase tracking-wider">
+            View Details
+          </a>
+          <button onclick="showWhatsAppDemo('${escapedText}')" class="w-full flex items-center justify-center gap-2 bg-[#D4AF37] text-white text-xs font-semibold py-2 px-3 rounded shadow transition-colors uppercase tracking-wider">
+            <i class="fa-brands fa-whatsapp"></i> Inquire WhatsApp
+          </button>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  section.classList.remove("hidden");
 }
 
 // Mobile Navbar Toggle
@@ -282,7 +377,7 @@ function renderProducts(productList) {
           <a href="product.html?id=${prod.id}" class="w-full block text-center border border-stone-200 text-stone-800 text-xs font-semibold py-2 px-3 rounded hover:bg-stone-50 transition-colors uppercase tracking-wider">
             View Details
           </a>
-          <button onclick="showWhatsAppDemo('${escapedText}')" class="w-full flex items-center justify-center gap-2 bg-[#D4AF37] text-white text-xs font-semibold py-2.5 px-3 rounded shadow transition-colors uppercase tracking-wider">
+          <button onclick="showWhatsAppDemo('${escapedText}')" class="w-full flex items-center justify-center gap-2 bg-[#D4AF37] text-white text-xs font-semibold py-2 px-3 rounded shadow transition-colors uppercase tracking-wider">
             <i class="fa-brands fa-whatsapp"></i> Inquire WhatsApp
           </button>
         </div>
@@ -308,7 +403,6 @@ function setupFilters() {
 
       const category = btn.getAttribute("data-category");
 
-      // Pull getProducts() but limit them for homepage grid rendering
       const allProducts = getProducts();
       let featuredList = allProducts.filter(p => p.featured === true || p.featured === "true");
       if (featuredList.length === 0) {
@@ -319,10 +413,9 @@ function setupFilters() {
       featuredList = featuredList.slice(0, limit);
 
       if (category === "all") {
-        renderProducts(allProducts); // In filter mode, render all matches or featured matches
+        renderProducts(allProducts); 
       } else {
         const filtered = allProducts.filter(p => p.category === category);
-        // Note: For filtering, we display all matching category products
         renderProducts(filtered);
       }
     });
