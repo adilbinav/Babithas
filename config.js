@@ -37,3 +37,17 @@ function base64ToBlob(base64Data, contentType) {
 
   return new Blob(byteArrays, {type: contentType});
 }
+
+// Global price formatter helper supporting original price strikethroughs and percentage discount badges
+window.formatPriceHtml = function(price, originalPrice) {
+  let cleanPrice = price ? `₹${Number(price).toLocaleString()}` : "Price on Ask";
+  if (originalPrice && price && Number(originalPrice) > Number(price)) {
+    const discountPercent = Math.round(((Number(originalPrice) - Number(price)) / Number(originalPrice)) * 100);
+    return `
+      <span class="text-stone-900 font-bold">₹${Number(price).toLocaleString()}</span>
+      <span class="line-through text-stone-400 text-[10px] font-normal ml-1">₹${Number(originalPrice).toLocaleString()}</span>
+      <span class="text-emerald-600 text-[9px] font-semibold ml-1 shrink-0">${discountPercent}% OFF</span>
+    `;
+  }
+  return `<span class="text-stone-900 font-bold">${cleanPrice}</span>`;
+};

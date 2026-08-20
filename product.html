@@ -381,8 +381,7 @@
       document.getElementById("detail-category").innerText = product.category;
       document.getElementById("detail-desc").innerText = product.desc;
       
-      const priceText = product.price ? `₹${Number(product.price).toLocaleString()}` : "Price on Ask";
-      document.getElementById("detail-price").innerText = priceText;
+      document.getElementById("detail-price").innerHTML = window.formatPriceHtml(product.price, product.original_price);
 
       // Render Specifications dynamically based on filled values
       const specsGrid = document.getElementById("specs-grid");

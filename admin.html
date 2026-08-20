@@ -287,7 +287,7 @@
           <input type="text" id="form-name" required class="w-full px-3.5 py-2.5 rounded border border-stone-200 text-sm font-normal focus:ring-1 focus:ring-gold-500 focus:outline-none bg-white min-h-[44px]" placeholder="e.g. Valkalam Royal Magenta Silk">
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <!-- Category -->
           <div>
             <label for="form-category" class="block uppercase tracking-wider text-stone-400 mb-1.5">Category Tab</label>
@@ -298,8 +298,14 @@
 
           <!-- Price -->
           <div>
-            <label for="form-price" class="block uppercase tracking-wider text-stone-400 mb-1.5">Price (₹, Optional)</label>
-            <input type="number" id="form-price" class="w-full px-3.5 py-2.5 rounded border border-stone-200 text-sm font-normal focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none bg-white min-h-[44px]" placeholder="e.g. 12500 (leave blank for On Ask)">
+            <label for="form-price" class="block uppercase tracking-wider text-stone-400 mb-1.5">Selling Price (₹)</label>
+            <input type="number" id="form-price" class="w-full px-3.5 py-2.5 rounded border border-stone-200 text-sm font-normal focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none bg-white min-h-[44px]" placeholder="e.g. 9999 (blank = On Ask)">
+          </div>
+
+          <!-- Original Price (Compare At) -->
+          <div>
+            <label for="form-original-price" class="block uppercase tracking-wider text-stone-400 mb-1.5">Original Price (₹)</label>
+            <input type="number" id="form-original-price" class="w-full px-3.5 py-2.5 rounded border border-stone-200 text-sm font-normal focus:ring-1 focus:ring-gold-500 focus:border-gold-500 focus:outline-none bg-white min-h-[44px]" placeholder="e.g. 12000 (Optional)">
           </div>
         </div>
 
@@ -664,7 +670,10 @@
       let mobileHtml = "";
 
       productList.forEach(prod => {
-        const priceText = prod.price ? `₹${Number(prod.price).toLocaleString()}` : "On Ask";
+        let priceText = prod.price ? `₹${Number(prod.price).toLocaleString()}` : "On Ask";
+        if (prod.original_price && prod.price && Number(prod.original_price) > Number(prod.price)) {
+          priceText += ` <span class="line-through text-stone-400 text-xs font-normal">₹${Number(prod.original_price).toLocaleString()}</span>`;
+        }
         const isFeatured = prod.featured === true || prod.featured === "true";
         const isCelebration = prod.celebration === true || prod.celebration === "true";
         
@@ -792,6 +801,7 @@
           document.getElementById("form-craft").value = prod.craft;
           document.getElementById("form-desc").value = prod.desc;
           document.getElementById("form-price").value = prod.price || "";
+          document.getElementById("form-original-price").value = prod.original_price || "";
           
           // Load specs
           document.getElementById("form-length").value = prod.length || "";
@@ -933,6 +943,9 @@
       const priceVal = document.getElementById("form-price").value;
       const price = priceVal ? parseFloat(priceVal) : null;
       
+      const originalPriceVal = document.getElementById("form-original-price").value;
+      const original_price = originalPriceVal ? parseFloat(originalPriceVal) : null;
+      
       const featured = document.getElementById("form-featured").checked;
       const celebration = document.getElementById("form-celebration").checked;
       
@@ -966,6 +979,7 @@
           craft,
           desc,
           price,
+          original_price,
           featured,
           celebration,
           length,

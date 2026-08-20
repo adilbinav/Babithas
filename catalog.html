@@ -451,9 +451,9 @@
               ${prod.category}
             </span>
             <span class="absolute bottom-3 right-3 bg-white/90 text-stone-900 text-xs font-bold px-2 py-1 rounded shadow-sm">
-              ${priceText}
+              ${prod.price ? `₹${Number(prod.price).toLocaleString()}` : 'Price on Ask'}
             </span>
-            <div class="hidden md:flex absolute inset-0 bg-stone-950/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-end justify-center p-4">
+            <div class="hidden md:flex absolute inset-0 bg-[#3A3530]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-end justify-center p-4">
               <div class="w-full space-y-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                 <a href="product.html?id=${prod.id}" class="w-full inline-block text-center bg-white text-stone-900 text-xs font-semibold py-2.5 px-4 rounded shadow hover:bg-stone-50 transition-colors uppercase tracking-wider">
                   View Details
@@ -467,7 +467,7 @@
           <div class="p-4 flex flex-col flex-grow">
             <div class="flex items-center justify-between gap-2 mb-1">
               <p class="text-[10px] uppercase tracking-wider text-[#AA771C] font-semibold">${prod.fabric}</p>
-              <span class="text-stone-900 font-bold text-xs">${priceText}</span>
+              <div class="text-stone-900 font-bold text-xs flex items-center gap-1 flex-wrap">${window.formatPriceHtml(prod.price, prod.original_price)}</div>
             </div>
             <a href="product.html?id=${prod.id}" class="block group-hover:text-[#AA771C]">
               <h3 class="font-serif text-base font-semibold text-stone-900 group-hover:text-[#AA771C] transition-colors mb-2 line-clamp-1">${prod.name}</h3>
