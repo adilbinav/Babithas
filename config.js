@@ -1,7 +1,7 @@
 // Supabase Production Credentials - Insert your credentials below to go live!
 // If left as default, the website automatically falls back to localStorage prototype mode.
-const SUPABASE_URL = "YOUR_SUPABASE_URL";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+const SUPABASE_URL = "https://dmhzbmdrscckiebcwqab.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRtaHpibWRyc2Nja2llYmN3cWFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcyMzg1MTUsImV4cCI6MjEwMjgxNDUxNX0.Jlp5ME_7L3V10P43TfrViPUJNegxhjJR7Gd3dCO4FWE";
 
 window.supabaseInstance = null;
 window.useSupabase = false;
