@@ -608,6 +608,9 @@
               </div>
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-right text-xs font-semibold space-x-2">
+              <button onclick="moveProductOrder(${prod.id}, 'up')" class="text-stone-400 hover:text-stone-900 p-1" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
+              <button onclick="moveProductOrder(${prod.id}, 'down')" class="text-stone-400 hover:text-stone-900 p-1" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
+              <span class="text-stone-250">|</span>
               <button onclick="openFormModal(${prod.id})" class="text-gold-700 hover:text-gold-900 font-bold p-1">Edit</button>
               <span class="text-stone-300">|</span>
               <button onclick="deleteProduct(${prod.id})" class="text-red-650 hover:text-red-800 font-bold p-1">Delete</button>
@@ -623,8 +626,12 @@
                 <img src="${prod.image}" alt="" class="w-full h-full object-cover">
               </div>
               <div class="flex-grow space-y-1.5">
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between gap-2">
                   <span class="text-[9px] uppercase tracking-wider text-stone-400 font-bold bg-stone-150/50 px-1.5 py-0.5 rounded">${prod.category}</span>
+                  <div class="flex gap-1">
+                    <button onclick="moveProductOrder(${prod.id}, 'up')" class="w-8 h-8 flex items-center justify-center border border-stone-200 rounded text-stone-500 bg-stone-50 hover:text-stone-900" title="Move Up"><i class="fa-solid fa-arrow-up text-[10px]"></i></button>
+                    <button onclick="moveProductOrder(${prod.id}, 'down')" class="w-8 h-8 flex items-center justify-center border border-stone-200 rounded text-stone-500 bg-stone-50 hover:text-stone-900" title="Move Down"><i class="fa-solid fa-arrow-down text-[10px]"></i></button>
+                  </div>
                   <span class="text-stone-900 font-bold text-sm">${priceText}</span>
                 </div>
                 <h4 class="font-serif text-sm font-semibold text-stone-900 leading-tight line-clamp-1">${prod.name}</h4>
@@ -896,6 +903,31 @@
     async function deleteProduct(productId) {
       if (confirm("Are you sure you want to delete this listing? This action cannot be undone.")) {
         await window.db.deleteProduct(productId);
+        await renderCatalog();
+      }
+    }
+
+    // Move Product sorting order (swap display order positions)
+    async function moveProductOrder(productId, direction) {
+      const productList = await getProducts();
+      const index = productList.findIndex(p => p.id === productId);
+      if (index === -1) return;
+
+      let targetIndex = -1;
+      if (direction === 'up' && index > 0) {
+        targetIndex = index - 1;
+      } else if (direction === 'down' && index < productList.length - 1) {
+        targetIndex = index + 1;
+      }
+
+      if (targetIndex !== -1) {
+        const p1 = productList[index];
+        const p2 = productList[targetIndex];
+        
+        // Swap orders in database
+        await window.db.swapProductOrder(p1.id, p2.id);
+        
+        // Refresh listings
         await renderCatalog();
       }
     }

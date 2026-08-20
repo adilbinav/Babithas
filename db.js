@@ -22,7 +22,8 @@ const DB_DEFAULT_PRODUCTS = [
     sizes: "", 
     image: "assets/saree_1.jpg",
     images: ["assets/saree_1.jpg", "assets/saree_2.jpg", "assets/saree_3.jpg"],
-    desc: "A majestic magenta silk saree decorated with ornate gold zari brocade, featuring a grand floral border and traditional rich pallu. Ideal for weddings and royal celebrations."
+    desc: "A majestic magenta silk saree decorated with ornate gold zari brocade, featuring a grand floral border and traditional rich pallu. Ideal for weddings and royal celebrations.",
+    display_order: 1
   },
   {
     id: 2,
@@ -38,7 +39,8 @@ const DB_DEFAULT_PRODUCTS = [
     sizes: "",
     image: "assets/saree_4.jpg",
     images: ["assets/saree_4.jpg", "assets/saree_5.jpg", "assets/saree_6.jpg"],
-    desc: "The timeless Kerala Kasavu saree, handwoven with fine off-white cotton and a signature rich gold zari border. It represents pure simplicity and cultural heritage."
+    desc: "The timeless Kerala Kasavu saree, handwoven with fine off-white cotton and a signature rich gold zari border. It represents pure simplicity and cultural heritage.",
+    display_order: 2
   },
   {
     id: 3,
@@ -54,7 +56,8 @@ const DB_DEFAULT_PRODUCTS = [
     sizes: "",
     image: "assets/saree_3.jpg",
     images: ["assets/saree_3.jpg", "assets/saree_1.jpg", "assets/saree_2.jpg"],
-    desc: "A radiant crimson saree crafted with pure Banarasi silk, displaying heritage gold motifs and an elaborate traditional border that radiates confidence."
+    desc: "A radiant crimson saree crafted with pure Banarasi silk, displaying heritage gold motifs and an elaborate traditional border that radiates confidence.",
+    display_order: 3
   },
   {
     id: 4,
@@ -70,7 +73,8 @@ const DB_DEFAULT_PRODUCTS = [
     sizes: "",
     image: "assets/saree_6.jpg",
     images: ["assets/saree_6.jpg", "assets/saree_4.jpg", "assets/saree_5.jpg"],
-    desc: "A breathable, eco-friendly linen saree in pastel sage green, trimmed with subtle silver-gold zari borders, offering both comfort and modern minimalist elegance."
+    desc: "A breathable, eco-friendly linen saree in pastel sage green, trimmed with subtle silver-gold zari borders, offering both comfort and modern minimalist elegance.",
+    display_order: 4
   }
 ];
 
@@ -81,6 +85,7 @@ window.db = {
       const { data, error } = await window.supabase
         .from('products')
         .select('*')
+        .order('display_order', { ascending: true })
         .order('id', { ascending: true });
         
       if (error) {
@@ -101,7 +106,13 @@ window.db = {
           localStorage.setItem("babithas_products", JSON.stringify(DB_DEFAULT_PRODUCTS));
           return DB_DEFAULT_PRODUCTS;
         }
-        return JSON.parse(stored);
+        const parsed = JSON.parse(stored);
+        // Ensure products are always sorted by display_order first, then id
+        return parsed.sort((a, b) => {
+          const ordA = a.display_order !== undefined ? a.display_order : a.id;
+          const ordB = b.display_order !== undefined ? b.display_order : b.id;
+          return ordA - ordB;
+        });
       } catch (e) {
         return DB_DEFAULT_PRODUCTS;
       }
@@ -124,7 +135,8 @@ window.db = {
         sizes: prod.sizes,
         image: prod.image,
         images: prod.images,
-        desc_text: prod.desc
+        desc_text: prod.desc,
+        display_order: prod.display_order !== undefined ? prod.display_order : 0
       };
 
       if (prod.id) {
@@ -145,10 +157,12 @@ window.db = {
       // LocalStorage Fallback
       let list = await this.getProducts();
       if (prod.id) {
+        prod.display_order = prod.display_order !== undefined ? prod.display_order : (prod.id);
         list = list.map(p => (p.id === parseInt(prod.id) ? prod : p));
       } else {
         const newId = list.length > 0 ? Math.max(...list.map(p => p.id)) + 1 : 1;
         prod.id = newId;
+        prod.display_order = prod.display_order !== undefined ? prod.display_order : newId;
         list.push(prod);
       }
       localStorage.setItem("babithas_products", JSON.stringify(list));
@@ -356,8 +370,30 @@ window.db = {
       }
       return publicUrls;
     } else {
-      // LocalStorage Fallback - returns the base64 strings directly to store locally
       return base64ImagesList;
     }
+  },
+
+  async swapProductOrder(productId1, productId2) {
+    const products = await this.getProducts();
+    const p1 = products.find(p => p.id === productId1);
+    const p2 = products.find(p => p.id === productId2);
+    if (!p1 || !p2) return;
+
+    // Save current display order positions
+    const order1 = p1.display_order !== undefined ? p1.display_order : p1.id;
+    const order2 = p2.display_order !== undefined ? p2.display_order : p2.id;
+
+    p1.display_order = order2;
+    p2.display_order = order1;
+
+    // Handle identical cases
+    if (p1.display_order === p2.display_order) {
+      p1.display_order = order1;
+      p2.display_order = order1 + 1;
+    }
+
+    await this.saveProduct(p1);
+    await this.saveProduct(p2);
   }
 };
