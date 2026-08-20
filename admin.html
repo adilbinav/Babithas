@@ -418,12 +418,23 @@
 
     // Login Authentication Guard
     async function checkAuth() {
-      const isAuthed = sessionStorage.getItem("babithas_admin_auth") === "true";
+      let isAuthed = false;
+      try {
+        isAuthed = sessionStorage.getItem("babithas_admin_auth") === "true";
+      } catch (e) {
+        isAuthed = window.babithas_admin_auth === "true";
+      }
+
       const overlay = document.getElementById("login-overlay");
       
       if (isAuthed) {
         overlay.classList.add("hidden");
-        await initDashboard();
+        try {
+          await initDashboard();
+        } catch (err) {
+          console.error("Dashboard initialization failed:", err);
+          alert("Dashboard Load Error: " + err.message + "\n\nPlease check your internet connection or verify your Supabase database settings.");
+        }
       } else {
         overlay.classList.remove("hidden");
       }
@@ -434,8 +445,14 @@
       const passcode = document.getElementById("passcode").value;
       const loginError = document.getElementById("login-error");
       
-      if (passcode === "admin") {
-        sessionStorage.setItem("babithas_admin_auth", "true");
+      // Trim and ignore case to prevent mobile keyboard auto-capitalize ("Admin") or space auto-complete ("admin ") lockouts
+      if (passcode && passcode.trim().toLowerCase() === "admin") {
+        try {
+          sessionStorage.setItem("babithas_admin_auth", "true");
+        } catch (e) {
+          console.warn("sessionStorage block fallback used", e);
+          window.babithas_admin_auth = "true";
+        }
         loginError.classList.add("hidden");
         checkAuth();
       } else {
@@ -445,7 +462,10 @@
     }
 
     function handleLogout() {
-      sessionStorage.removeItem("babithas_admin_auth");
+      try {
+        sessionStorage.removeItem("babithas_admin_auth");
+      } catch (e) {}
+      window.babithas_admin_auth = "false";
       checkAuth();
     }
 
