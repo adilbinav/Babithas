@@ -20,7 +20,7 @@ const DEFAULT_PRODUCTS = [
     blouse: "Yes, Matching Unstitched",
     sizes: "", 
     image: "assets/saree_1.jpg",
-    images: ["assets/saree_1.jpg", "assets/saree_2.jpg"],
+    images: ["assets/saree_1.jpg", "assets/saree_2.jpg", "assets/saree_3.jpg"],
     desc: "A majestic magenta silk saree decorated with ornate gold zari brocade, featuring a grand floral border and traditional rich pallu. Ideal for weddings and royal celebrations."
   },
   {
@@ -35,8 +35,8 @@ const DEFAULT_PRODUCTS = [
     length: "6.2 Metres (includes Blouse)",
     blouse: "Yes, Contrast Zari Stripe",
     sizes: "",
-    image: "assets/saree_2.jpg",
-    images: ["assets/saree_2.jpg", "assets/saree_1.jpg"],
+    image: "assets/saree_4.jpg",
+    images: ["assets/saree_4.jpg", "assets/saree_5.jpg", "assets/saree_6.jpg"],
     desc: "The timeless Kerala Kasavu saree, handwoven with fine off-white cotton and a signature rich gold zari border. It represents pure simplicity and cultural heritage."
   },
   {
@@ -51,8 +51,8 @@ const DEFAULT_PRODUCTS = [
     length: "5.5 Metres",
     blouse: "Yes, Banarasi Brocade Piece",
     sizes: "",
-    image: "assets/saree_1.jpg",
-    images: ["assets/saree_1.jpg", "assets/saree_2.jpg"],
+    image: "assets/saree_3.jpg",
+    images: ["assets/saree_3.jpg", "assets/saree_1.jpg", "assets/saree_2.jpg"],
     desc: "A radiant crimson saree crafted with pure Banarasi silk, displaying heritage gold motifs and an elaborate traditional border that radiates confidence."
   },
   {
@@ -67,8 +67,8 @@ const DEFAULT_PRODUCTS = [
     length: "5.5 Metres",
     blouse: "No (Saree only)",
     sizes: "",
-    image: "assets/saree_2.jpg",
-    images: ["assets/saree_2.jpg", "assets/saree_1.jpg"],
+    image: "assets/saree_6.jpg",
+    images: ["assets/saree_6.jpg", "assets/saree_4.jpg", "assets/saree_5.jpg"],
     desc: "A breathable, eco-friendly linen saree in pastel sage green, trimmed with subtle silver-gold zari borders, offering both comfort and modern minimalist elegance."
   }
 ];
