@@ -69,11 +69,14 @@
   <link rel="manifest" href="admin_manifest.json">
   <meta name="theme-color" content="#CBA147">
   <script>
+    // Unregister service worker during active development to prevent aggressive caching lockout
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('admin_sw.js')
-          .then(reg => console.log('Admin CMS Service Worker registered successfully!'))
-          .catch(err => console.error('Admin CMS Service Worker registration failed:', err));
+      navigator.serviceWorker.getRegistrations().then(registrations => {
+        for (let registration of registrations) {
+          registration.unregister().then(() => {
+            console.log('Active service worker unregistered to prevent cache locks.');
+          });
+        }
       });
     }
   </script>
