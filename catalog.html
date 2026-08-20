@@ -55,6 +55,25 @@
   <script src="config.js"></script>
   <!-- Unified Database Adapter -->
   <script src="db.js"></script>
+  <!-- Force unregister any lingering service worker from previous PWA attempts -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(registrations => {
+        for (let registration of registrations) {
+          registration.unregister().then(() => {
+            console.log('Lingering service worker unregistered.');
+          });
+        }
+      });
+    }
+    if ('caches' in window) {
+      caches.keys().then(names => {
+        for (let name of names) {
+          caches.delete(name);
+        }
+      });
+    }
+  </script>
 </head>
 <body class="bg-cream-50 text-charcoal font-sans flex flex-col min-h-screen">
 
