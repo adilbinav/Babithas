@@ -51,3 +51,10 @@ window.formatPriceHtml = function(price, originalPrice) {
   }
   return `<span class="text-stone-900 font-bold">${cleanPrice}</span>`;
 };
+
+// Global WhatsApp redirect helper
+window.showWhatsAppDemo = function(message) {
+  const number = "916238599582";
+  const url = `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+  window.open(url, '_blank');
+};

@@ -321,10 +321,6 @@ function setupFilters() {
 }
 
 // WhatsApp Demo Modal Helper Functions
-window.showWhatsAppDemo = function(message) {
-  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-  window.open(url, '_blank');
-};
 
 window.closeWhatsAppDemo = function() {
   const modal = document.getElementById("whatsapp-demo-modal");
