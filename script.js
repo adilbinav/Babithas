@@ -103,7 +103,7 @@ async function renderCelebrationSection() {
   slicedList.forEach(prod => {
     const priceText = prod.price ? `₹${Number(prod.price).toLocaleString()}` : "Price on Ask";
     const rawText = `Hi BaBitha's, I am interested in inquiring about the "${prod.name}" (${prod.fabric}) priced at ${priceText} from your "${title}" festive showcase.`;
-    const escapedText = rawText.replace(/'/g, "\\'");
+    const escapedText = rawText.replace(/'/g, "\\'").replace(/"/g, "&quot;");
 
     const card = document.createElement("div");
     card.className = "product-card group bg-white border border-stone-100 rounded-lg overflow-hidden luxury-shadow-sm hover:luxury-shadow transition-all duration-300 flex flex-col";
@@ -235,7 +235,7 @@ async function renderProducts(productList) {
   featuredList.forEach(prod => {
     const priceText = prod.price ? `₹${Number(prod.price).toLocaleString()}` : "Price on Ask";
     const rawText = `Hi BaBitha's, I am interested in inquiring about the "${prod.name}" (${prod.fabric}) priced at ${priceText} that I saw on your website catalog. Can you please share more details?`;
-    const escapedText = rawText.replace(/'/g, "\\'");
+    const escapedText = rawText.replace(/'/g, "\\'").replace(/"/g, "&quot;");
 
     const card = document.createElement("div");
     card.className = "product-card group bg-white border border-stone-100 rounded-lg overflow-hidden luxury-shadow-sm hover:luxury-shadow transition-all duration-300 flex flex-col";
