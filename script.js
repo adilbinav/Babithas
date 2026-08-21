@@ -203,7 +203,7 @@ function setupMobileMenu() {
 }
 
 // Render Products to Grid (Filtered by featured status & dynamic limit)
-function renderProducts(productList) {
+async function renderProducts(productList) {
   const grid = document.getElementById("product-grid");
   if (!grid) return;
 
@@ -218,7 +218,7 @@ function renderProducts(productList) {
   }
 
   // 2. Limit: Slice based on dynamic homepage limit settings
-  const limit = getHomepageLimit();
+  const limit = await getHomepageLimit();
   featuredList = featuredList.slice(0, limit);
 
   if (featuredList.length === 0) {
