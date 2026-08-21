@@ -123,6 +123,7 @@ window.db = {
         fabric: prod.fabric,
         craft: prod.craft,
         price: prod.price,
+        original_price: prod.original_price,
         featured: prod.featured,
         celebration: prod.celebration,
         length: prod.length,
